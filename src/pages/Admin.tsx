@@ -1,0 +1,1126 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useStore } from "../store/store";
+import type { Block, SiteContent } from "../lib/types";
+import { ui } from "../lib/ui";
+import {
+  AddButton,
+  AdminCard,
+  Field,
+  ImageField,
+  LangField,
+  Note,
+  TextArea,
+  TextInput,
+  Toggle,
+  emptyL,
+  slugify,
+} from "../components/admin/fields";
+
+type SectionKey =
+  | "home"
+  | "about"
+  | "story"
+  | "communities"
+  | "categories"
+  | "products"
+  | "journal"
+  | "partners"
+  | "contact"
+  | "newsletter"
+  | "settings";
+
+const SECTIONS: { key: SectionKey; label: string }[] = [
+  { key: "home", label: "Homepage" },
+  { key: "about", label: "About Us" },
+  { key: "story", label: "Our Story" },
+  { key: "communities", label: "Communities" },
+  { key: "categories", label: "Categories" },
+  { key: "products", label: "Products" },
+  { key: "journal", label: "Journal" },
+  { key: "partners", label: "Partners & Projects" },
+  { key: "contact", label: "Contact & Social" },
+  { key: "newsletter", label: "Newsletter" },
+  { key: "settings", label: "Settings" },
+];
+
+function Login() {
+  const { signIn } = useStore();
+  const [email, setEmail] = useState("admin@mystere.vn");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-charcoal px-6">
+      <div className="w-full max-w-sm">
+        <Link to="/" className="font-serif text-[30px] text-ivory">
+          Mystère
+        </Link>
+        <p className="mt-2 text-[10px] uppercase tracking-[0.3em] text-cream/50">
+          Admin dashboard
+        </p>
+        <form
+          className="mt-10 space-y-6"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!signIn(email, password)) setError(true);
+          }}
+        >
+          <label className="block">
+            <span className="text-[10px] uppercase tracking-[0.22em] text-cream/50">Email</span>
+            <input
+              className="mt-2 w-full border-b border-ivory/25 bg-transparent pb-2 text-ivory outline-none focus:border-ivory"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </label>
+          <label className="block">
+            <span className="text-[10px] uppercase tracking-[0.22em] text-cream/50">Password</span>
+            <input
+              type="password"
+              className="mt-2 w-full border-b border-ivory/25 bg-transparent pb-2 text-ivory outline-none focus:border-ivory"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </label>
+          {error && <p className="text-[13px] text-rust">Incorrect email or password.</p>}
+          <button className="w-full bg-ivory py-4 text-[11px] uppercase tracking-[0.28em] text-charcoal hover:bg-cream">
+            Sign in
+          </button>
+        </form>
+        <p className="mt-8 text-[12px] leading-relaxed text-cream/40">
+          Demo credentials: <span className="text-cream/70">admin@mystere.vn</span> /{" "}
+          <span className="text-cream/70">mystere2001</span>
+          <br />
+          In production this screen is backed by Supabase Auth.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default function Admin() {
+  const { content, setContent, resetContent, user, signOut, subscribers, t } = useStore();
+  const [section, setSection] = useState<SectionKey>("home");
+  const [saved, setSaved] = useState(false);
+
+  if (!user) return <Login />;
+
+  const up = (fn: (d: SiteContent) => void) => {
+    setContent((d) => {
+      fn(d);
+      return d;
+    });
+    setSaved(true);
+    window.clearTimeout((window as any).__mystereSaveTimer);
+    (window as any).__mystereSaveTimer = window.setTimeout(() => setSaved(false), 1200);
+  };
+
+  const move = <T,>(arr: T[], i: number, dir: -1 | 1) => {
+    const j = i + dir;
+    if (j < 0 || j >= arr.length) return;
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  };
+
+  const BlockEditor = ({
+    block,
+    onChange,
+    title,
+  }: {
+    block: Block;
+    onChange: (fn: (b: Block) => void) => void;
+    title: string;
+  }) => (
+    <AdminCard title={title}>
+      <LangField label="Title" value={block.title} onChange={(v) => onChange((b) => (b.title = v))} />
+      <LangField
+        label="Body"
+        multiline
+        rows={6}
+        value={block.body}
+        onChange={(v) => onChange((b) => (b.body = v))}
+      />
+      <ImageField label="Image" value={block.image} onChange={(v) => onChange((b) => (b.image = v))} />
+    </AdminCard>
+  );
+
+  return (
+    <div className="min-h-screen bg-cream/60">
+      <header className="sticky top-0 z-30 border-b border-sand bg-ivory">
+        <div className="mx-auto flex max-w-[1500px] items-center justify-between px-6 py-4">
+          <div className="flex items-baseline gap-4">
+            <Link to="/" className="font-serif text-[24px] text-charcoal">
+              Mystère
+            </Link>
+            <span className="text-[10px] uppercase tracking-[0.28em] text-clay">Admin</span>
+          </div>
+          <div className="flex items-center gap-6 text-[11px] uppercase tracking-[0.2em]">
+            <span className={`transition-opacity ${saved ? "opacity-100" : "opacity-0"} text-moss`}>
+              Saved
+            </span>
+            <Link to="/" className="text-cocoa/70 hover:text-charcoal">
+              View site
+            </Link>
+            <button onClick={signOut} className="text-rust hover:underline">
+              Sign out
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="mx-auto flex max-w-[1500px] flex-col gap-10 px-6 py-10 lg:flex-row">
+        <nav className="lg:w-52 lg:shrink-0">
+          <ul className="flex flex-wrap gap-2 lg:sticky lg:top-24 lg:flex-col">
+            {SECTIONS.map((s) => (
+              <li key={s.key}>
+                <button
+                  onClick={() => setSection(s.key)}
+                  className={`w-full px-3 py-2 text-left text-[12px] uppercase tracking-[0.16em] transition-colors ${
+                    section === s.key
+                      ? "bg-charcoal text-ivory"
+                      : "text-cocoa/70 hover:bg-sand/40 hover:text-charcoal"
+                  }`}
+                >
+                  {s.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div className="min-w-0 flex-1 space-y-8">
+          {/* HOMEPAGE */}
+          {section === "home" && (
+            <>
+              <h1 className="font-serif text-4xl text-charcoal">Homepage</h1>
+              <Note>
+                Images on the homepage are served directly from the client's Google Drive folder.
+                Paste any image URL, or upload a replacement file.
+              </Note>
+
+              <AdminCard title="Hero">
+                <ImageField
+                  label="Hero image"
+                  value={content.home.heroImage}
+                  onChange={(v) => up((d) => (d.home.heroImage = v))}
+                />
+                <LangField
+                  label="Eyebrow (25 years — est. 2001)"
+                  value={content.home.heroEyebrow}
+                  onChange={(v) => up((d) => (d.home.heroEyebrow = v))}
+                />
+                <LangField
+                  label="CTA label"
+                  value={content.home.heroCta}
+                  onChange={(v) => up((d) => (d.home.heroCta = v))}
+                />
+              </AdminCard>
+
+              <BlockEditor
+                title="1 · Brand introduction / Mission"
+                block={content.home.intro}
+                onChange={(fn) => up((d) => fn(d.home.intro))}
+              />
+              <BlockEditor
+                title="2 · 25 years"
+                block={content.home.anniversary}
+                onChange={(fn) => up((d) => fn(d.home.anniversary))}
+              />
+
+              <AdminCard title="3 · Artisan story">
+                <LangField
+                  label="Title"
+                  value={content.home.artisan.title}
+                  onChange={(v) => up((d) => (d.home.artisan.title = v))}
+                />
+                <LangField
+                  label="Body"
+                  multiline
+                  value={content.home.artisan.body}
+                  onChange={(v) => up((d) => (d.home.artisan.body = v))}
+                />
+                <LangField
+                  label="Quote"
+                  value={content.home.artisan.quote}
+                  onChange={(v) => up((d) => (d.home.artisan.quote = v))}
+                />
+                <LangField
+                  label="Quote author"
+                  value={content.home.artisan.quoteAuthor}
+                  onChange={(v) => up((d) => (d.home.artisan.quoteAuthor = v))}
+                />
+                <ImageField
+                  label="Image"
+                  value={content.home.artisan.image}
+                  onChange={(v) => up((d) => (d.home.artisan.image = v))}
+                />
+              </AdminCard>
+
+              <AdminCard title="4 · Featured communities block">
+                <LangField
+                  label="Title"
+                  value={content.home.projectsIntro.title}
+                  onChange={(v) => up((d) => (d.home.projectsIntro.title = v))}
+                />
+                <LangField
+                  label="Body"
+                  multiline
+                  rows={3}
+                  value={content.home.projectsIntro.body}
+                  onChange={(v) => up((d) => (d.home.projectsIntro.body = v))}
+                />
+                <Note>
+                  The community cards themselves are edited under <strong>Communities</strong>.
+                  Only published communities appear.
+                </Note>
+              </AdminCard>
+
+              <BlockEditor
+                title="5 · Every piece carries a story"
+                block={content.home.thread}
+                onChange={(fn) => up((d) => fn(d.home.thread))}
+              />
+
+              <AdminCard title="6 · Craft & products intro">
+                <LangField
+                  label="Title"
+                  value={content.home.craftIntro.title}
+                  onChange={(v) => up((d) => (d.home.craftIntro.title = v))}
+                />
+                <LangField
+                  label="Body"
+                  multiline
+                  rows={3}
+                  value={content.home.craftIntro.body}
+                  onChange={(v) => up((d) => (d.home.craftIntro.body = v))}
+                />
+              </AdminCard>
+
+              <AdminCard title="7 · Journal intro">
+                <LangField
+                  label="Title"
+                  value={content.home.journalIntro.title}
+                  onChange={(v) => up((d) => (d.home.journalIntro.title = v))}
+                />
+                <LangField
+                  label="Body"
+                  multiline
+                  rows={3}
+                  value={content.home.journalIntro.body}
+                  onChange={(v) => up((d) => (d.home.journalIntro.body = v))}
+                />
+              </AdminCard>
+
+              <BlockEditor
+                title="8 · Visit the shop"
+                block={content.home.visit}
+                onChange={(fn) => up((d) => fn(d.home.visit))}
+              />
+            </>
+          )}
+
+          {/* ABOUT */}
+          {section === "about" && (
+            <>
+              <h1 className="font-serif text-4xl text-charcoal">About Us</h1>
+              <AdminCard title="Header">
+                <ImageField
+                  label="Hero image"
+                  value={content.about.heroImage}
+                  onChange={(v) => up((d) => (d.about.heroImage = v))}
+                />
+                <LangField
+                  label="Title"
+                  value={content.about.title}
+                  onChange={(v) => up((d) => (d.about.title = v))}
+                />
+                <LangField
+                  label="Lead paragraph"
+                  multiline
+                  rows={5}
+                  value={content.about.lead}
+                  onChange={(v) => up((d) => (d.about.lead = v))}
+                />
+              </AdminCard>
+
+              <h2 className="font-serif text-2xl text-charcoal">Key numbers</h2>
+              {content.about.numbers.map((n, i) => (
+                <AdminCard
+                  key={i}
+                  title={n.value || "Number"}
+                  onDelete={() => up((d) => d.about.numbers.splice(i, 1))}
+                  onMoveUp={() => up((d) => move(d.about.numbers, i, -1))}
+                  onMoveDown={() => up((d) => move(d.about.numbers, i, 1))}
+                >
+                  <Field label="Value">
+                    <TextInput
+                      value={n.value}
+                      onChange={(v) => up((d) => (d.about.numbers[i].value = v))}
+                    />
+                  </Field>
+                  <LangField
+                    label="Label"
+                    value={n.label}
+                    onChange={(v) => up((d) => (d.about.numbers[i].label = v))}
+                  />
+                </AdminCard>
+              ))}
+              <AddButton
+                label="Add number"
+                onClick={() => up((d) => d.about.numbers.push({ value: "", label: { ...emptyL } }))}
+              />
+
+              <h2 className="font-serif text-2xl text-charcoal">Editorial blocks</h2>
+              {content.about.blocks.map((b, i) => (
+                <AdminCard
+                  key={i}
+                  title={b.title.en || `Block ${i + 1}`}
+                  onDelete={() => up((d) => d.about.blocks.splice(i, 1))}
+                  onMoveUp={() => up((d) => move(d.about.blocks, i, -1))}
+                  onMoveDown={() => up((d) => move(d.about.blocks, i, 1))}
+                >
+                  <LangField
+                    label="Title"
+                    value={b.title}
+                    onChange={(v) => up((d) => (d.about.blocks[i].title = v))}
+                  />
+                  <LangField
+                    label="Body"
+                    multiline
+                    rows={6}
+                    value={b.body}
+                    onChange={(v) => up((d) => (d.about.blocks[i].body = v))}
+                  />
+                  <ImageField
+                    label="Image"
+                    value={b.image}
+                    onChange={(v) => up((d) => (d.about.blocks[i].image = v))}
+                  />
+                </AdminCard>
+              ))}
+              <AddButton
+                label="Add block"
+                onClick={() =>
+                  up((d) =>
+                    d.about.blocks.push({ title: { ...emptyL }, body: { ...emptyL }, image: "" }),
+                  )
+                }
+              />
+            </>
+          )}
+
+          {/* STORY */}
+          {section === "story" && (
+            <>
+              <h1 className="font-serif text-4xl text-charcoal">Our Story</h1>
+              <AdminCard title="Main story">
+                <ImageField
+                  label="Hero image"
+                  value={content.story.heroImage}
+                  onChange={(v) => up((d) => (d.story.heroImage = v))}
+                />
+                <LangField
+                  label="Title"
+                  value={content.story.title}
+                  onChange={(v) => up((d) => (d.story.title = v))}
+                />
+                <LangField
+                  label="Lead"
+                  multiline
+                  rows={4}
+                  value={content.story.lead}
+                  onChange={(v) => up((d) => (d.story.lead = v))}
+                />
+                <LangField
+                  label="Body"
+                  multiline
+                  rows={10}
+                  value={content.story.body}
+                  onChange={(v) => up((d) => (d.story.body = v))}
+                />
+                <LangField
+                  label="Quote"
+                  value={content.story.quote}
+                  onChange={(v) => up((d) => (d.story.quote = v))}
+                />
+                <LangField
+                  label="Quote author"
+                  value={content.story.quoteAuthor}
+                  onChange={(v) => up((d) => (d.story.quoteAuthor = v))}
+                />
+              </AdminCard>
+              <AdminCard title="Communities section intro">
+                <LangField
+                  label="Title"
+                  value={content.story.communitiesTitle}
+                  onChange={(v) => up((d) => (d.story.communitiesTitle = v))}
+                />
+                <LangField
+                  label="Lead"
+                  value={content.story.communitiesLead}
+                  onChange={(v) => up((d) => (d.story.communitiesLead = v))}
+                />
+              </AdminCard>
+              <AdminCard title="Partners section intro">
+                <LangField
+                  label="Title"
+                  value={content.story.partnersTitle}
+                  onChange={(v) => up((d) => (d.story.partnersTitle = v))}
+                />
+                <LangField
+                  label="Lead"
+                  multiline
+                  rows={3}
+                  value={content.story.partnersLead}
+                  onChange={(v) => up((d) => (d.story.partnersLead = v))}
+                />
+                <LangField
+                  label="Footnote"
+                  multiline
+                  rows={2}
+                  value={content.story.partnersNote}
+                  onChange={(v) => up((d) => (d.story.partnersNote = v))}
+                />
+              </AdminCard>
+            </>
+          )}
+
+          {/* COMMUNITIES */}
+          {section === "communities" && (
+            <>
+              <h1 className="font-serif text-4xl text-charcoal">Communities</h1>
+              <Note>
+                The client supplied photographs for the Red Dao chapter only. Where no image is set,
+                the site shows a quiet “Photograph to be added” tile — upload a file whenever one is
+                available.
+              </Note>
+              {content.communities.map((c, i) => (
+                <AdminCard
+                  key={c.id}
+                  title={c.name || "Community"}
+                  onDelete={() => up((d) => d.communities.splice(i, 1))}
+                  onMoveUp={() => up((d) => move(d.communities, i, -1))}
+                  onMoveDown={() => up((d) => move(d.communities, i, 1))}
+                >
+                  <Toggle
+                    label={t(ui.published)}
+                    value={c.published}
+                    onChange={(v) => up((d) => (d.communities[i].published = v))}
+                  />
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Field label="Name">
+                      <TextInput
+                        value={c.name}
+                        onChange={(v) =>
+                          up((d) => {
+                            d.communities[i].name = v;
+                            d.communities[i].slug = slugify(v);
+                          })
+                        }
+                      />
+                    </Field>
+                    <Field label="Slug (URL anchor)">
+                      <TextInput
+                        value={c.slug}
+                        onChange={(v) => up((d) => (d.communities[i].slug = slugify(v)))}
+                      />
+                    </Field>
+                  </div>
+                  <LangField
+                    label="Region"
+                    value={c.region}
+                    onChange={(v) => up((d) => (d.communities[i].region = v))}
+                  />
+                  <LangField
+                    label="Heading"
+                    value={c.title}
+                    onChange={(v) => up((d) => (d.communities[i].title = v))}
+                  />
+                  <LangField
+                    label="One-line summary"
+                    multiline
+                    rows={2}
+                    value={c.line}
+                    onChange={(v) => up((d) => (d.communities[i].line = v))}
+                  />
+                  <LangField
+                    label="Story"
+                    multiline
+                    rows={6}
+                    value={c.story}
+                    onChange={(v) => up((d) => (d.communities[i].story = v))}
+                  />
+                  <LangField
+                    label="Craft"
+                    multiline
+                    rows={2}
+                    value={c.craft}
+                    onChange={(v) => up((d) => (d.communities[i].craft = v))}
+                  />
+                  <ImageField
+                    label="Image"
+                    value={c.image}
+                    onChange={(v) => up((d) => (d.communities[i].image = v))}
+                  />
+                </AdminCard>
+              ))}
+              <AddButton
+                label="Add community"
+                onClick={() =>
+                  up((d) =>
+                    d.communities.push({
+                      id: `c${Date.now()}`,
+                      slug: "new-community",
+                      name: "New community",
+                      region: { ...emptyL },
+                      title: { ...emptyL },
+                      line: { ...emptyL },
+                      story: { ...emptyL },
+                      craft: { ...emptyL },
+                      image: "",
+                      published: true,
+                    }),
+                  )
+                }
+              />
+            </>
+          )}
+
+          {/* CATEGORIES */}
+          {section === "categories" && (
+            <>
+              <h1 className="font-serif text-4xl text-charcoal">Categories</h1>
+              {content.categories.map((c, i) => (
+                <AdminCard
+                  key={c.id}
+                  title={c.name.en || "Category"}
+                  onDelete={() => up((d) => d.categories.splice(i, 1))}
+                  onMoveUp={() => up((d) => move(d.categories, i, -1))}
+                  onMoveDown={() => up((d) => move(d.categories, i, 1))}
+                >
+                  <Toggle
+                    label={t(ui.published)}
+                    value={c.published}
+                    onChange={(v) => up((d) => (d.categories[i].published = v))}
+                  />
+                  <LangField
+                    label="Name"
+                    value={c.name}
+                    onChange={(v) =>
+                      up((d) => {
+                        d.categories[i].name = v;
+                        d.categories[i].slug = slugify(v.en);
+                      })
+                    }
+                  />
+                  <Field label="Slug (URL)">
+                    <TextInput
+                      value={c.slug}
+                      onChange={(v) => up((d) => (d.categories[i].slug = slugify(v)))}
+                    />
+                  </Field>
+                  <LangField
+                    label="Short line"
+                    value={c.short}
+                    onChange={(v) => up((d) => (d.categories[i].short = v))}
+                  />
+                  <LangField
+                    label="Description"
+                    multiline
+                    value={c.description}
+                    onChange={(v) => up((d) => (d.categories[i].description = v))}
+                  />
+                  <ImageField
+                    label="Image"
+                    value={c.image}
+                    onChange={(v) => up((d) => (d.categories[i].image = v))}
+                  />
+                </AdminCard>
+              ))}
+              <AddButton
+                label="Add category"
+                onClick={() =>
+                  up((d) =>
+                    d.categories.push({
+                      id: `cat${Date.now()}`,
+                      slug: "new-category",
+                      name: { en: "New category", vi: "Danh mục mới" },
+                      short: { ...emptyL },
+                      description: { ...emptyL },
+                      image: "",
+                      published: true,
+                    }),
+                  )
+                }
+              />
+            </>
+          )}
+
+          {/* PRODUCTS */}
+          {section === "products" && (
+            <>
+              <h1 className="font-serif text-4xl text-charcoal">Products</h1>
+              <Note>
+                Products are presented editorially — no prices, no cart, no online sales. The client
+                has not yet supplied individual product photography; upload it here when available,
+                and the cards will update immediately.
+              </Note>
+              {content.products.map((p, i) => (
+                <AdminCard
+                  key={p.id}
+                  title={p.name.en || "Product"}
+                  onDelete={() => up((d) => d.products.splice(i, 1))}
+                  onMoveUp={() => up((d) => move(d.products, i, -1))}
+                  onMoveDown={() => up((d) => move(d.products, i, 1))}
+                >
+                  <Toggle
+                    label={t(ui.published)}
+                    value={p.published}
+                    onChange={(v) => up((d) => (d.products[i].published = v))}
+                  />
+                  <LangField
+                    label="Name"
+                    value={p.name}
+                    onChange={(v) => up((d) => (d.products[i].name = v))}
+                  />
+                  <LangField
+                    label="Description"
+                    multiline
+                    rows={3}
+                    value={p.description}
+                    onChange={(v) => up((d) => (d.products[i].description = v))}
+                  />
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Field label="Category">
+                      <select
+                        className="w-full border border-sand bg-white px-3 py-2 text-[14px] outline-none focus:border-clay"
+                        value={p.categoryId}
+                        onChange={(e) => up((d) => (d.products[i].categoryId = e.target.value))}
+                      >
+                        {content.categories.map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.name.en}
+                          </option>
+                        ))}
+                      </select>
+                    </Field>
+                    <Field label="Community">
+                      <TextInput
+                        value={p.community}
+                        onChange={(v) => up((d) => (d.products[i].community = v))}
+                      />
+                    </Field>
+                  </div>
+                  <LangField
+                    label="Materials"
+                    value={p.materials}
+                    onChange={(v) => up((d) => (d.products[i].materials = v))}
+                  />
+                  <ImageField
+                    label="Image"
+                    value={p.image}
+                    onChange={(v) => up((d) => (d.products[i].image = v))}
+                  />
+                </AdminCard>
+              ))}
+              <AddButton
+                label="Add product"
+                onClick={() =>
+                  up((d) =>
+                    d.products.push({
+                      id: `p${Date.now()}`,
+                      categoryId: d.categories[0]?.id ?? "",
+                      name: { en: "New product", vi: "Sản phẩm mới" },
+                      description: { ...emptyL },
+                      community: "",
+                      materials: { ...emptyL },
+                      image: "",
+                      published: true,
+                    }),
+                  )
+                }
+              />
+            </>
+          )}
+
+          {/* JOURNAL */}
+          {section === "journal" && (
+            <>
+              <h1 className="font-serif text-4xl text-charcoal">Journal</h1>
+              <Note>
+                Leave the date empty if the client has not confirmed a publication date — no date
+                will be shown anywhere on the site. Do not guess a date.
+              </Note>
+              <AdminCard title="Page header">
+                <LangField
+                  label="Title"
+                  value={content.journal.title}
+                  onChange={(v) => up((d) => (d.journal.title = v))}
+                />
+                <LangField
+                  label="Lead"
+                  multiline
+                  rows={3}
+                  value={content.journal.lead}
+                  onChange={(v) => up((d) => (d.journal.lead = v))}
+                />
+              </AdminCard>
+
+              {content.articles.map((a, i) => (
+                <AdminCard
+                  key={a.id}
+                  title={a.title.en || "Article"}
+                  onDelete={() => up((d) => d.articles.splice(i, 1))}
+                  onMoveUp={() => up((d) => move(d.articles, i, -1))}
+                  onMoveDown={() => up((d) => move(d.articles, i, 1))}
+                >
+                  <Toggle
+                    label={t(ui.published)}
+                    value={a.published}
+                    onChange={(v) => up((d) => (d.articles[i].published = v))}
+                  />
+                  <LangField
+                    label="Title"
+                    value={a.title}
+                    onChange={(v) =>
+                      up((d) => {
+                        d.articles[i].title = v;
+                        d.articles[i].slug = slugify(v.en);
+                      })
+                    }
+                  />
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Field label="Date (leave blank if unknown)">
+                      <input
+                        type="date"
+                        className="w-full border border-sand bg-white px-3 py-2 text-[14px] outline-none focus:border-clay"
+                        value={a.date}
+                        onChange={(e) => up((d) => (d.articles[i].date = e.target.value))}
+                      />
+                    </Field>
+                    <Field label="Slug (URL)">
+                      <TextInput
+                        value={a.slug}
+                        onChange={(v) => up((d) => (d.articles[i].slug = slugify(v)))}
+                      />
+                    </Field>
+                  </div>
+                  <LangField
+                    label="Excerpt"
+                    multiline
+                    rows={3}
+                    value={a.excerpt}
+                    onChange={(v) => up((d) => (d.articles[i].excerpt = v))}
+                  />
+                  <LangField
+                    label="Content"
+                    multiline
+                    rows={10}
+                    value={a.body}
+                    onChange={(v) => up((d) => (d.articles[i].body = v))}
+                  />
+                  <ImageField
+                    label="Cover image"
+                    value={a.cover}
+                    onChange={(v) => up((d) => (d.articles[i].cover = v))}
+                  />
+                  <div className="space-y-4 border-t border-sand pt-4">
+                    <span className="block text-[10px] uppercase tracking-[0.2em] text-cocoa/60">
+                      Gallery
+                    </span>
+                    {a.gallery.map((g, gi) => (
+                      <div key={gi} className="flex items-start gap-3">
+                        <div className="flex-1">
+                          <ImageField
+                            label={`Image ${gi + 1}`}
+                            value={g}
+                            onChange={(v) => up((d) => (d.articles[i].gallery[gi] = v))}
+                          />
+                        </div>
+                        <button
+                          onClick={() => up((d) => d.articles[i].gallery.splice(gi, 1))}
+                          className="mt-6 text-[10px] uppercase tracking-[0.18em] text-rust hover:underline"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                    <AddButton
+                      label="Add gallery image"
+                      onClick={() => up((d) => d.articles[i].gallery.push(""))}
+                    />
+                  </div>
+                </AdminCard>
+              ))}
+              <AddButton
+                label="Add article"
+                onClick={() =>
+                  up((d) =>
+                    d.articles.unshift({
+                      id: `a${Date.now()}`,
+                      slug: `new-article-${Date.now()}`,
+                      title: { en: "New article", vi: "Bài viết mới" },
+                      date: "",
+                      excerpt: { ...emptyL },
+                      body: { ...emptyL },
+                      cover: "",
+                      gallery: [],
+                      published: true,
+                    }),
+                  )
+                }
+              />
+            </>
+          )}
+
+          {/* PARTNERS */}
+          {section === "partners" && (
+            <>
+              <h1 className="font-serif text-4xl text-charcoal">Partners & Projects</h1>
+              <Note>
+                Supporting content — DECEN, the LIVE Project and HELVETAS. It appears at the end of
+                the Our Story page and should stay subordinate to the brand story.
+              </Note>
+              {content.partners.map((p, i) => (
+                <AdminCard
+                  key={p.id}
+                  title={p.name || "Partner"}
+                  onDelete={() => up((d) => d.partners.splice(i, 1))}
+                  onMoveUp={() => up((d) => move(d.partners, i, -1))}
+                  onMoveDown={() => up((d) => move(d.partners, i, 1))}
+                >
+                  <Toggle
+                    label={t(ui.published)}
+                    value={p.published}
+                    onChange={(v) => up((d) => (d.partners[i].published = v))}
+                  />
+                  <Field label="Name">
+                    <TextInput value={p.name} onChange={(v) => up((d) => (d.partners[i].name = v))} />
+                  </Field>
+                  <LangField
+                    label="Role / subtitle"
+                    value={p.role}
+                    onChange={(v) => up((d) => (d.partners[i].role = v))}
+                  />
+                  <LangField
+                    label="Description"
+                    multiline
+                    rows={5}
+                    value={p.body}
+                    onChange={(v) => up((d) => (d.partners[i].body = v))}
+                  />
+                  <Field label="Website URL (optional)">
+                    <TextInput value={p.url} onChange={(v) => up((d) => (d.partners[i].url = v))} />
+                  </Field>
+                  <ImageField
+                    label="Image"
+                    value={p.image}
+                    onChange={(v) => up((d) => (d.partners[i].image = v))}
+                  />
+                </AdminCard>
+              ))}
+              <AddButton
+                label="Add partner"
+                onClick={() =>
+                  up((d) =>
+                    d.partners.push({
+                      id: `n${Date.now()}`,
+                      name: "New partner",
+                      role: { ...emptyL },
+                      body: { ...emptyL },
+                      image: "",
+                      url: "",
+                      published: true,
+                    }),
+                  )
+                }
+              />
+            </>
+          )}
+
+          {/* CONTACT */}
+          {section === "contact" && (
+            <>
+              <h1 className="font-serif text-4xl text-charcoal">Contact & Social</h1>
+              <AdminCard title="Brand">
+                <ImageField
+                  label="Logo (SVG or PNG export — the .ai master cannot be displayed in browsers)"
+                  value={content.contact.logo}
+                  onChange={(v) => up((d) => (d.contact.logo = v))}
+                />
+                <Note>
+                  Leave empty to keep the typographic wordmark in the header and footer.
+                </Note>
+              </AdminCard>
+              <AdminCard title="Visit Us page">
+                <ImageField
+                  label="Shop image"
+                  value={content.contact.image}
+                  onChange={(v) => up((d) => (d.contact.image = v))}
+                />
+                <Field label="Address (one line per row)">
+                  <TextArea
+                    rows={3}
+                    value={content.contact.addressLines.join("\n")}
+                    onChange={(v) => up((d) => (d.contact.addressLines = v.split("\n")))}
+                  />
+                </Field>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <Field label="Phone">
+                    <TextInput
+                      value={content.contact.phone}
+                      onChange={(v) => up((d) => (d.contact.phone = v))}
+                    />
+                  </Field>
+                  <Field label="Zalo / WhatsApp">
+                    <TextInput
+                      value={content.contact.zalo}
+                      onChange={(v) => up((d) => (d.contact.zalo = v))}
+                    />
+                  </Field>
+                </div>
+                <Field label="Display name (Zalo / WhatsApp)">
+                  <TextInput
+                    value={content.contact.displayName.en}
+                    onChange={(v) =>
+                      up((d) => {
+                        d.contact.displayName.en = v;
+                        d.contact.displayName.vi = v;
+                      })
+                    }
+                  />
+                </Field>
+                <LangField
+                  label="Opening hours"
+                  value={content.contact.hours}
+                  onChange={(v) => up((d) => (d.contact.hours = v))}
+                />
+                <Field label="Email">
+                  <TextInput
+                    value={content.contact.email}
+                    onChange={(v) => up((d) => (d.contact.email = v))}
+                  />
+                </Field>
+                <Field label="Google Maps URL">
+                  <TextInput
+                    value={content.contact.mapsUrl}
+                    onChange={(v) => up((d) => (d.contact.mapsUrl = v))}
+                  />
+                </Field>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <Field label="Instagram URL">
+                    <TextInput
+                      value={content.contact.instagram}
+                      onChange={(v) => up((d) => (d.contact.instagram = v))}
+                    />
+                  </Field>
+                  <Field label="Facebook URL">
+                    <TextInput
+                      value={content.contact.facebook}
+                      onChange={(v) => up((d) => (d.contact.facebook = v))}
+                    />
+                  </Field>
+                </div>
+                <LangField
+                  label="Placeholder note (small print at the bottom of the Visit page — clear it once the links are final)"
+                  multiline
+                  rows={2}
+                  value={content.contact.note}
+                  onChange={(v) => up((d) => (d.contact.note = v))}
+                />
+              </AdminCard>
+            </>
+          )}
+
+          {/* NEWSLETTER */}
+          {section === "newsletter" && (
+            <>
+              <h1 className="font-serif text-4xl text-charcoal">Newsletter</h1>
+              <AdminCard title="Newsletter block">
+                <LangField
+                  label="Title"
+                  value={content.newsletter.title}
+                  onChange={(v) => up((d) => (d.newsletter.title = v))}
+                />
+                <LangField
+                  label="Body"
+                  multiline
+                  rows={3}
+                  value={content.newsletter.body}
+                  onChange={(v) => up((d) => (d.newsletter.body = v))}
+                />
+                <LangField
+                  label="Button label"
+                  value={content.newsletter.button}
+                  onChange={(v) => up((d) => (d.newsletter.button = v))}
+                />
+                <LangField
+                  label="Success message"
+                  value={content.newsletter.success}
+                  onChange={(v) => up((d) => (d.newsletter.success = v))}
+                />
+              </AdminCard>
+
+              <AdminCard title={`Subscribers (${subscribers.length})`}>
+                {subscribers.length === 0 ? (
+                  <p className="text-[14px] text-cocoa/60">No subscribers yet.</p>
+                ) : (
+                  <ul className="divide-y divide-sand text-[14px]">
+                    {subscribers.map((s, i) => (
+                      <li key={i} className="flex justify-between gap-4 py-2">
+                        <span className="text-charcoal">{s.email}</span>
+                        <span className="text-cocoa/60">{s.name || "—"}</span>
+                        <span className="text-cocoa/40">{s.date.slice(0, 10)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </AdminCard>
+            </>
+          )}
+
+          {/* SETTINGS */}
+          {section === "settings" && (
+            <>
+              <h1 className="font-serif text-4xl text-charcoal">Settings</h1>
+              <AdminCard title="Content data">
+                <p className="text-[14px] leading-relaxed text-cocoa/75">
+                  All site content is stored as a single JSON document. In production this document
+                  lives in Supabase (Postgres), images in Supabase Storage, and this dashboard is
+                  protected by Supabase Auth. Here it is saved locally in the browser so the client
+                  can try the full editing flow.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    onClick={() => {
+                      const blob = new Blob([JSON.stringify(content, null, 2)], {
+                        type: "application/json",
+                      });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement("a");
+                      a.href = url;
+                      a.download = "mystere-content.json";
+                      a.click();
+                      URL.revokeObjectURL(url);
+                    }}
+                    className="border border-charcoal px-5 py-3 text-[11px] uppercase tracking-[0.2em] text-charcoal hover:bg-charcoal hover:text-ivory"
+                  >
+                    Export JSON
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (confirm("Reset all content to the shipped version?")) resetContent();
+                    }}
+                    className="border border-rust px-5 py-3 text-[11px] uppercase tracking-[0.2em] text-rust hover:bg-rust hover:text-ivory"
+                  >
+                    Reset content
+                  </button>
+                </div>
+              </AdminCard>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
