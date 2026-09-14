@@ -31,16 +31,10 @@ type SectionKey =
   | "settings";
 
 const SECTIONS: { key: SectionKey; label: string }[] = [
-  { key: "home", label: "Homepage" },
-  { key: "about", label: "About Us" },
-  { key: "story", label: "Our Story" },
-  { key: "communities", label: "Communities" },
-  { key: "categories", label: "Categories" },
-  { key: "products", label: "Products" },
-  { key: "journal", label: "Journal" },
-  { key: "partners", label: "Partners & Projects" },
-  { key: "contact", label: "Contact & Social" },
+  { key: "home", label: "NEW · Page content" },
+  { key: "communities", label: "What we do · Communities" },
   { key: "newsletter", label: "Newsletter" },
+  { key: "contact", label: "Logo & Contact" },
   { key: "settings", label: "Settings" },
 ];
 
@@ -192,130 +186,21 @@ export default function Admin() {
           {/* HOMEPAGE */}
           {section === "home" && (
             <>
-              <h1 className="font-serif text-4xl text-charcoal">Homepage</h1>
-              <Note>
-                Images on the homepage are served directly from the client's Google Drive folder.
-                Paste any image URL, or upload a replacement file.
-              </Note>
-
-              <AdminCard title="Hero">
-                <ImageField
-                  label="Hero image"
-                  value={content.home.heroImage}
-                  onChange={(v) => up((d) => (d.home.heroImage = v))}
-                />
-                <LangField
-                  label="Eyebrow (25 years — est. 2001)"
-                  value={content.home.heroEyebrow}
-                  onChange={(v) => up((d) => (d.home.heroEyebrow = v))}
-                />
-                <LangField
-                  label="CTA label"
-                  value={content.home.heroCta}
-                  onChange={(v) => up((d) => (d.home.heroCta = v))}
-                />
+              <h1 className="font-serif text-4xl text-charcoal">NEW · Page content</h1>
+              <Note>The website has two main sections. Use photographs without embedded document text. Community stories expand within What we do. Changes and subscriber registrations are stored in this browser only.</Note>
+              <AdminCard title="Opening banner">
+                <ImageField label="Banner image" value={content.home.heroImage} onChange={(v) => up((d) => (d.home.heroImage = v))} />
+                <LangField label="Eyebrow" value={content.home.heroEyebrow} onChange={(v) => up((d) => (d.home.heroEyebrow = v))} />
+                <LangField label="Button label" value={content.home.heroCta} onChange={(v) => up((d) => (d.home.heroCta = v))} />
               </AdminCard>
-
-              <BlockEditor
-                title="1 · Brand introduction / Mission"
-                block={content.home.intro}
-                onChange={(fn) => up((d) => fn(d.home.intro))}
-              />
-              <BlockEditor
-                title="2 · 25 years"
-                block={content.home.anniversary}
-                onChange={(fn) => up((d) => fn(d.home.anniversary))}
-              />
-
-              <AdminCard title="3 · Artisan story">
-                <LangField
-                  label="Title"
-                  value={content.home.artisan.title}
-                  onChange={(v) => up((d) => (d.home.artisan.title = v))}
-                />
-                <LangField
-                  label="Body"
-                  multiline
-                  value={content.home.artisan.body}
-                  onChange={(v) => up((d) => (d.home.artisan.body = v))}
-                />
-                <LangField
-                  label="Quote"
-                  value={content.home.artisan.quote}
-                  onChange={(v) => up((d) => (d.home.artisan.quote = v))}
-                />
-                <LangField
-                  label="Quote author"
-                  value={content.home.artisan.quoteAuthor}
-                  onChange={(v) => up((d) => (d.home.artisan.quoteAuthor = v))}
-                />
-                <ImageField
-                  label="Image"
-                  value={content.home.artisan.image}
-                  onChange={(v) => up((d) => (d.home.artisan.image = v))}
-                />
+              <BlockEditor title="1.1 · Who we are — Mission" block={content.home.intro} onChange={(fn) => up((d) => fn(d.home.intro))} />
+              <BlockEditor title="1.2 · Who we are — Where it began" block={content.home.artisan} onChange={(fn) => up((d) => fn(d.home.artisan))} />
+              <AdminCard title="2.1 · What we do — Our projects">
+                <LangField label="Title" value={content.home.projectsIntro.title} onChange={(v) => up((d) => (d.home.projectsIntro.title = v))} />
+                <LangField label="Body" multiline value={content.home.projectsIntro.body} onChange={(v) => up((d) => (d.home.projectsIntro.body = v))} />
+                <Note>Edit the five project summaries, photographs and expanded stories under What we do · Communities. The newsletter follows the last project.</Note>
               </AdminCard>
-
-              <AdminCard title="4 · Featured communities block">
-                <LangField
-                  label="Title"
-                  value={content.home.projectsIntro.title}
-                  onChange={(v) => up((d) => (d.home.projectsIntro.title = v))}
-                />
-                <LangField
-                  label="Body"
-                  multiline
-                  rows={3}
-                  value={content.home.projectsIntro.body}
-                  onChange={(v) => up((d) => (d.home.projectsIntro.body = v))}
-                />
-                <Note>
-                  The community cards themselves are edited under <strong>Communities</strong>.
-                  Only published communities appear.
-                </Note>
-              </AdminCard>
-
-              <BlockEditor
-                title="5 · Every piece carries a story"
-                block={content.home.thread}
-                onChange={(fn) => up((d) => fn(d.home.thread))}
-              />
-
-              <AdminCard title="6 · Craft & products intro">
-                <LangField
-                  label="Title"
-                  value={content.home.craftIntro.title}
-                  onChange={(v) => up((d) => (d.home.craftIntro.title = v))}
-                />
-                <LangField
-                  label="Body"
-                  multiline
-                  rows={3}
-                  value={content.home.craftIntro.body}
-                  onChange={(v) => up((d) => (d.home.craftIntro.body = v))}
-                />
-              </AdminCard>
-
-              <AdminCard title="7 · Journal intro">
-                <LangField
-                  label="Title"
-                  value={content.home.journalIntro.title}
-                  onChange={(v) => up((d) => (d.home.journalIntro.title = v))}
-                />
-                <LangField
-                  label="Body"
-                  multiline
-                  rows={3}
-                  value={content.home.journalIntro.body}
-                  onChange={(v) => up((d) => (d.home.journalIntro.body = v))}
-                />
-              </AdminCard>
-
-              <BlockEditor
-                title="8 · Visit the shop"
-                block={content.home.visit}
-                onChange={(fn) => up((d) => fn(d.home.visit))}
-              />
+              <BlockEditor title="2.2 · What we do — The thread that connects" block={content.home.thread} onChange={(fn) => up((d) => fn(d.home.thread))} />
             </>
           )}
 

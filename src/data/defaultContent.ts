@@ -632,3 +632,14 @@ export const defaultContent: SiteContent = {
     },
   ],
 };
+
+// NEW content structure. Original fields remain available for archived admin content.
+defaultContent.home.intro.image = "/images/mystere-shop.jpg";
+defaultContent.home.artisan.image = "/images/red-dao.jpg";
+defaultContent.home.thread.image = "/images/mystere-shop.jpg";
+defaultContent.contact.logo = "/images/mystere-logo.jpg";
+defaultContent.communities[0].image = "/images/red-dao.jpg";
+defaultContent.home.intro.body = {
+  en: "Founded in Saigon in 2001, Mystère Shop is a family business connecting the craft traditions of northern Vietnam with the wider world. We work alongside Red Dao, Dao Tiền, Nùng, H'Mông and Black Lô Lô artisans in Cao Bằng, Hà Giang and Sa Pa.\n\nFrom handwoven cloth and embroidery to silverwork, their skills deserve a lasting future. Our shop on Đồng Khởi Street helps these traditions reach new homes while keeping the people behind each piece at the heart of the story.",
+  vi: "Thành lập tại Sài Gòn năm 2001, Mystère Shop là cửa hàng gia đình kết nối nghề thủ công miền núi phía Bắc với thế giới. Chúng tôi đồng hành cùng nghệ nhân Dao Đỏ, Dao Tiền, Nùng, H'Mông và Lô Lô Đen tại Cao Bằng, Hà Giang và Sa Pa.\n\nTừ dệt vải, thêu tay đến chế tác bạc, những kỹ năng ấy xứng đáng được tiếp nối. Cửa hàng trên đường Đồng Khởi đưa các sản phẩm đến những mái nhà mới, luôn trân trọng người làm nên từng món đồ."
+};

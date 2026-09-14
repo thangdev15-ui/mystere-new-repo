@@ -1,254 +1,36 @@
-import { useEffect, useState } from "react";
-import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import { useStore } from "../store/store";
-import { ui } from "../lib/ui";
-
-const NAV = [
-  { to: "/about", key: "about" as const },
-  { to: "/our-story", key: "story" as const },
-  { to: "/craft", key: "craft" as const },
-  { to: "/journal", key: "journal" as const },
-  { to: "/visit", key: "visit" as const },
-];
-
-function LangSwitch({ light }: { light: boolean }) {
-  const { lang, setLang } = useStore();
-  const base = "px-1 text-[11px] uppercase tracking-[0.2em] transition-opacity";
-  return (
-    <div className={`flex items-center gap-1 ${light ? "text-ivory" : "text-charcoal"}`}>
-      <button
-        onClick={() => setLang("en")}
-        className={`${base} ${lang === "en" ? "opacity-100 underline underline-offset-4" : "opacity-50 hover:opacity-90"}`}
-        aria-label="English"
-      >
-        EN
-      </button>
-      <span className="opacity-40">|</span>
-      <button
-        onClick={() => setLang("vi")}
-        className={`${base} ${lang === "vi" ? "opacity-100 underline underline-offset-4" : "opacity-50 hover:opacity-90"}`}
-        aria-label="Tiếng Việt"
-      >
-        VN
-      </button>
-    </div>
-  );
-}
-
-function Wordmark({ light }: { light: boolean }) {
-  const { content } = useStore();
-  const logo = content.contact.logo;
-  if (logo) {
-    return <img src={logo} alt="Mystère Shop" className="h-8 w-auto md:h-9" />;
-  }
-  return (
-    <>
-      <span
-        className={`font-serif text-[26px] leading-none tracking-tight transition-colors ${
-          light ? "text-ivory" : "text-charcoal"
-        }`}
-      >
-        Mystère
-      </span>
-      <span
-        className={`hidden text-[10px] uppercase tracking-[0.32em] transition-colors sm:block ${
-          light ? "text-ivory/70" : "text-clay"
-        }`}
-      >
-        Huyền Bí
-      </span>
-    </>
-  );
-}
-
-function Header() {
-  const { t } = useStore();
-  const { pathname } = useLocation();
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-
-  const hasHero =
-    pathname === "/" ||
-    pathname === "/about" ||
-    pathname === "/our-story" ||
-    pathname === "/visit" ||
-    pathname.startsWith("/craft") ||
-    pathname.startsWith("/journal/") ||
-    pathname.startsWith("/communities/");
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
-  const light = hasHero && !scrolled && !open;
-
-  return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
-        light ? "bg-transparent" : "border-b border-sand/60 bg-ivory/95 backdrop-blur"
-      }`}
-    >
-      <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between px-6 py-5 md:px-12">
-        <Link to="/" className="group flex items-baseline gap-3">
-          <Wordmark light={light} />
-        </Link>
-
-        <nav className="hidden items-center gap-9 lg:flex">
-          {NAV.map((n) => (
-            <NavLink
-              key={n.to}
-              to={n.to}
-              className={({ isActive }) =>
-                `text-[11px] uppercase tracking-[0.22em] transition-colors ${
-                  light
-                    ? "text-ivory/85 hover:text-ivory"
-                    : isActive
-                      ? "text-rust"
-                      : "text-charcoal/80 hover:text-charcoal"
-                } ${isActive && light ? "underline underline-offset-8" : ""}`
-              }
-            >
-              {t(ui.nav[n.key])}
-            </NavLink>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-6">
-          <LangSwitch light={light} />
-          <button
-            className={`lg:hidden text-[11px] uppercase tracking-[0.2em] ${
-              light ? "text-ivory" : "text-charcoal"
-            }`}
-            onClick={() => setOpen((o) => !o)}
-          >
-            {open ? "Close" : "Menu"}
-          </button>
-        </div>
-      </div>
-
-      {open && (
-        <div className="border-t border-sand/60 bg-ivory lg:hidden">
-          <nav className="mx-auto flex w-full max-w-[1400px] flex-col px-6 py-4">
-            {NAV.map((n) => (
-              <Link
-                key={n.to}
-                to={n.to}
-                className="border-b border-sand/50 py-4 font-serif text-2xl text-charcoal last:border-0"
-              >
-                {t(ui.nav[n.key])}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      )}
-    </header>
-  );
-}
-
-function Footer() {
-  const { content, t } = useStore();
-  const c = content.contact;
-  return (
-    <footer className="bg-charcoal text-ivory">
-      <div className="mx-auto grid w-full max-w-[1400px] gap-12 px-6 py-20 md:grid-cols-12 md:px-12">
-        <div className="md:col-span-5">
-          {content.contact.logo ? (
-            <img
-              src={content.contact.logo}
-              alt="Mystère Shop"
-              className="h-12 w-auto brightness-0 invert"
-            />
-          ) : (
-            <p className="font-serif text-4xl leading-none">Mystère Shop</p>
-          )}
-          <p className="mt-3 text-[12px] uppercase tracking-[0.3em] text-cream/60">Huyền Bí</p>
-          <p className="mt-8 max-w-sm font-serif text-2xl leading-snug text-ivory/85">
-            {t(ui.tagline)}
-          </p>
-          <p className="mt-6 text-[11px] uppercase tracking-[0.28em] text-cream/50">
-            {t(ui.estd)}
-          </p>
-        </div>
-
-        <div className="md:col-span-3">
-          <p className="text-[11px] uppercase tracking-[0.28em] text-cream/50">{t(ui.address)}</p>
-          <address className="mt-5 space-y-1 text-[15px] not-italic leading-relaxed text-ivory/80">
-            {c.addressLines.map((l) => (
-              <div key={l}>{l}</div>
-            ))}
-          </address>
-          <div className="mt-6 space-y-1 text-[15px] text-ivory/80">
-            <div>{c.phone}</div>
-            <div>Zalo / WhatsApp {c.zalo}</div>
-            <div>{t(c.hours)}</div>
-          </div>
-        </div>
-
-        <div className="md:col-span-2">
-          <p className="text-[11px] uppercase tracking-[0.28em] text-cream/50">Menu</p>
-          <nav className="mt-5 flex flex-col gap-2 text-[15px] text-ivory/80">
-            {NAV.map((n) => (
-              <Link key={n.to} to={n.to} className="hover:text-ivory">
-                {t(ui.nav[n.key])}
-              </Link>
-            ))}
-          </nav>
-        </div>
-
-        <div className="md:col-span-2">
-          <p className="text-[11px] uppercase tracking-[0.28em] text-cream/50">{t(ui.follow)}</p>
-          <div className="mt-5 flex flex-col gap-2 text-[15px] text-ivory/80">
-            <a href={c.instagram} target="_blank" rel="noreferrer" className="hover:text-ivory">
-              Instagram
-            </a>
-            <a href={c.facebook} target="_blank" rel="noreferrer" className="hover:text-ivory">
-              Facebook
-            </a>
-            <a href={c.mapsUrl} target="_blank" rel="noreferrer" className="hover:text-ivory">
-              Google Maps
-            </a>
-            <a href={`mailto:${c.email}`} className="hover:text-ivory">
-              {c.email}
-            </a>
-          </div>
-        </div>
-      </div>
-      <div className="border-t border-ivory/10">
-        <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-3 px-6 py-6 text-[11px] uppercase tracking-[0.2em] text-cream/40 md:flex-row md:items-center md:justify-between md:px-12">
-          <span>© {new Date().getFullYear()} Mystère Shop — Huyền Bí. {t(ui.rights)}</span>
-          <Link to="/admin" className="hover:text-cream/80">
-            {t(ui.admin)}
-          </Link>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
-function ScrollToTop() {
-  const { pathname } = useLocation();
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "auto" });
-  }, [pathname]);
-  return null;
-}
+import { useEffect, useRef, useState } from 'react';
+import { Link, Outlet, useLocation } from 'react-router-dom';
+import { useStore } from '../store/store';
 
 export default function Layout() {
-  return (
-    <div className="flex min-h-screen flex-col bg-ivory">
-      <ScrollToTop />
-      <Header />
-      <main className="flex-1">
-        <Outlet />
-      </main>
-      <Footer />
-    </div>
-  );
+  const { content, lang, setLang, t } = useStore();
+  const location = useLocation();
+  const [menu, setMenu] = useState(false);
+  const [search, setSearch] = useState(false);
+  const [query, setQuery] = useState('');
+  const searchInput = useRef<HTMLInputElement>(null);
+  const searchButton = useRef<HTMLButtonElement>(null);
+  const en = lang === 'en';
+  const nav = [{to:'/#who-we-are', label:en ? 'Who we are' : 'Về chúng tôi'}, {to:'/#what-we-do',label:en ? 'What we do' : 'Chúng tôi làm gì'}];
+  const entries = [
+    {to:'/#who-we-are', title:nav[0].label, text:t(content.home.intro.body)},
+    {to:'/#where-it-began',title:t(content.home.artisan.title),text:t(content.home.artisan.body)},
+    ...content.communities.filter(c => c.published).map(c => ({to:`/#${c.slug}`, title:c.name, text:`${t(c.title)} ${t(c.story)}`})),
+    {to:'/#the-thread',title:t(content.home.thread.title),text:t(content.home.thread.body)},
+  ];
+  const results = query.trim() ? entries.filter(x => `${x.title} ${x.text}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase())) : [];
+  useEffect(() => {
+    setMenu(false); setSearch(false);
+    const frame = requestAnimationFrame(() => {
+      if (location.hash) document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block:'start'});
+      else window.scrollTo(0,0);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [location.pathname, location.hash, location.key]);
+  useEffect(() => { if (search) searchInput.current?.focus(); }, [search]);
+  useEffect(() => { const escape = (event: KeyboardEvent) => {if(event.key === 'Escape') {setSearch(false);setMenu(false);searchButton.current?.focus();}};window.addEventListener('keydown',escape);return () => window.removeEventListener('keydown',escape); }, []);
+  return <><a className="skip-link" href="#main-content">{en ? 'Skip to content' : 'Đi đến nội dung'}</a><header className="site-header"><div className="header-inner"><Link to="/" className="brand" aria-label="Mystère Shop — Home"><img src={content.contact.logo} alt=""/><span>Mystère<small>HUYỀN BÍ</small></span></Link><nav className="desktop-nav" aria-label={en ? 'Main navigation' : 'Điều hướng chính'}>{nav.map(n => <Link key={n.to} to={n.to}>{n.label}</Link>)}</nav><div className="header-tools"><label className="language-picker"><span className="sr-only">{en ? 'Language' : 'Ngôn ngữ'}</span><select value={lang} onChange={e => setLang(e.target.value as 'en' | 'vi')}><option value="en">English</option><option value="vi">Tiếng Việt</option></select></label><button ref={searchButton} className="search-button" aria-label={en ? 'Search' : 'Tìm kiếm'} aria-expanded={search} aria-controls="site-search" onClick={() => {setSearch(!search);setMenu(false);}}><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><span>{en ? 'Search' : 'Tìm kiếm'}</span></button><button className="mobile-menu" aria-expanded={menu} aria-controls="mobile-nav" onClick={() => {setMenu(!menu);setSearch(false);}}>{menu ? (en ? 'Close' : 'Đóng') : 'Menu'} <span aria-hidden="true">{menu ? '×' : '☰'}</span></button></div></div>
+    {menu && <nav id="mobile-nav" className="mobile-nav" aria-label={en ? 'Mobile navigation' : 'Điều hướng di động'}>{nav.map(n => <Link key={n.to} to={n.to}>{n.label} <span>→</span></Link>)}</nav>}
+    {search && <div id="site-search" className="search-panel"><div className="content-width"><label htmlFor="search-query">{en ? 'Search our stories' : 'Tìm kiếm câu chuyện'}</label><input ref={searchInput} id="search-query" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder={en ? 'Try Red Dao, batik or our shop…' : 'Tìm Dao Đỏ, sáp ong hoặc cửa hàng…'}/><div aria-live="polite">{query.trim() && <p>{results.length ? `${results.length} ${en ? 'results' : 'kết quả'}` : (en ? 'No stories found. Try another word.' : 'Chưa tìm thấy. Hãy thử từ khóa khác.')}</p>}</div><ul>{results.map(r => <li key={r.to}><Link to={r.to}>{r.title}<span>→</span></Link></li>)}</ul></div></div>}
+    </header><main id="main-content" tabIndex={-1}><Outlet/></main><footer className="site-footer"><div className="content-width footer-grid"><div><Link to="/" className="footer-brand">Mystère Shop</Link><p>Huyền Bí · {en ? 'Since 2001' : 'Từ năm 2001'}</p><p>{en ? 'Vietnamese craft. Human connections.' : 'Nghề thủ công Việt. Kết nối con người.'}</p></div><div><h2>{en ? 'Come say hello' : 'Ghé thăm chúng tôi'}</h2><address>{content.contact.addressLines.map(l => <span key={l}>{l}<br/></span>)}</address><p>{t(content.contact.hours)}</p><a href={content.contact.mapsUrl} target="_blank" rel="noreferrer">{en ? 'Get directions' : 'Chỉ đường'} ↗</a></div><div><h2>{en ? 'Explore' : 'Khám phá'}</h2>{nav.map(n => <Link key={n.to} to={n.to}>{n.label}</Link>)}<a href={`mailto:${content.contact.email}`}>{content.contact.email}</a><a href={`tel:${content.contact.phone.replace(/[^+\d]/g,'')}`}>{content.contact.phone}</a></div></div><div className="content-width footer-bottom"><span>© {new Date().getFullYear()} Mystère Shop — Huyền Bí</span><span>{en ? 'Made with care, in Vietnam.' : 'Từ Việt Nam, với sự trân trọng.'}</span></div></footer></>;
 }

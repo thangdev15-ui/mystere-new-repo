@@ -57,9 +57,24 @@ function load<T>(key: string, fallback: T): T {
   }
 }
 
+// Update only untouched v2 defaults; preserve all existing customer edits.
+function loadCurrentContent(): SiteContent {
+  const saved = load<SiteContent>(CONTENT_KEY, defaultContent);
+  if (saved === defaultContent) return saved;
+  const legacy = (value: string, id: string) => value?.startsWith(`https://lh3.googleusercontent.com/d/${id}=`);
+  if (legacy(saved.home.intro.image, "1WTrl0Uh0fHLZDlnP2dvLh4qD5_JiDnn7")) saved.home.intro.image = defaultContent.home.intro.image;
+  if (legacy(saved.home.artisan.image, "1Nk-1AOnhOMu5sc-u0BTzQoyYw_ITK0lN")) saved.home.artisan.image = defaultContent.home.artisan.image;
+  if (legacy(saved.home.thread.image, "1xnKHLZ9pyPImdf9rIVryBfIE_trP1FUo")) saved.home.thread.image = defaultContent.home.thread.image;
+  if (!saved.contact.logo) saved.contact.logo = defaultContent.contact.logo;
+  const redDao = saved.communities.find(c => c.slug === "red-dao");
+  if (redDao && legacy(redDao.image, "1g8jxhr1NKHeiMFGRS3YCvOXjXRTjfBSW")) redDao.image = defaultContent.communities[0].image;
+  if (saved.home.intro.body.en.startsWith("Mystère Shop was born from a simple belief:")) saved.home.intro.body = defaultContent.home.intro.body;
+  return saved;
+}
+
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [content, setContentState] = useState<SiteContent>(() =>
-    load<SiteContent>(CONTENT_KEY, defaultContent),
+    loadCurrentContent(),
   );
   const [lang, setLangState] = useState<Lang>(() => load<Lang>(LANG_KEY, "en"));
   const [user, setUser] = useState<string | null>(() => load<string | null>(AUTH_KEY, null));
@@ -110,7 +125,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       signIn,
       signOut: () => setUser(null),
       subscribers,
-      addSubscriber: (s) => setSubscribers((prev) => [s, ...prev]),
+      addSubscriber: (s) => setSubscribers((prev) => [s, ...prev.filter(item => item.email.toLowerCase() !== s.email.toLowerCase())]),
     }),
     [content, setContent, resetContent, lang, t, user, signIn, subscribers],
   );
