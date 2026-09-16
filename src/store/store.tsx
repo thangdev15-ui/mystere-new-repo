@@ -61,14 +61,29 @@ function load<T>(key: string, fallback: T): T {
 function loadCurrentContent(): SiteContent {
   const saved = load<SiteContent>(CONTENT_KEY, defaultContent);
   if (saved === defaultContent) return saved;
+  saved.events ??= structuredClone(defaultContent.events);
+  for (const event of defaultContent.events) {
+    const existing = saved.events.find(item => item.id === event.id);
+    if (existing) { existing.image ??= event.image; existing.url ??= ""; }
+    else saved.events.push(structuredClone(event));
+  }
+  for (const community of defaultContent.communities) {
+    const existing = saved.communities.find(item => item.id === community.id);
+    if (existing && (!existing.image || existing.image.startsWith("https://lh3.googleusercontent.com"))) existing.image = community.image;
+  }
+  // Migrate the previous bundled JPG without overwriting custom image URLs.
+  for (const block of [saved.home.intro, saved.home.thread]) {
+    if (block.image === "/images/mystere-shop.jpg") block.image = "/images/mystere-shop.png";
+  }
   const legacy = (value: string, id: string) => value?.startsWith(`https://lh3.googleusercontent.com/d/${id}=`);
   if (legacy(saved.home.intro.image, "1WTrl0Uh0fHLZDlnP2dvLh4qD5_JiDnn7")) saved.home.intro.image = defaultContent.home.intro.image;
-  if (legacy(saved.home.artisan.image, "1Nk-1AOnhOMu5sc-u0BTzQoyYw_ITK0lN")) saved.home.artisan.image = defaultContent.home.artisan.image;
+  if (saved.home.artisan.image === "/images/red-dao.jpg" || legacy(saved.home.artisan.image, "1Nk-1AOnhOMu5sc-u0BTzQoyYw_ITK0lN")) saved.home.artisan.image = defaultContent.home.artisan.image;
   if (legacy(saved.home.thread.image, "1xnKHLZ9pyPImdf9rIVryBfIE_trP1FUo")) saved.home.thread.image = defaultContent.home.thread.image;
-  if (!saved.contact.logo) saved.contact.logo = defaultContent.contact.logo;
+  if (!saved.contact.logo || saved.contact.logo === "/images/mystere-logo.png") saved.contact.logo = defaultContent.contact.logo;
   const redDao = saved.communities.find(c => c.slug === "red-dao");
-  if (redDao && legacy(redDao.image, "1g8jxhr1NKHeiMFGRS3YCvOXjXRTjfBSW")) redDao.image = defaultContent.communities[0].image;
-  if (saved.home.intro.body.en.startsWith("Mystère Shop was born from a simple belief:")) saved.home.intro.body = defaultContent.home.intro.body;
+  if (redDao && (redDao.image === "/images/red-dao.jpg" || legacy(redDao.image, "1g8jxhr1NKHeiMFGRS3YCvOXjXRTjfBSW"))) redDao.image = defaultContent.communities[0].image;
+  if (saved.home.intro.body.en.startsWith("Mystère Shop was born from a simple belief:") || saved.home.intro.body.en.startsWith("Founded in Saigon in 2001, Mystère Shop is a family business connecting")) saved.home.intro.body = defaultContent.home.intro.body;
+  if (saved.home.artisan.body.en.startsWith("It started at a small fair for ethnic minority artisans,")) saved.home.artisan.body = defaultContent.home.artisan.body;
   return saved;
 }
 

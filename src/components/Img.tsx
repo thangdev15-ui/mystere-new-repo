@@ -33,8 +33,8 @@ export function HeroImage({
   priority?: boolean;
   label?: string;
 }) {
-  const [failed, setFailed] = useState(false);
-  if (!src || failed) {
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  if (!src || failedSrc === src) {
     return (
       <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-cocoa">
         {label && <span className="font-serif text-[15px] text-ivory/60">{label}</span>}
@@ -47,7 +47,7 @@ export function HeroImage({
       alt={alt}
       loading={priority ? "eager" : "lazy"}
       decoding="async"
-      onError={() => setFailed(true)}
+      onError={() => setFailedSrc(src)}
       className="h-full w-full object-cover"
     />
   );
@@ -66,9 +66,9 @@ export default function Img({
   priority = false,
 }: ImgProps) {
   const { t, lang } = useStore();
-  const [failed, setFailed] = useState(false);
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
 
-  if (!src || failed) {
+  if (!src || failedSrc === src) {
     return (
       <div
         className={`flex ${ratio} w-full flex-col items-center justify-center gap-2 border border-sand bg-cream/70 ${className}`}
@@ -87,7 +87,7 @@ export default function Img({
       alt={alt || t(ui.imageAlt)}
       loading={priority ? "eager" : "lazy"}
       decoding="async"
-      onError={() => setFailed(true)}
+      onError={() => setFailedSrc(src)}
       className={`${ratio} w-full object-cover ${className}`}
     />
   );

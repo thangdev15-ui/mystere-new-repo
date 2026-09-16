@@ -18,6 +18,7 @@ import {
 } from "../components/admin/fields";
 
 type SectionKey =
+  | "events"
   | "home"
   | "about"
   | "story"
@@ -33,6 +34,7 @@ type SectionKey =
 const SECTIONS: { key: SectionKey; label: string }[] = [
   { key: "home", label: "NEW · Page content" },
   { key: "communities", label: "What we do · Communities" },
+  { key: "events", label: "What we do · Events" },
   { key: "newsletter", label: "Newsletter" },
   { key: "contact", label: "Logo & Contact" },
   { key: "settings", label: "Settings" },
@@ -198,7 +200,7 @@ export default function Admin() {
               <AdminCard title="2.1 · What we do — Our projects">
                 <LangField label="Title" value={content.home.projectsIntro.title} onChange={(v) => up((d) => (d.home.projectsIntro.title = v))} />
                 <LangField label="Body" multiline value={content.home.projectsIntro.body} onChange={(v) => up((d) => (d.home.projectsIntro.body = v))} />
-                <Note>Edit the five project summaries, photographs and expanded stories under What we do · Communities. The newsletter follows the last project.</Note>
+                <Note>Edit the five project summaries, photographs and expanded stories under What we do · Communities. Events follow the last project, then the newsletter.</Note>
               </AdminCard>
               <BlockEditor title="2.2 · What we do — The thread that connects" block={content.home.thread} onChange={(fn) => up((d) => fn(d.home.thread))} />
             </>
@@ -916,6 +918,22 @@ export default function Admin() {
               </AdminCard>
             </>
           )}
+
+          {section === "events" && <>
+            <h1 className="font-serif text-4xl text-charcoal">What we do · Events</h1>
+            <Note>These are archived events. Dates and venue addresses retain the information supplied for each event.</Note>
+            {content.events.map((event, index) => <AdminCard key={event.id} title={event.title.en}>
+              <Toggle label="Published" value={event.published} onChange={(v) => up(d => { d.events[index].published = v; })} />
+              <ImageField label="Event photograph" value={event.image} onChange={v => up(d => { d.events[index].image = v; })} />
+              <Field label="Event website URL (leave empty until available)"><TextInput value={event.url} onChange={v => up(d => { d.events[index].url = v; })} /></Field>
+              <LangField label="Event title" value={event.title} onChange={v => up(d => { d.events[index].title = v; })} />
+              <LangField label="Display date" value={event.dateLabel} onChange={v => up(d => { d.events[index].dateLabel = v; })} />
+              <Field label="Start date (YYYY-MM-DD)"><TextInput value={event.dateStart} onChange={v => up(d => { d.events[index].dateStart = v; })} /></Field>
+              <LangField label="Schedule" multiline value={event.schedule} onChange={v => up(d => { d.events[index].schedule = v; })} />
+              <Field label="Venue"><TextInput value={event.venue} onChange={v => up(d => { d.events[index].venue = v; })} /></Field>
+              <LangField label="Address" value={event.address} onChange={v => up(d => { d.events[index].address = v; })} />
+            </AdminCard>)}
+          </>}
 
           {/* NEWSLETTER */}
           {section === "newsletter" && (

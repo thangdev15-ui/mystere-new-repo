@@ -41,6 +41,44 @@ const IMG_REDDAO_FAMILY = drive("1g8jxhr1NKHeiMFGRS3YCvOXjXRTjfBSW");
 const PLACEHOLDER = "";
 
 export const defaultContent: SiteContent = {
+  events: [
+    {
+      id: "cao-bang-day-2012",
+      image: "/images/event-2012.jpg",
+      url: "",
+      title: { en: "Cao Bang Day Traditional Handicraft Bazaar", vi: "Hội chợ Thổ cẩm Truyền thống, Văn hóa và Du lịch Cao Bằng" },
+      dateLabel: { en: "11 November 2012", vi: "11 tháng 11, 2012" },
+      dateStart: "2012-11-11",
+      schedule: { en: "9:30–16:00", vi: "9:30–16:00" },
+      venue: "Renaissance Riverside Hotel Saigon",
+      address: { en: "8–15 Tôn Đức Thắng, District 1, Ho Chi Minh City", vi: "8–15 Tôn Đức Thắng, Quận 1, TP.HCM" },
+      published: true,
+    },
+    {
+      id: "handicraft-bazaar-2014",
+      image: "/images/event-2014.jpg",
+      url: "",
+      title: { en: "Traditional Handicraft Bazaar", vi: "Hội chợ Thủ công Truyền thống" },
+      dateLabel: { en: "8–9 November 2014", vi: "8–9 tháng 11, 2014" },
+      dateStart: "2014-11-08",
+      schedule: { en: "Night Bazaar · 8 November, 17:00–21:00\nDay Bazaar · 9 November, 9:00–16:00", vi: "Hội chợ đêm · 8/11, 17:00–21:00\nHội chợ ban ngày · 9/11, 9:00–16:00" },
+      venue: "Renaissance Riverside Hotel Saigon",
+      address: { en: "8–15 Tôn Đức Thắng, Bến Nghé, District 1, Ho Chi Minh City", vi: "8–15 Tôn Đức Thắng, Bến Nghé, Quận 1, TP.HCM" },
+      published: true,
+    },
+    {
+      id: "handicraft-bazaar-2013",
+      image: "/images/event-2013.jpg",
+      url: "",
+      title: { en: "Traditional Handicraft Bazaar · The Second Event", vi: "Ngày hội Thổ cẩm Cao Bằng lần thứ 2" },
+      dateLabel: { en: "10 November 2013", vi: "10 tháng 11, 2013" },
+      dateStart: "2013-11-10",
+      schedule: { en: "9:30–16:00", vi: "9:30–16:00" },
+      venue: "Renaissance Riverside Hotel Saigon",
+      address: { en: "8–15 Tôn Đức Thắng, Ho Chi Minh City", vi: "8–15 Tôn Đức Thắng, TP.HCM" },
+      published: true,
+    },
+  ],
   home: {
     heroImage: IMG_REDDAO_FAMILY,
     heroEyebrow: { en: "25 Years — Est. 2001", vi: "25 Năm — Thành lập 2001" },
@@ -634,12 +672,20 @@ export const defaultContent: SiteContent = {
 };
 
 // NEW content structure. Original fields remain available for archived admin content.
-defaultContent.home.intro.image = "/images/mystere-shop.jpg";
-defaultContent.home.artisan.image = "/images/red-dao.jpg";
-defaultContent.home.thread.image = "/images/mystere-shop.jpg";
+defaultContent.home.intro.image = "/images/mystere-shop.png";
+defaultContent.home.artisan.image = "/images/khoinguon.jpg";
+defaultContent.home.thread.image = "/images/mystere-shop.png";
 defaultContent.contact.logo = "/images/mystere-logo.jpg";
-defaultContent.communities[0].image = "/images/red-dao.jpg";
+defaultContent.communities[0].image = "/images/red-dao.png";
+defaultContent.communities[1].image = "/images/project-dao-tien.jpg";
+defaultContent.communities[2].image = "/images/project-nung.jpg";
+defaultContent.communities[3].image = "/images/project-hmong.jpg";
+defaultContent.communities[4].image = "/images/project-lo-lo.jpg";
 defaultContent.home.intro.body = {
-  en: "Founded in Saigon in 2001, Mystère Shop is a family business connecting the craft traditions of northern Vietnam with the wider world. We work alongside Red Dao, Dao Tiền, Nùng, H'Mông and Black Lô Lô artisans in Cao Bằng, Hà Giang and Sa Pa.\n\nFrom handwoven cloth and embroidery to silverwork, their skills deserve a lasting future. Our shop on Đồng Khởi Street helps these traditions reach new homes while keeping the people behind each piece at the heart of the story.",
-  vi: "Thành lập tại Sài Gòn năm 2001, Mystère Shop là cửa hàng gia đình kết nối nghề thủ công miền núi phía Bắc với thế giới. Chúng tôi đồng hành cùng nghệ nhân Dao Đỏ, Dao Tiền, Nùng, H'Mông và Lô Lô Đen tại Cao Bằng, Hà Giang và Sa Pa.\n\nTừ dệt vải, thêu tay đến chế tác bạc, những kỹ năng ấy xứng đáng được tiếp nối. Cửa hàng trên đường Đồng Khởi đưa các sản phẩm đến những mái nhà mới, luôn trân trọng người làm nên từng món đồ."
+  en: "Mystère Shop believes the artisans of Cao Bằng, Hà Giang and Sa Pa deserve more than admiration for their craft — they deserve a future shaped by it.\n\nWe work alongside Red Dao, Dao Tiền, Nùng, H'Mông and Black Lô Lô communities to keep weaving, embroidery and silverwork alive. Through our shop, their work reaches new homes, carrying the knowledge and stories of the people who made it.",
+  vi: "Mystère Shop tin rằng nghệ nhân ở Cao Bằng, Hà Giang và Sa Pa xứng đáng có nhiều hơn sự ngưỡng mộ dành cho tay nghề — họ cần một tương lai được vun đắp từ chính nghề ấy.\n\nChúng tôi đồng hành cùng các cộng đồng Dao Đỏ, Dao Tiền, Nùng, H'Mông và Lô Lô Đen để gìn giữ nghề dệt, thêu và chế tác bạc. Qua cửa hàng, những sản phẩm ấy đến với các mái nhà mới, mang theo tri thức và câu chuyện của người làm ra chúng."
+};
+defaultContent.home.artisan.body = {
+  en: "A chance meeting with Ms. Lý May Pét at a small artisan fair at the Vietnam Museum of Ethnology in Hanoi marked the beginning. Over fifteen years of visits and conversations, that friendship grew into a bond as close as family. It opened the door to a wider community — part of the journey Mystère Shop has continued for 25 years.",
+  vi: "Một cuộc gặp tình cờ với bà Lý May Pét tại hội chợ thủ công nhỏ ở Bảo tàng Dân tộc học Việt Nam, Hà Nội, đã mở đầu câu chuyện. Qua mười lăm năm thăm hỏi và trò chuyện, tình bạn ấy trở nên gắn bó như gia đình, mở ra sự kết nối với cả một cộng đồng — một phần trong hành trình 25 năm của Mystère Shop."
 };

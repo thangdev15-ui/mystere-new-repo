@@ -69,7 +69,21 @@ export interface Block {
   image: string;
 }
 
+export interface ShopEvent {
+  image: string;
+  url: string;
+  id: string;
+  title: L;
+  dateLabel: L;
+  dateStart: string;
+  schedule: L;
+  venue: string;
+  address: L;
+  published: boolean;
+}
+
 export interface SiteContent {
+  events: ShopEvent[];
   home: {
     heroImage: string;
     heroEyebrow: L;
@@ -78,6 +92,7 @@ export interface SiteContent {
     anniversary: Block;
     artisan: Block & { quote: L; quoteAuthor: L };
     projectsIntro: { title: L; body: L };
+    projectsLead?: Block;
     thread: Block;
     craftIntro: { title: L; body: L };
     journalIntro: { title: L; body: L };
