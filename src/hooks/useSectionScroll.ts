@@ -42,13 +42,20 @@ export function useSectionScroll(rootRef: RefObject<HTMLDivElement | null>) {
     };
     const wheel = (event: WheelEvent) => {
       if (event.ctrlKey || event.metaKey || ignored(event.target) || Math.abs(event.deltaX) > Math.abs(event.deltaY) || !event.deltaY) return;
-      event.preventDefault();
       const now = performance.now();
       if (!busy && now - lastInput > 120) { used = false; total = 0; }
       lastInput = now;
       if (used || busy) return;
       total += event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? innerHeight : 1);
-      if (Math.abs(total) >= 12) { used = true; advance(Math.sign(total)); }
+      if (Math.abs(total) >= 12) {
+        const direction = Math.sign(total);
+        const positions = stops();
+        const canMove = direction > 0 ? positions.some(y => y > scrollY + 8) : positions.some(y => y < scrollY - 8);
+        if (!canMove) { total = 0; return; }
+        event.preventDefault();
+        used = true;
+        advance(direction);
+      }
     };
     const touchStart = (event: TouchEvent) => {
       touchConsumed = false;
