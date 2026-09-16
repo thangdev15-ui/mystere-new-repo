@@ -177,10 +177,12 @@ figcaption { font-size:10px; line-height:1.6; color:#65716c; margin-top:13px; }
 .home-banner { position:relative; min-height:600px; height:calc(100svh - 100px); overflow:hidden; background:#211f1c; color:#fff; display:flex; align-items:flex-end; }
 .banner-image,.banner-shade { position:absolute; inset:0; }
 .banner-shade { background:linear-gradient(180deg,rgba(20,25,21,.22),rgba(20,25,21,.2) 30%,rgba(20,25,21,.8)); }
-.banner-content { position:relative; padding-block:70px; }
+.banner-content { position:relative; padding-block:42px 52px; }
 .banner-eyebrow { font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:#fff9; }
+.banner-content>.banner-location { margin-top:10px; font-size:12px; letter-spacing:.28em; text-transform:uppercase; color:#fff9; }
+.banner-years { margin-top:24px; font-size:10px; letter-spacing:.32em; color:#fff9; }
 .banner-content h1 { font-family:'Ballet', 'Allura', cursive; font-size:clamp(82px,10.5vw,156px); font-weight:400; letter-spacing:.015em; line-height:.9; margin-top:24px; text-shadow:0 3px 18px rgba(0,0,0,.2); }
-.banner-bottom { display:flex; justify-content:space-between; align-items:flex-end; gap:30px; margin-top:25px; }
+.banner-bottom { display:flex; justify-content:flex-end; align-items:flex-end; gap:30px; margin-top:18px; }
 .banner-tagline { font-family:'Allura', var(--font-serif); font-size:35px; font-style:normal; }
 .banner-location { font-size:11px; text-transform:uppercase; letter-spacing:.3em; color:#fffa; margin-top:9px; }
 .banner-cta { display:inline-flex; align-items:center; gap:28px; border:1px solid #fff9; padding:19px 30px; font-size:11px; text-transform:uppercase; letter-spacing:.2em; transition:background .2s,color .2s; }
@@ -313,3 +315,6 @@ figcaption { font-size:10px; line-height:1.6; color:#65716c; margin-top:13px; }
 @media(max-width:760px) { .community-page { padding-top:78px; } .community-hero { grid-template-columns:1fr; gap:35px; padding-block:48px 45px; } .community-hero h1 { font-size:56px; } .community-hero figure img { max-height:360px; } .community-body { grid-template-columns:1fr; gap:48px; padding-block:50px 62px; } .community-story h2,.community-closing h2 { font-size:32px; } .community-prose p { font-size:16px; } .community-closing { padding-block:50px; } }
 .footer-brand { display:inline-block; }
 .footer-brand img { display:block; width:190px; height:auto; max-height:70px; object-fit:contain; object-position:left center; }
+.contact-project-link { display:inline-flex; gap:18px; align-items:center; margin-top:28px; color:var(--brand-red); font-weight:650; font-size:13px; border-bottom:1px solid #d9a0a5; padding-bottom:9px; }
+.community-aside .back-link { display:block; margin-top:18px; }
+@media(max-width:760px) { .banner-content { padding-block:32px 38px; } .banner-content h1 { font-size:clamp(68px,18vw,108px); } .banner-content>.banner-location { font-size:10px; } .banner-years { margin-top:18px; } }

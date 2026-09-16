@@ -20,13 +20,7 @@ export function useSectionScroll(rootRef: RefObject<HTMLDivElement | null>) {
       const header = document.querySelector('.site-header')?.getBoundingClientRect().height ?? 100;
       const max = document.documentElement.scrollHeight - innerHeight;
       const tops = [0, ...Array.from(root.querySelectorAll<HTMLElement>('[data-scroll-part]')).map(el => Math.max(0, Math.min(max, el.getBoundingClientRect().top + scrollY - header - 16))), max];
-      const sorted = [...new Set(tops)].sort((a,b) => a-b);
-      const result: number[] = [];
-      sorted.forEach((top, i) => {
-        if (i) { let step = sorted[i-1] + innerHeight - header - 40; while (step < top - 80) { result.push(step); step += innerHeight - header - 40; } }
-        result.push(top);
-      });
-      return result;
+      return [...new Set(tops)].sort((a,b) => a-b);
     };
     const advance = (direction: number) => {
       const positions = stops();
