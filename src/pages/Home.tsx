@@ -123,9 +123,7 @@ export default function Home() {
       <div className="banner-image"><HeroImage src="/images/Banner.png" priority /></div>
       <div className="banner-shade" />
       <div className="content-width banner-content">
-        <p className="banner-eyebrow">The Vietnamese Refinement</p>
-        <p className="banner-location">Huyền Bí — Saigon</p>
-        <p className="banner-years">25 YEARS — EST. 2001</p>
+        <div className="banner-meta"><p className="banner-eyebrow">The Vietnamese Refinement</p><p className="banner-location">Huyền Bí — Saigon</p><p className="banner-years">25 YEARS — EST. 2001</p></div>
         <h1>Mystère Shop</h1>
         <div className="banner-bottom">
           <Link to="/#where-it-began" className="banner-cta">{t(h.heroCta)} <span aria-hidden="true">→</span></Link>

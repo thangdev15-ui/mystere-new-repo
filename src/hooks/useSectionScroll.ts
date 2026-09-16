@@ -44,7 +44,7 @@ export function useSectionScroll(rootRef: RefObject<HTMLDivElement | null>) {
       if (event.ctrlKey || event.metaKey || ignored(event.target) || Math.abs(event.deltaX) > Math.abs(event.deltaY) || !event.deltaY) return;
       event.preventDefault();
       const now = performance.now();
-      if (now - lastInput > 180 && !busy) { used = false; total = 0; }
+      if (!busy && now - lastInput > 120) { used = false; total = 0; }
       lastInput = now;
       if (used || busy) return;
       total += event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? innerHeight : 1);
