@@ -69,7 +69,12 @@ function loadCurrentContent(): SiteContent {
   }
   for (const community of defaultContent.communities) {
     const existing = saved.communities.find(item => item.id === community.id);
-    if (existing && existing.story.en.length < 500) existing.story = community.story;
+    if (existing && (existing.story.en.length < 500 ||
+      (community.slug === "red-dao" && !existing.story.en.includes("five elements")) ||
+      (community.slug === "dao-tien" && !existing.story.en.includes("Hòa Thuận")) ||
+      (community.slug === "nung" && !existing.story.en.includes("Phúc Sen")) ||
+      (community.slug === "hmong" && !existing.story.en.includes("Na Kiêng")) ||
+      (community.slug === "black-lo-lo" && !existing.story.en.includes("Kim Cúc")))) existing.story = community.story;
   }
   for (const community of defaultContent.communities) {
     const existing = saved.communities.find(item => item.id === community.id);
@@ -88,6 +93,11 @@ function loadCurrentContent(): SiteContent {
   if (redDao && (redDao.image === "/images/red-dao.jpg" || legacy(redDao.image, "1g8jxhr1NKHeiMFGRS3YCvOXjXRTjfBSW"))) redDao.image = defaultContent.communities[0].image;
   if (saved.home.intro.body.en.startsWith("Mystère Shop was born from a simple belief:") || saved.home.intro.body.en.startsWith("Founded in Saigon in 2001, Mystère Shop is a family business connecting")) saved.home.intro.body = defaultContent.home.intro.body;
   if (saved.home.artisan.body.en.startsWith("It started at a small fair for ethnic minority artisans,")) saved.home.artisan.body = defaultContent.home.artisan.body;
+  if (saved.home.projectsIntro.body.en.startsWith("Red Dao, Dao Tiền, Nùng")) saved.home.projectsIntro.body = defaultContent.home.projectsIntro.body;
+  if (saved.newsletter.title.en === "More stories are coming") {
+    saved.newsletter.title = defaultContent.newsletter.title;
+    saved.newsletter.body = defaultContent.newsletter.body;
+  }
   return saved;
 }
 
