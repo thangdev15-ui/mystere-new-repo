@@ -3,7 +3,6 @@ import { Link, useParams } from 'react-router-dom';
 import { useStore } from '../store/store';
 import Img, { HeroImage } from '../components/Img';
 import type { Community } from '../lib/types';
-import { useSectionScroll } from '../hooks/useSectionScroll';
 
 function Project({ community: c, index }: { community: Community; index: number }) {
   const { t, lang } = useStore();
@@ -59,7 +58,6 @@ export function CommunityPage() {
 export default function Home() {
   const { content, t, lang } = useStore();
   const pageRef = useRef<HTMLDivElement>(null);
-  useSectionScroll(pageRef);
   useEffect(() => {
     const root = pageRef.current;
     if (!root) return;
