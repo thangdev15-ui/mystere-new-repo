@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Allura&family=Ballet:opsz@16..72&display=swap');
 
 @theme {
   --font-serif: "Cormorant Garamond", Georgia, serif;
@@ -171,9 +172,9 @@ figcaption { font-size:10px; line-height:1.6; color:#65716c; margin-top:13px; }
 .banner-shade { background:linear-gradient(180deg,rgba(20,25,21,.22),rgba(20,25,21,.2) 30%,rgba(20,25,21,.8)); }
 .banner-content { position:relative; padding-block:70px; }
 .banner-eyebrow { font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:#fff9; }
-.banner-content h1 { font-family:var(--font-serif); font-size:clamp(64px,9.4vw,136px); font-weight:400; line-height:1; margin-top:24px; }
+.banner-content h1 { font-family:'Ballet', 'Allura', cursive; font-size:clamp(82px,10.5vw,156px); font-weight:400; letter-spacing:.015em; line-height:.9; margin-top:24px; text-shadow:0 3px 18px rgba(0,0,0,.2); }
 .banner-bottom { display:flex; justify-content:space-between; align-items:flex-end; gap:30px; margin-top:25px; }
-.banner-tagline { font-family:var(--font-serif); font-size:32px; font-style:italic; }
+.banner-tagline { font-family:'Allura', var(--font-serif); font-size:35px; font-style:normal; }
 .banner-location { font-size:11px; text-transform:uppercase; letter-spacing:.3em; color:#fffa; margin-top:9px; }
 .banner-cta { display:inline-flex; align-items:center; gap:28px; border:1px solid #fff9; padding:19px 30px; font-size:11px; text-transform:uppercase; letter-spacing:.2em; transition:background .2s,color .2s; }
 .banner-cta:hover { background:#fff; color:#252b2b; }
