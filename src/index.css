@@ -295,14 +295,14 @@ figcaption { font-size:10px; line-height:1.6; color:#65716c; margin-top:13px; }
 @media(max-width:1100px) { .event-card { padding:20px; gap:18px; grid-template-columns:1fr; } .event-card figure img { height:220px; aspect-ratio:3/2; } }
 @media(max-width:760px) { .event-grid { grid-template-columns:1fr; } .event-card { grid-template-columns:1fr; padding:23px; gap:20px; } .event-card figure img { height:auto; aspect-ratio:3/2; } .event-card h4 { font-size:24px; } .event-grid .newsletter-band { padding:25px; } .what-section { padding-bottom:35px; } }
 
-.community-page { padding-top:100px; background:#fff; }
-.community-hero { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; padding-block:86px 78px; border-bottom:1px solid #dce4dd; }
+.community-page { padding-top:76px; background:#fff; }
+.community-hero { display:grid; grid-template-columns:1fr 1fr; gap:58px; align-items:center; padding-block:48px 44px; border-bottom:1px solid #dce4dd; }
 .community-hero h1 { font-size:clamp(52px,7vw,96px); line-height:1; letter-spacing:-2px; font-weight:650; }
 .community-index { color:var(--brand-red); text-transform:uppercase; letter-spacing:2px; font-size:11px; font-weight:700; margin:15px 0 25px; }
 .community-strapline { font:italic 28px Georgia,serif; color:#66746b; margin-top:25px; max-width:450px; }
 .community-hero figure { margin:0; }
-.community-hero figure img { max-height:530px; object-fit:cover; }
-.community-body { display:grid; grid-template-columns:1.25fr .75fr; gap:100px; padding-block:82px 100px; }
+.community-hero figure img { max-height:390px; object-fit:cover; }
+.community-body { display:grid; grid-template-columns:1.25fr .75fr; gap:70px; padding-block:48px 58px; }
 .community-story h2 { font-size:42px; line-height:1.15; margin-bottom:32px; }
 .community-prose { max-width:720px; }
 .community-prose p { font-size:18px; line-height:1.9; color:#4d5b52; margin-bottom:23px; }
