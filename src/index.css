@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Allura&family=Ballet:opsz@16..72&display=swap');
+@import "tailwindcss";
 
 @theme {
   --font-serif: "Cormorant Garamond", Georgia, serif;
