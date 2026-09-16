@@ -303,3 +303,5 @@ figcaption { font-size:10px; line-height:1.6; color:#65716c; margin-top:13px; }
 .community-closing h2 { max-width:720px; font-size:42px; }
 .community-closing p:last-child { max-width:760px; margin-top:24px; color:#506058; font-size:17px; line-height:1.9; }
 @media(max-width:760px) { .community-page { padding-top:78px; } .community-hero { grid-template-columns:1fr; gap:35px; padding-block:48px 45px; } .community-hero h1 { font-size:56px; } .community-hero figure img { max-height:360px; } .community-body { grid-template-columns:1fr; gap:48px; padding-block:50px 62px; } .community-story h2,.community-closing h2 { font-size:32px; } .community-prose p { font-size:16px; } .community-closing { padding-block:50px; } }
+.footer-brand { display:inline-block; }
+.footer-brand img { display:block; width:190px; height:auto; max-height:70px; object-fit:contain; object-position:left center; }
