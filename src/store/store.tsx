@@ -69,6 +69,10 @@ function loadCurrentContent(): SiteContent {
   }
   for (const community of defaultContent.communities) {
     const existing = saved.communities.find(item => item.id === community.id);
+    if (existing && existing.story.en.length < 500) existing.story = community.story;
+  }
+  for (const community of defaultContent.communities) {
+    const existing = saved.communities.find(item => item.id === community.id);
     if (existing && (!existing.image || existing.image.startsWith("https://lh3.googleusercontent.com"))) existing.image = community.image;
   }
   // Migrate the previous bundled JPG without overwriting custom image URLs.

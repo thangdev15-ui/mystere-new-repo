@@ -26,7 +26,7 @@ function NavDropdown({ section, mobile = false, onNavigate }: { section: "who" |
         <li><Link to="/#where-it-began" onClick={close}>{en ? 'Where it began' : 'Khởi nguồn'}</Link></li>
       </> : <>
         <li><Link to="/#what-we-do" onClick={close}>{en ? 'Our Project' : 'Dự án của chúng tôi'}</Link>
-          <ol>{content.communities.filter(c => c.published).map((c, index) => <li key={c.id}><Link to={`/#${c.slug}`} onClick={close}><span className="submenu-number">{index + 1}</span>{c.name}</Link></li>)}</ol>
+          <ol>{content.communities.filter(c => c.published).map((c, index) => <li key={c.id}><Link to={`/project/${c.slug}`} onClick={close}><span className="submenu-number">{index + 1}</span>{c.name}</Link></li>)}</ol>
         </li>
         <li><Link to="/#our-event" onClick={close}>{en ? 'Our Event' : 'Sự kiện của chúng tôi'}</Link></li>
       </>}

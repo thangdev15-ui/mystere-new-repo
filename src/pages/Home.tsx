@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useStore } from '../store/store';
 import Img, { HeroImage } from '../components/Img';
 import { ui } from '../lib/ui';
@@ -7,16 +7,13 @@ import type { Community } from '../lib/types';
 
 function Project({ community: c, index }: { community: Community; index: number }) {
   const { t, lang } = useStore();
-  const { hash } = useLocation();
-  const [open, setOpen] = useState(hash.endsWith(`#${c.slug}`) || hash === `#${c.slug}`);
-  useEffect(() => { if (hash.endsWith(`#${c.slug}`) || hash === `#${c.slug}`) setOpen(true); }, [hash, c.slug]);
   const fallbackImages: Record<string, string> = { 'red-dao':'/images/red-dao.png', 'dao-tien':'/images/project-dao-tien.jpg', nung:'/images/project-nung.jpg', hmong:'/images/project-hmong.jpg', 'black-lo-lo':'/images/project-lo-lo.jpg' };
   const image = c.image || fallbackImages[c.slug];
-  return <article className={`project-row ${open ? 'expanded' : ''}`} id={c.slug} data-scroll-part={index > 0 ? true : undefined}>
+  return <article className="project-row" id={c.slug} data-scroll-part={index > 0 ? true : undefined}>
     <span className="project-number">0{index + 1}</span>
     {image ? <Img src={image} alt={c.name} ratio="aspect-[3/2]" className="project-photo" /> : <div className="project-photo photo-pending"><span>{t(c.region)}</span><small>{lang === 'en' ? 'Field photograph forthcoming' : 'Ảnh thực địa sẽ được bổ sung'}</small></div>}
     <div className="project-copy"><p className="kicker">{t(c.region)}</p><h3>{c.name}</h3><p>{t(c.line)}</p>
-      <Link className="project-more" to={`/#${c.slug}`} onClick={() => setOpen(true)}>{lang === 'en' ? 'More about' : 'Xem thêm'} <span aria-hidden="true">↗</span></Link>
+      <Link className="project-more" to={`/project/${c.slug}`}>{lang === 'en' ? 'More about' : 'Xem thêm'} <span aria-hidden="true">↗</span></Link>
       <div id={`story-${c.id}`} hidden={!open} className="project-story"><h4>{t(c.title)}</h4><p>{t(c.story)}</p></div>
     </div>
   </article>;
@@ -43,6 +40,20 @@ function Events() {
       </div>
     </article>)}<Newsletter /></div>
   </section>;
+}
+
+export function CommunityPage() {
+  const { slug } = useParams();
+  const { content, t, lang } = useStore();
+  const community = content.communities.find(item => item.slug === slug) || content.communities[0];
+  const fallback: Record<string, string> = { 'red-dao':'/images/red-dao.png', 'dao-tien':'/images/project-dao-tien.jpg', nung:'/images/project-nung.jpg', hmong:'/images/project-hmong.jpg', 'black-lo-lo':'/images/project-lo-lo.jpg' };
+  const image = community.image || fallback[community.slug];
+  const en = lang === 'en';
+  return <article className="community-page">
+    <header className="community-hero content-width"><div><p className="kicker">{t(community.region)}</p><p className="community-index">{en ? 'Our project' : 'Dự án cộng đồng'}</p><h1>{community.name}</h1><p className="community-strapline">{t(community.title)}</p></div><figure><Img src={image} alt={community.name} ratio="aspect-[4/3]" priority /></figure></header>
+    <div className="community-body content-width"><div className="community-story"><p className="kicker">{en ? 'The story' : 'Câu chuyện'}</p><h2>{t(community.title)}</h2><div className="community-prose">{t(community.story).split("\n\n").map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div></div><aside className="community-aside"><p className="kicker">{en ? 'The craft' : 'Nghề thủ công'}</p><p>{t(community.craft)}</p><Link to="/#what-we-do" className="back-link">← {en ? 'Back to What we do' : 'Quay lại Chúng tôi làm gì'}</Link></aside></div>
+    <section className="community-closing"><div className="content-width"><p className="kicker">{en ? 'The work behind the work' : 'Công việc phía sau mỗi sản phẩm'}</p><h2>{en ? 'What “supporting a community” actually looks like' : 'Đồng hành cùng một cộng đồng thực sự là gì'}</h2><p>{en ? 'Behind every product on our shelves is a small group of women who learned to dye, weave, sew, keep books, and run a business together — often for the first time. We helped set up those groups, brought in training, connected them to markets in Hanoi and Saigon, and built the “Craft Belt” name so their work could travel further than the village.' : 'Phía sau mỗi sản phẩm là một nhóm phụ nữ đã học cách nhuộm, dệt, may, ghi sổ và cùng nhau vận hành công việc — nhiều khi là lần đầu tiên. Chúng tôi hỗ trợ thành lập nhóm, kết nối đào tạo với thị trường Hà Nội và Sài Gòn, đồng thời xây dựng tên gọi “Craft Belt” để nghề của họ đi xa hơn bản làng.'}</p></div></section>
+  </article>;
 }
 
 export default function Home() {
