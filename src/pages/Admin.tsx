@@ -96,9 +96,11 @@ function Login() {
 }
 
 export default function Admin() {
-  const { content, setContent, resetContent, user, signOut, subscribers, t } = useStore();
+  const { content, setContent, saveContent, resetContent, user, signOut, subscribers, t } = useStore();
   const [section, setSection] = useState<SectionKey>("home");
   const [saved, setSaved] = useState(false);
+  const [dirty, setDirty] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [connection, setConnection] = useState<'idle' | 'checking' | 'connected' | 'error'>(isSupabaseConfigured ? 'checking' : 'idle');
   const checkConnection = async () => {
     if (!supabase) { setConnection('idle'); return; }
@@ -116,9 +118,11 @@ export default function Admin() {
       return d;
     });
     setSaved(true);
+    setDirty(true);
     window.clearTimeout((window as any).__mystereSaveTimer);
     (window as any).__mystereSaveTimer = window.setTimeout(() => setSaved(false), 1200);
   };
+  const save = async () => { setSaving(true); const ok = await saveContent(); setSaving(false); setDirty(!ok); setSaved(ok); window.setTimeout(() => setSaved(false), 1800); };
 
   const move = <T,>(arr: T[], i: number, dir: -1 | 1) => {
     const j = i + dir;
@@ -159,9 +163,10 @@ export default function Admin() {
             <span className="text-[10px] uppercase tracking-[0.28em] text-clay">Admin</span>
           </div>
           <div className="flex items-center gap-6 text-[11px] uppercase tracking-[0.2em]">
-            <span className={`transition-opacity ${saved ? "opacity-100" : "opacity-0"} text-moss`}>
-              Saved
+            <span className={`${dirty ? "text-rust" : "text-moss"}`}>
+              {saving ? 'Saving…' : dirty ? 'Unsaved changes' : saved ? 'Saved just now' : 'All changes saved'}
             </span>
+            <button onClick={() => void save()} disabled={!dirty || saving} className="border border-charcoal px-3 py-2 text-[10px] uppercase tracking-[0.16em] disabled:cursor-not-allowed disabled:opacity-40">Save changes</button>
             <Link to="/" className="text-cocoa/70 hover:text-charcoal">
               View site
             </Link>

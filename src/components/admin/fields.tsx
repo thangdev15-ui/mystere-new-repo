@@ -112,7 +112,19 @@ export function ImageField({
 
   const upload = (file: File) => {
     const reader = new FileReader();
-    reader.onload = () => onChange(String(reader.result));
+    reader.onload = () => {
+      const image = new Image();
+      image.onload = () => {
+        const max = 1800;
+        const scale = Math.min(1, max / Math.max(image.width, image.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(image.width * scale));
+        canvas.height = Math.max(1, Math.round(image.height * scale));
+        canvas.getContext('2d')?.drawImage(image, 0, 0, canvas.width, canvas.height);
+        onChange(canvas.toDataURL('image/webp', .82));
+      };
+      image.src = String(reader.result);
+    };
     reader.readAsDataURL(file);
   };
 

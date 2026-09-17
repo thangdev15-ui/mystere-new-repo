@@ -35,6 +35,7 @@ export interface Subscriber {
 interface StoreValue {
   content: SiteContent;
   setContent: (updater: (draft: SiteContent) => SiteContent) => void;
+  saveContent: () => Promise<boolean>;
   resetContent: () => void;
   lang: Lang;
   setLang: (l: Lang) => void;
@@ -138,12 +139,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     localStorage.setItem(CONTENT_KEY, JSON.stringify(content));
-    if (!supabase || !remoteReady.current || !user) return;
-    void Promise.all([
-      supabase.from('communities').upsert(content.communities.map((row, sort_order) => ({ ...row, sort_order }))),
-      supabase.from('events').upsert(content.events.map((row, sort_order) => ({ id: row.id, image: row.image, url: row.url, title: row.title, date_label: row.dateLabel, date_start: row.dateStart || null, schedule: row.schedule, venue: row.venue, address: row.address, published: row.published, sort_order }))),
-    ]);
-  }, [content, user, remoteReady]);
+  }, [content]);
   useEffect(() => {
     localStorage.setItem(LANG_KEY, JSON.stringify(lang));
     document.documentElement.lang = lang;
@@ -173,11 +169,20 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     if (email.trim().toLowerCase() === "admin@mystere.vn" && password === "mystere2001") { setUser(email.trim().toLowerCase()); return true; }
     return false;
   }, []);
+  const saveContent = useCallback(async () => {
+    if (!supabase || !user) { localStorage.setItem(CONTENT_KEY, JSON.stringify(content)); return true; }
+    const [communities, events] = await Promise.all([
+      supabase.from('communities').upsert(content.communities.map((row, sort_order) => ({ ...row, sort_order }))),
+      supabase.from('events').upsert(content.events.map((row, sort_order) => ({ id: row.id, image: row.image, url: row.url, title: row.title, date_label: row.dateLabel, date_start: row.dateStart || null, schedule: row.schedule, venue: row.venue, address: row.address, published: row.published, sort_order }))),
+    ]);
+    return !communities.error && !events.error;
+  }, [content, user]);
 
   const value = useMemo<StoreValue>(
     () => ({
       content,
       setContent,
+      saveContent,
       resetContent,
       lang,
       setLang: setLangState,
@@ -188,7 +193,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       subscribers,
       addSubscriber: (s) => setSubscribers((prev) => [s, ...prev.filter(item => item.email.toLowerCase() !== s.email.toLowerCase())]),
     }),
-    [content, setContent, resetContent, lang, t, user, signIn, subscribers],
+    [content, setContent, saveContent, resetContent, lang, t, user, signIn, subscribers],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
