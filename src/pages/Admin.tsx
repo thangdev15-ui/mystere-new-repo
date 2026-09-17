@@ -19,6 +19,7 @@ import {
 } from "../components/admin/fields";
 
 type SectionKey =
+  | "dashboard"
   | "events"
   | "home"
   | "about"
@@ -33,6 +34,7 @@ type SectionKey =
   | "settings";
 
 const SECTIONS: { key: SectionKey; label: string }[] = [
+  { key: "dashboard", label: "Dashboard" },
   { key: "home", label: "NEW · Page content" },
   { key: "communities", label: "What we do · Communities" },
   { key: "events", label: "What we do · Events" },
@@ -147,8 +149,8 @@ export default function Admin() {
   );
 
   return (
-    <div className="min-h-screen bg-cream/60">
-      <header className="sticky top-0 z-30 border-b border-sand bg-ivory">
+    <div className="admin-shell min-h-screen bg-cream/60">
+      <header className="admin-topbar sticky top-0 z-30 border-b border-sand bg-ivory">
         <div className="mx-auto flex max-w-[1500px] items-center justify-between px-6 py-4">
           <div className="flex items-baseline gap-4">
             <Link to="/" className="font-serif text-[24px] text-charcoal">
@@ -170,14 +172,15 @@ export default function Admin() {
         </div>
       </header>
 
-      <div className="mx-auto flex max-w-[1500px] flex-col gap-10 px-6 py-10 lg:flex-row">
-        <nav className="lg:w-52 lg:shrink-0">
+      <div className="admin-workspace mx-auto flex max-w-[1500px] flex-col gap-10 px-6 py-10 lg:flex-row">
+        <aside className="admin-sidebar lg:w-52 lg:shrink-0">
+          <p className="admin-sidebar-kicker">Mystère CMS</p>
           <ul className="flex flex-wrap gap-2 lg:sticky lg:top-24 lg:flex-col">
             {SECTIONS.map((s) => (
               <li key={s.key}>
                 <button
                   onClick={() => setSection(s.key)}
-                  className={`w-full px-3 py-2 text-left text-[12px] uppercase tracking-[0.16em] transition-colors ${
+                    className={`admin-nav-item w-full px-3 py-2 text-left text-[12px] uppercase tracking-[0.16em] transition-colors ${
                     section === s.key
                       ? "bg-charcoal text-ivory"
                       : "text-cocoa/70 hover:bg-sand/40 hover:text-charcoal"
@@ -188,9 +191,15 @@ export default function Admin() {
               </li>
             ))}
           </ul>
-        </nav>
+          <p className="admin-sidebar-note">Crafts.<br/>Communities.<br/>A better tomorrow.</p>
+        </aside>
 
-        <div className="min-w-0 flex-1 space-y-8">
+        <div className="admin-content min-w-0 flex-1 space-y-8">
+          {section === "dashboard" && <>
+            <div className="admin-page-heading"><div><p className="admin-overline">Dashboard</p><h1>Welcome back, Admin</h1><p>Keep the stories, people and events of Mystère up to date.</p></div><Link className="admin-preview" to="/">View site ↗</Link></div>
+            <div className="admin-stat-grid"><button onClick={() => setSection('home')}><strong>1</strong><span>Pages</span></button><button onClick={() => setSection('communities')}><strong>{content.communities.length}</strong><span>Communities</span></button><button onClick={() => setSection('events')}><strong>{content.events.length}</strong><span>Events</span></button><button onClick={() => setSection('newsletter')}><strong>{subscribers.length}</strong><span>Subscribers</span></button></div>
+            <AdminCard title="Quick actions"><div className="admin-quick-actions"><button onClick={() => setSection('home')}>Edit Who We Are <span>→</span></button><button onClick={() => setSection('communities')}>Manage communities <span>→</span></button><button onClick={() => setSection('events')}>Create an event <span>→</span></button><button onClick={() => setSection('newsletter')}>Manage newsletter <span>→</span></button></div></AdminCard>
+          </>}
           {/* HOMEPAGE */}
           {section === "home" && (
             <>

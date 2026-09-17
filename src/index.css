@@ -181,6 +181,42 @@ figcaption { font-size:10px; line-height:1.6; color:#65716c; margin-top:13px; }
 .admin-card-collapsible[open] { border-color:#b9a68f; box-shadow:0 12px 30px rgba(52,43,34,.07); }
 .admin-card-collapsible[open] summary { padding-bottom:14px; border-bottom:1px solid #ded2bf; }
 @media(max-width:640px) { .admin-card-collapsible { padding:16px; } .admin-card-collapsible summary { align-items:flex-start; flex-direction:column; gap:7px; } }
+
+/* Mystère CMS workspace. Kept under admin-shell so the public site remains untouched. */
+.admin-shell { --admin-red:#9f2630; --admin-ink:#292726; --admin-muted:#756f68; background:#f7f3ed; color:var(--admin-ink); }
+.admin-shell .admin-topbar { background:#fffdf9; border-color:#ded6ca; }
+.admin-shell .admin-topbar > div { min-height:72px; }
+.admin-shell .admin-sidebar { width:250px; min-height:calc(100vh - 120px); position:relative; }
+.admin-sidebar-kicker { color:var(--admin-red); font-family:Georgia,serif; font-size:22px; margin:0 0 25px; }
+.admin-sidebar-note { position:sticky; top:calc(100vh - 165px); margin-top:46px; color:#9d9489; font:italic 17px/1.65 Georgia,serif; }
+.admin-shell .admin-nav-item { border:1px solid transparent; color:#756f68; text-transform:none; letter-spacing:.02em; font-size:13px; padding:12px 14px; }
+.admin-shell .admin-nav-item::before { content:'○'; display:inline-block; width:25px; color:#a59b90; }
+.admin-shell .admin-nav-item:hover { background:#eee7de; color:var(--admin-ink); }
+.admin-shell .admin-nav-item.bg-charcoal { background:var(--admin-red); color:#fff; border-color:var(--admin-red); }
+.admin-shell .admin-nav-item.bg-charcoal::before { content:'●'; color:#fff; }
+.admin-content { max-width:1040px; }
+.admin-content > h1 { font:400 42px/1.1 Georgia,serif; letter-spacing:-.03em; }
+.admin-content > h2 { font:400 28px Georgia,serif; }
+.admin-content section.border, .admin-content details.admin-card-collapsible { border-color:#ded6ca; border-radius:5px; background:#fffdf9; box-shadow:0 1px 0 #fff inset; }
+.admin-content section.border > header, .admin-content details.admin-card-collapsible > div > header { border-color:#e6ded3; }
+.admin-content section.border h3, .admin-content details.admin-card-collapsible summary { font-family:Georgia,serif; }
+.admin-page-heading { display:flex; justify-content:space-between; align-items:end; gap:30px; padding-bottom:24px; border-bottom:1px solid #ded6ca; }
+.admin-page-heading h1 { margin:5px 0 8px; font:400 43px/1.1 Georgia,serif; }
+.admin-page-heading p:last-child { color:var(--admin-muted); font-size:14px; }
+.admin-overline { color:var(--admin-red)!important; text-transform:uppercase; letter-spacing:.18em; font-size:10px!important; }
+.admin-preview { border:1px solid #b8aa9a; padding:10px 14px; color:var(--admin-red); font-size:11px; text-transform:uppercase; letter-spacing:.12em; }
+.admin-stat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+.admin-stat-grid button { display:flex; flex-direction:column; gap:10px; text-align:left; border:1px solid #ded6ca; background:#fffdf9; padding:20px; transition:transform .2s, border-color .2s; }
+.admin-stat-grid button:hover { transform:translateY(-2px); border-color:#b8aa9a; }
+.admin-stat-grid strong { font:400 34px Georgia,serif; color:var(--admin-red); }
+.admin-stat-grid span { color:var(--admin-muted); font-size:11px; text-transform:uppercase; letter-spacing:.12em; }
+.admin-quick-actions { display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:#ded6ca; }
+.admin-quick-actions button { display:flex; justify-content:space-between; background:#fffdf9; padding:17px; text-align:left; font-size:13px; }
+.admin-quick-actions button:hover { color:var(--admin-red); }
+.admin-shell input:focus, .admin-shell textarea:focus, .admin-shell select:focus { border-color:var(--admin-red); box-shadow:0 0 0 2px #9f26301c; }
+.admin-shell button.bg-ivory, .admin-shell button.bg-charcoal { background:var(--admin-red); }
+@media(max-width:900px) { .admin-shell .admin-sidebar { width:auto; min-height:0; } .admin-sidebar-note { display:none; } .admin-stat-grid { grid-template-columns:repeat(2,1fr); } }
+@media(max-width:640px) { .admin-shell .admin-topbar > div { padding:14px 16px; } .admin-workspace { padding:22px 16px!important; gap:22px; } .admin-page-heading { align-items:flex-start; flex-direction:column; } .admin-page-heading h1 { font-size:34px; } .admin-content > h1 { font-size:34px; } .admin-stat-grid { gap:8px; } .admin-stat-grid button { padding:14px; } .admin-quick-actions { grid-template-columns:1fr; } }
 @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *,*::before,*::after { transition:none!important; animation:none!important; } .reveal { opacity:1; transform:none; } }
 
 /* Restored opening banner, above the NEW page sections. */
