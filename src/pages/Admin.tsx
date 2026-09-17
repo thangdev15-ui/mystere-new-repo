@@ -59,7 +59,7 @@ function Login() {
           className="mt-10 space-y-6"
           onSubmit={(e) => {
             e.preventDefault();
-            if (!signIn(email, password)) setError(true);
+            void signIn(email, password).then(ok => { if (!ok) setError(true); });
           }}
         >
           <label className="block">
@@ -85,10 +85,7 @@ function Login() {
           </button>
         </form>
         <p className="mt-8 text-[12px] leading-relaxed text-cream/40">
-          Demo credentials: <span className="text-cream/70">admin@mystere.vn</span> /{" "}
-          <span className="text-cream/70">mystere2001</span>
-          <br />
-          In production this screen is backed by Supabase Auth.
+          {import.meta.env.VITE_SUPABASE_URL ? 'Use the editor account created in Supabase Auth.' : <>Demo mode: <span className="text-cream/70">admin@mystere.vn</span> /{" "}<span className="text-cream/70">mystere2001</span></>}
         </p>
       </div>
     </div>

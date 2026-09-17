@@ -9,6 +9,7 @@ import {
 } from "react";
 import { defaultContent } from "../data/defaultContent";
 import type { L, Lang, SiteContent } from "../lib/types";
+import { supabase } from "../lib/supabase";
 
 const CONTENT_KEY = "mystere.content.v2";
 const LANG_KEY = "mystere.lang.v1";
@@ -39,7 +40,7 @@ interface StoreValue {
   setLang: (l: Lang) => void;
   t: (v: L | undefined) => string;
   user: string | null;
-  signIn: (email: string, password: string) => boolean;
+  signIn: (email: string, password: string) => Promise<boolean>;
   signOut: () => void;
   subscribers: Subscriber[];
   addSubscriber: (s: Subscriber) => void;
@@ -110,10 +111,39 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [subscribers, setSubscribers] = useState<Subscriber[]>(() =>
     load<Subscriber[]>(SUBS_KEY, []),
   );
+  const remoteReady = useState({ current: false })[0];
+
+  useEffect(() => {
+    const client = supabase;
+    if (!client) { remoteReady.current = true; return; }
+    let active = true;
+    const hydrate = async () => {
+      const [communities, events] = await Promise.all([
+        client.from('communities').select('*').order('sort_order'),
+        client.from('events').select('*').order('sort_order'),
+      ]);
+      if (!active) return;
+      setContentState(prev => {
+        const next = structuredClone(prev);
+        if (!communities.error && communities.data?.length) next.communities = communities.data.map(row => ({ ...row, region: row.region, title: row.title, line: row.line, story: row.story, craft: row.craft }));
+        if (!events.error && events.data?.length) next.events = events.data.map(row => ({ id: row.id, image: row.image, url: row.url ?? '', title: row.title, dateLabel: row.date_label, dateStart: row.date_start ?? '', schedule: row.schedule, venue: row.venue, address: row.address, published: row.published }));
+        return next;
+      });
+      remoteReady.current = true;
+    };
+    hydrate();
+    const { data: listener } = client.auth.onAuthStateChange((_event, session) => setUser(session?.user.email ?? null));
+    return () => { active = false; listener.subscription.unsubscribe(); };
+  }, [remoteReady]);
 
   useEffect(() => {
     localStorage.setItem(CONTENT_KEY, JSON.stringify(content));
-  }, [content]);
+    if (!supabase || !remoteReady.current || !user) return;
+    void Promise.all([
+      supabase.from('communities').upsert(content.communities.map((row, sort_order) => ({ ...row, sort_order }))),
+      supabase.from('events').upsert(content.events.map((row, sort_order) => ({ id: row.id, image: row.image, url: row.url, title: row.title, date_label: row.dateLabel, date_start: row.dateStart || null, schedule: row.schedule, venue: row.venue, address: row.address, published: row.published, sort_order }))),
+    ]);
+  }, [content, user, remoteReady]);
   useEffect(() => {
     localStorage.setItem(LANG_KEY, JSON.stringify(lang));
     document.documentElement.lang = lang;
@@ -133,12 +163,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const t = useCallback((v: L | undefined) => (v ? v[lang] || v.en : ""), [lang]);
 
-  const signIn = useCallback((email: string, password: string) => {
-    // Demo credentials — replace with supabase.auth.signInWithPassword()
-    if (email.trim().toLowerCase() === "admin@mystere.vn" && password === "mystere2001") {
-      setUser(email.trim().toLowerCase());
+  const signIn = useCallback(async (email: string, password: string) => {
+    if (supabase) {
+      const { data, error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+      if (error || !data.user) return false;
+      setUser(data.user.email ?? email.trim().toLowerCase());
       return true;
     }
+    if (email.trim().toLowerCase() === "admin@mystere.vn" && password === "mystere2001") { setUser(email.trim().toLowerCase()); return true; }
     return false;
   }, []);
 
@@ -152,7 +184,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       t,
       user,
       signIn,
-      signOut: () => setUser(null),
+      signOut: () => { setUser(null); void supabase?.auth.signOut(); },
       subscribers,
       addSubscriber: (s) => setSubscribers((prev) => [s, ...prev.filter(item => item.email.toLowerCase() !== s.email.toLowerCase())]),
     }),
