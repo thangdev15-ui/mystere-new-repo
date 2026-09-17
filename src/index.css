@@ -18,7 +18,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
+  scroll-snap-type: none;
 }
 
 body {
@@ -295,7 +295,7 @@ figcaption { font-size:10px; line-height:1.6; color:#65716c; margin-top:13px; }
 .event-grid .newsletter-band .red-button { margin-top:12px; }
 .events-section { padding-bottom:0; }
 @media(min-width:761px) {
-  html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
+  html { scroll-snap-type:none; scroll-behavior:smooth; }
   .new-home > section[data-scroll-part], .project-row[data-scroll-part], .events-section[data-scroll-part], .thread-section[data-scroll-part] { scroll-snap-align:start; scroll-margin-top:108px; }
 }
 @media(max-width:1100px) { .event-card { padding:20px; gap:18px; grid-template-columns:1fr; } .event-card figure img { height:220px; aspect-ratio:3/2; } }
@@ -324,3 +324,34 @@ figcaption { font-size:10px; line-height:1.6; color:#65716c; margin-top:13px; }
 .contact-project-link { display:inline-flex; gap:18px; align-items:center; margin-top:28px; color:var(--brand-red); font-weight:650; font-size:13px; border-bottom:1px solid #d9a0a5; padding-bottom:9px; }
 .community-aside .back-link { display:block; margin-top:18px; }
 @media(max-width:760px) { .banner-content { padding-block:32px 38px; } .banner-content h1 { font-size:clamp(68px,18vw,108px); } .banner-meta { gap:10px 16px; } .banner-meta .banner-eyebrow,.banner-meta .banner-location,.banner-meta .banner-years { font-size:9px; letter-spacing:.2em; } }
+
+/* Projects: one introduction, compact section heading, aligned image-and-copy cards. */
+.what-section > .content-width { width:min(1300px, calc(100% - 80px)); }
+.what-section > .content-width > .section-top > span { display:none; }
+.what-section .projects-intro { margin:22px 0 28px; }
+.what-section .projects-intro h2 { max-width:900px; font-size:clamp(30px,3.1vw,44px); line-height:1.12; }
+.what-section .projects-intro p { max-width:1240px; margin-top:16px; line-height:1.8; }
+.what-section .projects-heading { display:flex; align-items:center; gap:16px; padding:22px 0; margin:0; border-top:1px solid #d2d9d4; }
+.what-section .projects-heading::before { content:''; width:28px; height:2px; background:#8b9a8f; flex-shrink:0; }
+.what-section .projects-heading h2 { font-size:20px; letter-spacing:-.4px; line-height:1.35; max-width:none; }
+.what-section .projects-heading > span { margin-left:auto; font-size:9px; text-transform:uppercase; letter-spacing:.8px; color:#68736c; }
+.what-section .project-row { display:grid; grid-template-columns:minmax(280px,420px) minmax(0,1fr); gap:40px; padding:25px 0; align-items:center; }
+.what-section .project-photo { grid-column:auto; width:100%; height:225px; border-radius:12px; object-fit:cover; }
+.what-section .project-copy { grid-column:auto; padding:0; }
+.what-section .project-copy h3 { font-size:32px; }
+.what-section .project-copy > p:not(.kicker) { max-width:620px; font-size:16px; }
+.banner-content { padding-bottom:18px; }
+.banner-content h1 { font-family:'Kunstler Script','Edwardian Script ITC','Bickham Script Pro','Compendium','Allura',cursive; font-size:clamp(72px,9vw,132px); line-height:1.05; margin-top:8px; letter-spacing:0; }
+.banner-meta .banner-eyebrow { font-family:'Allura',cursive; text-transform:none; letter-spacing:0; font-size:27px; color:white; }
+.banner-bottom { position:absolute; right:0; bottom:26px; margin:0; }
+@media(max-width:1000px) { .what-section .project-row { grid-template-columns:minmax(250px,340px) minmax(0,1fr); gap:28px; } .what-section .projects-heading > span { display:none; } .banner-bottom { position:static; } }
+@media(max-width:760px) {
+ .what-section > .content-width { width:calc(100% - 40px); }
+ .what-section .project-row { grid-template-columns:minmax(0,1fr); gap:20px; }
+ .what-section .project-photo { height:auto; aspect-ratio:3/2; }
+ .what-section .projects-heading h2 { font-size:19px; }
+ .what-section .projects-intro h2 { font-size:30px; }
+ .banner-content { padding-bottom:16px; }
+ .banner-content h1 { font-size:clamp(56px,15vw,100px); }
+ .banner-meta .banner-eyebrow { font-size:23px; }
+}

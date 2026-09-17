@@ -1,89 +1,72 @@
 import { useEffect, type RefObject } from 'react';
 
-/** One wheel/touch gesture advances one part; tall parts get readable intermediate stops. */
+/** Desktop wheel navigation; touch retains native scrolling so tall content stays readable. */
 export function useSectionScroll(rootRef: RefObject<HTMLDivElement | null>) {
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
     let frame = 0;
-    let busy = false;
-    let used = false;
-    let lastInput = 0;
-    let total = 0;
-    let touchX = 0;
-    let touchY = 0;
-    let touchAllowed = false;
-    let touchConsumed = false;
-    const ignored = (target: EventTarget | null) => target instanceof Element && Boolean(target.closest('header, input, textarea, select, button, a, [contenteditable="true"], [role="dialog"]'));
-    const stops = () => {
+    let target: number | null = null;
+    let lastTime = 0;
+    let lastDirection = 0;
+    let consumed = false;
+    const cancel = () => { cancelAnimationFrame(frame); frame = 0; target = null; consumed = false; };
+    const positions = () => {
       const header = document.querySelector('.site-header')?.getBoundingClientRect().height ?? 100;
-      const max = document.documentElement.scrollHeight - innerHeight;
-      const tops = [0, ...Array.from(root.querySelectorAll<HTMLElement>('[data-scroll-part]')).map(el => Math.max(0, Math.min(max, el.getBoundingClientRect().top + scrollY - header - 16))), max];
-      return [...new Set(tops)].sort((a,b) => a-b);
+      const max = Math.max(0, document.documentElement.scrollHeight - innerHeight);
+      const nodes = [...root.querySelectorAll<HTMLElement>('[data-scroll-part]')];
+      const footer = document.getElementById('contact');
+      if (footer) nodes.push(footer);
+      return [...new Set([0, ...nodes.map(el => Math.round(Math.max(0, Math.min(max, el.getBoundingClientRect().top + scrollY - header - 12)))), max])].sort((a,b) => a-b);
     };
-    const advance = (direction: number) => {
-      const positions = stops();
-      const next = direction > 0 ? positions.find(y => y > scrollY + 8) : positions.slice().reverse().find(y => y < scrollY - 8);
-      if (next === undefined) return;
+    const animate = (to: number) => {
       cancelAnimationFrame(frame);
-      if (reduced.matches) { window.scrollTo({top:next, behavior:'instant'}); return; }
       const from = scrollY;
       const start = performance.now();
-      busy = true;
-      const animate = (now: number) => {
-        const progress = Math.min(1, (now - start) / 720);
-        const eased = progress < .5 ? 4 * progress ** 3 : 1 - (-2 * progress + 2) ** 3 / 2;
-        window.scrollTo({top:from + (next - from) * eased, behavior:'instant'});
-        if (progress < 1) frame = requestAnimationFrame(animate);
-        else { busy = false; frame = 0; }
+      target = to;
+      const duration = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 620;
+      const tick = (now: number) => {
+        const p = duration ? Math.min(1, (now-start)/duration) : 1;
+        const ease = 1 - Math.pow(1-p, 4);
+        window.scrollTo({ top: from+(to-from)*ease, behavior:'instant' });
+        if (p < 1) frame = requestAnimationFrame(tick);
+        else { frame = 0; target = null; }
       };
-      frame = requestAnimationFrame(animate);
+      frame = requestAnimationFrame(tick);
     };
     const wheel = (event: WheelEvent) => {
-      if (event.ctrlKey || event.metaKey || ignored(event.target) || Math.abs(event.deltaX) > Math.abs(event.deltaY) || !event.deltaY) return;
+      if (innerWidth < 761 || event.ctrlKey || event.metaKey || !event.deltaY || Math.abs(event.deltaX)>Math.abs(event.deltaY)) return;
+      if (event.target instanceof Element && event.target.closest('.site-header, input, textarea, select, [role="dialog"], [contenteditable="true"]')) return;
+      const direction = Math.sign(event.deltaY);
       const now = performance.now();
-      if (!busy && now - lastInput > 120) { used = false; total = 0; }
-      lastInput = now;
-      if (used || busy) return;
-      total += event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? innerHeight : 1);
-      if (Math.abs(total) >= 12) {
-        const direction = Math.sign(total);
-        const positions = stops();
-        const canMove = direction > 0 ? positions.some(y => y > scrollY + 8) : positions.some(y => y < scrollY - 8);
-        if (!canMove) { total = 0; return; }
-        event.preventDefault();
-        used = true;
-        advance(direction);
-      }
-    };
-    const touchStart = (event: TouchEvent) => {
-      touchConsumed = false;
-      touchAllowed = event.touches.length === 1 && !ignored(event.target);
-      if (touchAllowed) { touchX = event.touches[0].clientX; touchY = event.touches[0].clientY; }
-    };
-    const touchMove = (event: TouchEvent) => {
-      if (touchConsumed && event.touches.length === 1) { event.preventDefault(); return; }
-      if (!touchAllowed || event.touches.length !== 1) return;
-      const dy = touchY - event.touches[0].clientY;
-      if (Math.abs(dy) <= Math.abs(touchX - event.touches[0].clientX)) return;
+      const reversed = direction !== lastDirection;
+      const fresh = now-lastTime>160 || reversed;
+      lastTime = now; lastDirection = direction;
+      if (fresh) consumed = false;
+      // Swallow momentum from the same gesture while animating, but allow immediate reversal.
+      if ((target !== null || consumed) && !reversed) { event.preventDefault(); return; }
+      const stops = positions();
+      const next = direction>0 ? stops.find(y=>y>scrollY+4) : [...stops].reverse().find(y=>y<scrollY-4);
+      if (next === undefined) { cancel(); return; }
       event.preventDefault();
-      if (Math.abs(dy) > 45 && !busy) { advance(Math.sign(dy)); touchAllowed = false; touchConsumed = true; }
+      consumed = true;
+      // Long sections must remain readable before moving to the following title.
+      const page = innerHeight-(document.querySelector('.site-header')?.getBoundingClientRect().height ?? 100)-32;
+      const destination = direction>0 && next-scrollY>page+80 ? Math.min(next,scrollY+page) : direction<0 && scrollY-next>page+80 ? Math.max(next,scrollY-page) : next;
+      animate(destination);
     };
-    const cancel = () => { cancelAnimationFrame(frame); busy = false; };
-    // A menu link or keyboard command takes priority over a running wheel transition.
+    window.addEventListener('wheel', wheel, { passive:false });
     window.addEventListener('pointerdown', cancel);
     window.addEventListener('keydown', cancel);
-    window.addEventListener('wheel', wheel, {passive:false});
-    window.addEventListener('touchstart', touchStart, {passive:true});
-    window.addEventListener('touchmove', touchMove, {passive:false});
+    window.addEventListener('hashchange', cancel);
+    window.addEventListener('resize', cancel);
     return () => {
       cancel();
+      window.removeEventListener('wheel', wheel);
       window.removeEventListener('pointerdown', cancel);
       window.removeEventListener('keydown', cancel);
-      window.removeEventListener('wheel', wheel);
-      window.removeEventListener('touchstart', touchStart);
-      window.removeEventListener('touchmove', touchMove);
+      window.removeEventListener('hashchange', cancel);
+      window.removeEventListener('resize', cancel);
     };
   }, [rootRef]);
 }
