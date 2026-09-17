@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useStore } from "../store/store";
 import type { Block, SiteContent } from "../lib/types";
 import { ui } from "../lib/ui";
+import { isSupabaseConfigured, supabase } from "../lib/supabase";
 import {
   AddButton,
   AdminCard,
@@ -96,6 +97,14 @@ export default function Admin() {
   const { content, setContent, resetContent, user, signOut, subscribers, t } = useStore();
   const [section, setSection] = useState<SectionKey>("home");
   const [saved, setSaved] = useState(false);
+  const [connection, setConnection] = useState<'idle' | 'checking' | 'connected' | 'error'>(isSupabaseConfigured ? 'checking' : 'idle');
+  const checkConnection = async () => {
+    if (!supabase) { setConnection('idle'); return; }
+    setConnection('checking');
+    const { error } = await supabase.from('communities').select('id').limit(1);
+    setConnection(error ? 'error' : 'connected');
+  };
+  useEffect(() => { if (isSupabaseConfigured) void checkConnection(); }, []);
 
   if (!user) return <Login />;
 
@@ -381,6 +390,7 @@ export default function Admin() {
               {content.communities.map((c, i) => (
                 <AdminCard
                   key={c.id}
+                  collapsible
                   title={c.name || "Community"}
                   onDelete={() => up((d) => d.communities.splice(i, 1))}
                   onMoveUp={() => up((d) => move(d.communities, i, -1))}
@@ -919,7 +929,7 @@ export default function Admin() {
           {section === "events" && <>
             <h1 className="font-serif text-4xl text-charcoal">What we do · Events</h1>
             <Note>These are archived events. Dates and venue addresses retain the information supplied for each event.</Note>
-            {content.events.map((event, index) => <AdminCard key={event.id} title={event.title.en}>
+            {content.events.map((event, index) => <AdminCard key={event.id} collapsible title={event.title.en}>
               <Toggle label="Published" value={event.published} onChange={(v) => up(d => { d.events[index].published = v; })} />
               <ImageField label="Event photograph" value={event.image} onChange={v => up(d => { d.events[index].image = v; })} />
               <Field label="Event website URL (leave empty until available)"><TextInput value={event.url} onChange={v => up(d => { d.events[index].url = v; })} /></Field>
@@ -984,6 +994,11 @@ export default function Admin() {
             <>
               <h1 className="font-serif text-4xl text-charcoal">Settings</h1>
               <AdminCard title="Content data">
+                <div className={`rounded border px-4 py-3 text-[13px] ${connection === 'connected' ? 'border-emerald-300 bg-emerald-50 text-emerald-800' : connection === 'error' ? 'border-red-300 bg-red-50 text-red-800' : 'border-sand bg-cream/40 text-cocoa/75'}`}>
+                  <strong>{connection === 'connected' ? 'Supabase connected' : connection === 'error' ? 'Supabase connection failed' : isSupabaseConfigured ? 'Checking Supabase connection…' : 'Supabase is not configured'}</strong>
+                  <p className="mt-1 text-[12px]">{isSupabaseConfigured ? 'Projects and events can be edited from the shared database.' : 'Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env to enable shared CMS data.'}</p>
+                  {isSupabaseConfigured && <button onClick={checkConnection} className="mt-3 border border-current px-3 py-2 text-[10px] uppercase tracking-[0.16em]">Check connection</button>}
+                </div>
                 <p className="text-[14px] leading-relaxed text-cocoa/75">
                   All site content is stored as a single JSON document. In production this document
                   lives in Supabase (Postgres), images in Supabase Storage, and this dashboard is

@@ -207,15 +207,16 @@ export function AdminCard({
   onDelete,
   onMoveUp,
   onMoveDown,
+  collapsible = false,
 }: {
   title: string;
   children: ReactNode;
   onDelete?: () => void;
   onMoveUp?: () => void;
   onMoveDown?: () => void;
+  collapsible?: boolean;
 }) {
-  return (
-    <section className="border border-sand bg-ivory/60 p-5">
+  const content = <>
       <header className="mb-5 flex items-center justify-between gap-4 border-b border-sand pb-3">
         <h3 className="font-serif text-[22px] text-charcoal">{title}</h3>
         <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.18em]">
@@ -237,8 +238,8 @@ export function AdminCard({
         </div>
       </header>
       <div className="space-y-5">{children}</div>
-    </section>
-  );
+    </>;
+  return collapsible ? <details className="admin-card-collapsible border border-sand bg-ivory/60 p-5"><summary className="cursor-pointer list-none font-serif text-[22px] text-charcoal">{title}<span>Open editor</span></summary><div className="pt-5">{content}</div></details> : <section className="border border-sand bg-ivory/60 p-5">{content}</section>;
 }
 
 export function AddButton({ label, onClick }: { label: string; onClick: () => void }) {
