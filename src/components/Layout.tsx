@@ -22,11 +22,11 @@ function NavDropdown({ section, mobile = false, onNavigate }: { section: "who" |
     </div>
     <ul id={id} className="who-submenu" hidden={!open}>
       {section === 'who' ? <>
-        <li><Link to="/#our-mission" onClick={close}>{en ? 'Our mission' : 'Sứ mệnh'}</Link></li>
-        <li><Link to="/#where-it-began" onClick={close}>{en ? 'Where it began' : 'Khởi nguồn'}</Link></li>
+        <li><Link to="/about-mystere#our-mission" onClick={close}>{en ? 'Our mission' : 'Sứ mệnh'}</Link></li>
+        <li><Link to="/about-mystere#where-it-began" onClick={close}>{en ? 'Where it began' : 'Khởi nguồn'}</Link></li>
       </> : <>
         <li><Link to="/#what-we-do" onClick={close}>{en ? 'Our Project' : 'Dự án của chúng tôi'}</Link>
-          <ol>{content.communities.filter(c => c.published).map(c => <li key={c.id}><Link to={`/project/${c.slug}`} onClick={close}>{c.name}</Link></li>)}</ol>
+          <ul>{content.communities.filter(c => c.published).map(c => <li key={c.id}><Link to={`/projects#${c.slug}`} onClick={close}>{c.name}</Link></li>)}</ul>
         </li>
         <li><Link to="/#our-event" onClick={close}>{en ? 'Our Event' : 'Sự kiện của chúng tôi'}</Link></li>
       </>}
@@ -54,8 +54,8 @@ export default function Layout() {
   const nav = [{to:'/#who-we-are', label:en ? 'Who we are' : 'Về chúng tôi'}, {to:'/#what-we-do',label:en ? 'What we do' : 'Chúng tôi làm gì'}];
   const entries = [
     {to:'/#who-we-are', title:nav[0].label, text:t(content.home.intro.body)},
-    {to:'/#where-it-began',title:t(content.home.artisan.title),text:t(content.home.artisan.body)},
-    ...content.communities.filter(c => c.published).map(c => ({to:`/#${c.slug}`, title:c.name, text:`${t(c.title)} ${t(c.story)}`})),
+    {to:'/about-mystere#where-it-began',title:t(content.home.artisan.title),text:t(content.home.artisan.body)},
+    ...content.communities.filter(c => c.published).map(c => ({to:`/projects#${c.slug}`, title:c.name, text:`${t(c.title)} ${t(c.story)}`})),
     {to:'/#the-thread',title:t(content.home.thread.title),text:t(content.home.thread.body)},
   ];
   const results = query.trim() ? entries.filter(x => `${x.title} ${x.text}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase())) : [];

@@ -12,7 +12,7 @@ function Project({ community: c }: { community: Community }) {
   return <article className="project-row" id={c.slug} data-scroll-part>
     {image ? <Img src={image} alt={c.name} ratio="aspect-[3/2]" className="project-photo" /> : <div className="project-photo photo-pending"><span>{t(c.region)}</span><small>{lang === 'en' ? 'Field photograph forthcoming' : 'Ảnh thực địa sẽ được bổ sung'}</small></div>}
     <div className="project-copy"><p className="kicker">{t(c.region)}</p><h3>{c.name}</h3><p>{t(c.line)}</p>
-      <Link className="project-more" to={`/project/${c.slug}`}>{lang === 'en' ? 'More about' : 'Xem thêm'} <span aria-hidden="true">↗</span></Link>
+      <Link className="project-more" to={`/projects#${c.slug}`}>{lang === 'en' ? 'More about' : 'Xem thêm'} <span aria-hidden="true">↗</span></Link>
 
     </div>
   </article>;
@@ -50,8 +50,87 @@ export function CommunityPage() {
   const en = lang === 'en';
   return <article className="community-page">
     <header className="community-hero content-width"><div><p className="kicker">{t(community.region)}</p><p className="community-index">{en ? 'Our project' : 'Dự án cộng đồng'}</p><h1>{community.name}</h1><p className="community-strapline">{t(community.title)}</p></div><figure><Img src={image} alt={community.name} ratio="aspect-[4/3]" priority /></figure></header>
-    <div className="community-body content-width"><div className="community-story"><p className="kicker">{en ? 'The story' : 'Câu chuyện'}</p><h2>{t(community.title)}</h2><div className="community-prose">{t(community.story).split("\n\n").map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div></div><aside className="community-aside"><p className="kicker">{en ? 'The craft' : 'Nghề thủ công'}</p><p>{t(community.craft)}</p><a href="#contact" className="contact-project-link">{en ? 'Contact us for more information' : 'Liên hệ để biết thêm thông tin'} <span aria-hidden="true">→</span></a><Link to="/#what-we-do" className="back-link">← {en ? 'Back to What we do' : 'Quay lại Chúng tôi làm gì'}</Link></aside></div>
+    <div className="community-body content-width"><div className="community-story"><p className="kicker">{en ? 'The story' : 'Câu chuyện'}</p><h2>{t(community.title)}</h2><div className="community-prose">{t(community.story).split("\n\n").map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div></div><aside className="community-aside"><p className="kicker">{en ? 'The craft' : 'Nghề thủ công'}</p><p>{t(community.craft)}</p><Link to="/#contact" className="contact-project-link">{en ? 'Contact us for more information' : 'Liên hệ để biết thêm thông tin'} <span aria-hidden="true">→</span></Link><Link to="/#what-we-do" className="back-link">← {en ? 'Back to What we do' : 'Quay lại Chúng tôi làm gì'}</Link></aside></div>
     <section className="community-closing"><div className="content-width"><p className="kicker">{en ? 'The work behind the work' : 'Công việc phía sau mỗi sản phẩm'}</p><h2>{en ? 'What “supporting a community” actually looks like' : 'Đồng hành cùng một cộng đồng thực sự là gì'}</h2><p>{en ? 'Behind every product on our shelves is a small group of women who learned to dye, weave, sew, keep books, and run a business together — often for the first time. We helped set up those groups, brought in training, connected them to markets in Hanoi and Saigon, and built the “Craft Belt” name so their work could travel further than the village.' : 'Phía sau mỗi sản phẩm là một nhóm phụ nữ đã học cách nhuộm, dệt, may, ghi sổ và cùng nhau vận hành công việc — nhiều khi là lần đầu tiên. Chúng tôi hỗ trợ thành lập nhóm, kết nối đào tạo với thị trường Hà Nội và Sài Gòn, đồng thời xây dựng tên gọi “Craft Belt” để nghề của họ đi xa hơn bản làng.'}</p></div></section>
+  </article>;
+}
+
+export function AllProjectsPage() {
+  const { content, t, lang } = useStore();
+  const en = lang === 'en';
+  const communities = content.communities.filter(item => item.published);
+  const fallback: Record<string, string> = { 'red-dao':'/images/red-dao.png', 'dao-tien':'/images/project-dao-tien.jpg', nung:'/images/project-nung.jpg', hmong:'/images/project-hmong.jpg', 'black-lo-lo':'/images/project-lo-lo.jpg' };
+  return <article className="projects-page">
+    <header className="projects-page-hero content-width">
+      <p className="section-label">{en ? 'Our projects' : 'Dự án cộng đồng'}</p>
+      <h1>{en ? 'Standing beside the artisans, project by project' : 'Đồng hành cùng nghệ nhân, qua từng dự án'}</h1>
+      <p>{en ? 'Five communities, five living crafts, and one long relationship built through visits, trust, bazaars, training and the work carried home from the village.' : 'Năm cộng đồng, năm nghề thủ công sống động và một mối quan hệ dài được xây dựng qua những chuyến thăm, niềm tin, hội chợ, đào tạo và những sản phẩm đi xa khỏi bản làng.'}</p>
+    </header>
+    <div className="projects-page-list content-width">
+      {communities.map(community => {
+        const image = community.image || fallback[community.slug];
+        return <section key={community.id} id={community.slug} data-scroll-part className="project-detail-section">
+          <div className="project-detail-media">
+            <Img src={image} alt={community.name} ratio="aspect-[4/3]" priority={community.slug === 'red-dao'} />
+          </div>
+          <div className="project-detail-copy">
+            <p className="kicker">{t(community.region)}</p>
+            <h2>{community.name}</h2>
+            <p className="project-detail-title">{t(community.title)}</p>
+            <div className="project-detail-prose">{t(community.story).split("\n\n").map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
+            <aside className="project-detail-aside">
+              <p className="kicker">{en ? 'The craft' : 'Nghề thủ công'}</p>
+              <p>{t(community.craft)}</p>
+              <Link to="/#contact" className="contact-project-link">{en ? 'Contact us for more information' : 'Liên hệ để biết thêm thông tin'} <span aria-hidden="true">→</span></Link>
+            </aside>
+          </div>
+        </section>;
+      })}
+    </div>
+    <section className="community-closing">
+      <div className="content-width">
+        <p className="kicker">{en ? 'The work behind the work' : 'Công việc phía sau mỗi sản phẩm'}</p>
+        <h2>{en ? 'What “supporting a community” actually looks like' : 'Đồng hành cùng một cộng đồng thực sự là gì'}</h2>
+        <p>{en ? 'Behind every product on our shelves is a small group of women who learned to dye, weave, sew, keep books, and run a business together — often for the first time. We helped set up those groups, brought in training, connected them to markets in Hanoi and Saigon, and built the “Craft Belt” name so their work could travel further than the village. Some of that support came through workshops and mentors; a good deal of it came through bazaars like the ones on the next page — bazaars that quite literally built four walls and a roof for these communities to work under.' : 'Phía sau mỗi sản phẩm là một nhóm phụ nữ đã học cách nhuộm, dệt, may, ghi sổ và cùng nhau vận hành công việc — nhiều khi là lần đầu tiên. Chúng tôi hỗ trợ thành lập nhóm, kết nối đào tạo, đưa sản phẩm đến thị trường Hà Nội và Sài Gòn, đồng thời xây dựng tên gọi “Craft Belt” để nghề của họ đi xa hơn bản làng. Một phần hỗ trợ đến từ hội thảo và người hướng dẫn; một phần lớn đến từ những hội chợ ở trang tiếp theo — những hội chợ đã thực sự dựng nên bốn bức tường và mái nhà để cộng đồng có nơi làm việc.'}</p>
+        <Link to="/#what-we-do" className="back-link">← {en ? 'Back to What we do' : 'Quay lại Chúng tôi làm gì'}</Link>
+      </div>
+    </section>
+  </article>;
+}
+
+export function AboutMysterePage() {
+  const { content, t, lang } = useStore();
+  const h = content.home;
+  const en = lang === 'en';
+  return <article className="about-mystere-page">
+    <header className="about-page-hero content-width">
+      <p className="section-label">{en ? 'About Mystère' : 'Về Mystère'}</p>
+      <h1>{en ? 'A Vietnamese family shop, built around craft and connection' : 'Một cửa hàng gia đình Việt Nam, gắn với nghề thủ công và kết nối con người'}</h1>
+      <p>{en ? 'Mystère Shop introduces the finest tribal art and craft from ethnic families of Red Dao, Money Dao, Nung, H’Mong and Black Lolo in northern Vietnam.' : 'Mystère Shop giới thiệu nghệ thuật và nghề thủ công tinh túy từ các gia đình người Dao Đỏ, Dao Tiền, Nùng, H’Mông và Lô Lô Đen ở miền núi phía Bắc Việt Nam.'}</p>
+    </header>
+    <section id="our-mission" data-scroll-part className="about-detail-section content-width">
+      <div>
+        <p className="kicker">{t(h.intro.eyebrow)}</p>
+        <h2>{t(h.intro.title)}</h2>
+        <div className="red-rule" />
+        <p>{t(h.intro.body)}</p>
+      </div>
+      <figure className="mission-image">
+        <Img src={h.intro.image} alt={en ? 'Inside Mystère Shop on Dong Khoi Street, Saigon' : 'Không gian cửa hàng Mystère trên đường Đồng Khởi, Sài Gòn'} ratio="aspect-[4/5]" priority/>
+        <figcaption><span>141 Đồng Khởi, Saigon</span><span>{en ? 'Since 2001' : 'Từ năm 2001'}</span></figcaption>
+      </figure>
+    </section>
+    <section id="where-it-began" data-scroll-part className="about-detail-section about-detail-section-alt content-width">
+      <figure>
+        <Img src={h.artisan.image} alt={t(h.artisan.title)} ratio="aspect-[4/3]" />
+      </figure>
+      <div>
+        <p className="kicker">{en ? 'Where it began' : 'Khởi nguồn'}</p>
+        <h2>{t(h.artisan.title)}</h2>
+        <p>{t(h.artisan.body)}</p>
+        <Link to="/#who-we-are" className="project-more">← {en ? 'Back to Who we are' : 'Quay lại Về chúng tôi'}</Link>
+      </div>
+    </section>
   </article>;
 }
 
@@ -125,14 +204,13 @@ export default function Home() {
         <div className="banner-meta"><p className="banner-eyebrow">The Vietnamese Refinement</p><p className="banner-location">Huyền Bí — Saigon</p><p className="banner-years">25 YEARS — EST. 2001</p></div>
         <h1>Mystère Shop</h1>
         <div className="banner-bottom">
-          <Link to="/#where-it-began" className="banner-cta">{t(h.heroCta)} <span aria-hidden="true">→</span></Link>
+          <Link to="/about-mystere#where-it-began" className="banner-cta">{t(h.heroCta)} <span aria-hidden="true">→</span></Link>
         </div>
       </div>
     </section>
     <section id="who-we-are" data-scroll-part className="who-section" aria-labelledby="who-heading">
       <div className="section-top content-width"><h2 id="who-heading" className="who-heading">{en ? 'WHO WE ARE' : 'VỀ CHÚNG TÔI'}</h2><span>{en ? 'Rooted in Vietnam. Connected by craft.' : 'Khởi nguồn Việt Nam. Gắn kết qua nghề thủ công.'}</span></div>
-      <div id="our-mission" className="mission-grid content-width"><div className="mission-copy"><p className="kicker">{en ? 'Our mission' : 'Sứ mệnh'}</p><h3>{t(h.intro.title)}</h3><div className="red-rule"/><p>{t(h.intro.body)}</p></div><figure className="mission-image"><Img src={h.intro.image} alt={en ? 'Inside Mystère Shop on Dong Khoi Street, Saigon' : 'Không gian cửa hàng Mystère trên đường Đồng Khởi, Sài Gòn'} ratio="aspect-[4/5]" priority/><figcaption><span>141 Đồng Khởi, Saigon</span><span>{en ? 'Since 2001' : 'Từ năm 2001'}</span></figcaption></figure></div>
-      <div className="origin-grid content-width" id="where-it-began" data-scroll-part><figure><Img src={h.artisan.image} alt={en ? 'A photograph of the Red Dao community from the shop’s archive' : 'Ảnh cộng đồng Dao Đỏ từ tư liệu cửa hàng'} ratio="aspect-[16/10]"/><figcaption>{en ? 'From our archive · The Red Dao community' : 'Từ tư liệu của chúng tôi · Cộng đồng Dao Đỏ'}</figcaption></figure><div><p className="kicker">{en ? 'Where it began' : 'Khởi nguồn'}</p><h3>{t(h.artisan.title)}</h3><p>{t(h.artisan.body)}</p><div className="origin-note"><strong>2001</strong><span>{en ? 'A small shop in Saigon.\nThe beginning of a shared journey.' : 'Một cửa hàng nhỏ ở Sài Gòn.\nKhởi đầu hành trình đồng hành.'}</span></div></div></div>
+      <div id="our-mission" className="mission-grid content-width"><div className="mission-copy"><p className="kicker">{en ? 'Our story' : 'Câu chuyện của chúng tôi'}</p><h3>{en ? 'The Vietnamese Refinement, rooted in people and place' : 'The Vietnamese Refinement — bắt nguồn từ con người và vùng đất'}</h3><div className="red-rule"/><p>{en ? 'Mystère Shop “The Vietnamese Refinement” at 141 Dong Khoi Street, District 1 in Ho Chi Minh City is an excellent location for buying finest handicraft made by the ethnic minorities of Vietnam. You will enjoy your shopping in a friendly and unique atmosphere.' : 'Huyền Bí (Mystère Shop) “The Vietnamese Refinement” là doanh nghiệp gia đình người Việt tại 141 Đồng Khởi, Quận 1, Thành phố Hồ Chí Minh, chuyên cung cấp các sản phẩm thủ công của dân tộc người Dao Đỏ, Dao Tiền, Nùng, H’Mông và Lô Lô Đen ở khu vực Cao Bằng, Hà Giang và Sapa.'}</p><p>{en ? 'We trade finest tribal art hand made from ethnic families of Red Dao, Money Dao, Nung, H’Mong and Black Lolo from the mountainous regions Cao Bang, Ha Giang and Sapa of northern Vietnam.' : 'Với hơn 20 năm kinh nghiệm, Huyền Bí mang đến trải nghiệm mua sắm độc đáo và sang trọng qua các sản phẩm thời trang như trang sức bạc và phụ kiện thủ công, đề cao chất lượng, sự thanh lịch và tính độc nhất.'}</p><Link to="/about-mystere" className="project-more">{en ? 'About Mystère' : 'Về Mystère'} <span aria-hidden="true">→</span></Link></div><figure className="mission-image"><Img src={h.intro.image} alt={en ? 'Inside Mystère Shop on Dong Khoi Street, Saigon' : 'Không gian cửa hàng Mystère trên đường Đồng Khởi, Sài Gòn'} ratio="aspect-[4/5]" priority/><figcaption><span>141 Đồng Khởi, Saigon</span><span>{en ? 'Since 2001' : 'Từ năm 2001'}</span></figcaption></figure></div>
     </section>
     <section id="what-we-do" data-scroll-part className="what-section"><div className="content-width"><div className="section-top"><p className="section-label">{en ? 'What we do' : 'Chúng tôi làm gì'}</p><span>{en ? 'Our projects' : 'Các dự án cùng cộng đồng'}</span></div><div className="projects-intro"><h2>{en ? 'More than a shop — a twenty-five-year partnership' : 'Hơn cả một cửa hàng — hành trình đồng hành 25 năm'}</h2><p>{en ? 'Mystère Shop has traded the finest handmade jewellery and craft of Vietnam’s hill-tribe artisans since 2001. The relationship behind every piece runs deeper than a transaction. It began with a chance meeting, grew through fifteen years of trust, and continues today across five communities in Cao Bằng, Hà Giang and Sa Pa.' : 'Từ năm 2001, Mystère Shop giới thiệu những món trang sức và sản phẩm thủ công tinh túy của nghệ nhân vùng cao Việt Nam. Mối quan hệ phía sau mỗi món đồ sâu sắc hơn một giao dịch — bắt đầu từ một cuộc gặp tình cờ, lớn lên qua mười lăm năm tin cậy và tiếp tục cùng năm cộng đồng tại Cao Bằng, Hà Giang và Sa Pa.'}</p></div><div className="projects-heading"><h2>{t(h.projectsIntro.title)}</h2><span>{en ? "Different communities — same commitment" : "Những cộng đồng khác nhau — chung một cam kết"}</span></div><div className="project-list">{content.communities.filter(c => c.published).map(c => <Project key={c.id} community={c}/>)}</div><Events /></div>
     </section>
