@@ -929,7 +929,7 @@ export default function Admin() {
           {section === "events" && <>
             <h1 className="font-serif text-4xl text-charcoal">What we do · Events</h1>
             <Note>These are archived events. Dates and venue addresses retain the information supplied for each event.</Note>
-            {content.events.map((event, index) => <AdminCard key={event.id} collapsible title={event.title.en}>
+            {content.events.map((event, index) => <AdminCard key={event.id} collapsible title={event.title.en || 'Untitled event'} onDelete={() => up(d => d.events.splice(index, 1))} onMoveUp={() => up(d => move(d.events, index, -1))} onMoveDown={() => up(d => move(d.events, index, 1))}>
               <Toggle label="Published" value={event.published} onChange={(v) => up(d => { d.events[index].published = v; })} />
               <ImageField label="Event photograph" value={event.image} onChange={v => up(d => { d.events[index].image = v; })} />
               <Field label="Event website URL (leave empty until available)"><TextInput value={event.url} onChange={v => up(d => { d.events[index].url = v; })} /></Field>
@@ -940,6 +940,7 @@ export default function Admin() {
               <Field label="Venue"><TextInput value={event.venue} onChange={v => up(d => { d.events[index].venue = v; })} /></Field>
               <LangField label="Address" value={event.address} onChange={v => up(d => { d.events[index].address = v; })} />
             </AdminCard>)}
+            <AddButton label="Add event" onClick={() => up(d => d.events.push({ id: `event-${Date.now()}`, image: '', url: '', title: { en: 'New event', vi: 'Sự kiện mới' }, dateLabel: { ...emptyL }, dateStart: '', schedule: { ...emptyL }, venue: '', address: { ...emptyL }, published: false }))} />
           </>}
 
           {/* NEWSLETTER */}
