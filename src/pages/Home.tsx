@@ -103,7 +103,7 @@ export function AboutMysterePage() {
   return <article className="about-mystere-page">
     <header className="about-page-hero content-width">
       <p className="section-label">{en ? 'About Mystère' : 'Về Mystère'}</p>
-      <h1>{en ? 'A Vietnamese family shop, built around craft and connection' : 'Một cửa hàng gia đình Việt Nam, gắn với nghề thủ công và kết nối con người'}</h1>
+      <h1>{en ? 'Mystère Shop: Unique Art, Craft & Cultural Heritage' : 'Shop Huyền Bí: Nghệ thuật, nghề thủ công và di sản văn hóa độc đáo'}</h1>
       <p>{en ? 'Mystère Shop introduces the finest tribal art and craft from ethnic families of Red Dao, Money Dao, Nung, H’Mong and Black Lolo in northern Vietnam.' : 'Mystère Shop giới thiệu nghệ thuật và nghề thủ công tinh túy từ các gia đình người Dao Đỏ, Dao Tiền, Nùng, H’Mông và Lô Lô Đen ở miền núi phía Bắc Việt Nam.'}</p>
     </header>
     <section id="our-mission" data-scroll-part className="about-detail-section content-width">
@@ -114,7 +114,7 @@ export function AboutMysterePage() {
         <p>{t(h.intro.body)}</p>
       </div>
       <figure className="mission-image">
-        <Img src={h.intro.image} alt={en ? 'Inside Mystère Shop on Dong Khoi Street, Saigon' : 'Không gian cửa hàng Mystère trên đường Đồng Khởi, Sài Gòn'} ratio="aspect-[4/5]" priority/>
+        <Img src="/images/nguoidantoc.png" alt={en ? 'Ethnic minority artisans standing at the Mystère Shop' : 'Các nghệ nhân dân tộc tại Shop Huyền Bí'} ratio="aspect-[4/5]" priority/>
         <figcaption><span>141 Đồng Khởi, Saigon</span><span>{en ? 'Since 2001' : 'Từ năm 2001'}</span></figcaption>
       </figure>
     </section>

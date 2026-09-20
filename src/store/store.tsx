@@ -63,6 +63,8 @@ function load<T>(key: string, fallback: T): T {
 function loadCurrentContent(): SiteContent {
   const saved = load<SiteContent>(CONTENT_KEY, defaultContent);
   if (saved === defaultContent) return saved;
+  // Remove the temporary record created during initial CMS testing.
+  saved.communities = (saved.communities ?? []).filter(item => item.id !== "new-community" && item.slug !== "new-community");
   saved.events ??= structuredClone(defaultContent.events);
   for (const event of defaultContent.events) {
     const existing = saved.events.find(item => item.id === event.id);
@@ -125,7 +127,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (!active) return;
       setContentState(prev => {
         const next = structuredClone(prev);
-        if (!communities.error && communities.data?.length) next.communities = communities.data.map(row => ({ ...row, region: row.region, title: row.title, line: row.line, story: row.story, craft: row.craft }));
+        if (!communities.error && communities.data) next.communities = communities.data.filter(row => row.id !== "new-community" && row.slug !== "new-community").map(row => ({ ...row, region: row.region, title: row.title, line: row.line, story: row.story, craft: row.craft }));
         if (!events.error && events.data?.length) next.events = events.data.map(row => ({ id: row.id, image: row.image, url: row.url ?? '', title: row.title, dateLabel: row.date_label, dateStart: row.date_start ?? '', schedule: row.schedule, venue: row.venue, address: row.address, published: row.published }));
         return next;
       });
@@ -170,6 +172,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, []);
   const saveContent = useCallback(async () => {
     if (!supabase || !user) { localStorage.setItem(CONTENT_KEY, JSON.stringify(content)); return true; }
+    const communityIds = content.communities.map(row => row.id);
+    const eventIds = content.events.map(row => row.id);
+    const [communityDelete, eventDelete] = await Promise.all([
+      communityIds.length ? supabase.from('communities').delete().not('id', 'in', `(${communityIds.join(',')})`) : supabase.from('communities').delete().neq('id', ''),
+      eventIds.length ? supabase.from('events').delete().not('id', 'in', `(${eventIds.join(',')})`) : supabase.from('events').delete().neq('id', ''),
+    ]);
+    if (communityDelete.error || eventDelete.error) return false;
     const [communities, events] = await Promise.all([
       supabase.from('communities').upsert(content.communities.map((row, sort_order) => ({ ...row, sort_order }))),
       supabase.from('events').upsert(content.events.map((row, sort_order) => ({ id: row.id, image: row.image, url: row.url, title: row.title, date_label: row.dateLabel, date_start: row.dateStart || null, schedule: row.schedule, venue: row.venue, address: row.address, published: row.published, sort_order }))),
