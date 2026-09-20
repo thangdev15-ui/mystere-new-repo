@@ -607,16 +607,18 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
 /* Events — one compact, balanced horizontal row per event. */
 .what-section .events-section { margin-top:52px; padding:0 0 58px; }
 .what-section .event-grid { display:block; margin-top:18px; }
-.what-section .event-card.event-strip { display:grid; grid-template-columns:260px minmax(0,1fr); min-height:210px; margin-bottom:18px; padding:0; overflow:hidden; background:white; }
-.what-section .event-strip figure { height:210px; margin:0; overflow:hidden; background:#ecefea; }
+.what-section .event-card.event-strip { display:grid; grid-template-columns:minmax(280px,34%) minmax(0,1fr); min-height:260px; margin-bottom:22px; padding:0; overflow:hidden; background:white; }
+.what-section .event-strip figure { height:260px; margin:0; overflow:hidden; background:#ecefea; }
 .what-section .event-strip figure img { width:100%; height:100%; object-fit:cover; }
-.what-section .event-strip .event-card-copy { position:static; display:grid; grid-template-columns:minmax(220px,1.4fr) minmax(170px,.75fr) minmax(220px,1fr); gap:28px; align-items:center; padding:30px 36px; }
-.what-section .event-summary .kicker { position:static; margin:0 0 14px; color:#6c796f; }
-.what-section .event-summary h4 { margin:0; font-size:22px; line-height:1.35; }
+.what-section .event-strip .event-card-copy { position:static; display:grid; grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr); grid-template-rows:1fr auto; gap:24px 18px; align-items:end; padding:34px 42px 32px; }
+.what-section .event-summary { grid-column:1/-1; align-self:start; max-width:720px; }
+.what-section .event-summary .kicker { position:static; margin:0 0 17px; color:#6c796f; }
+.what-section .event-summary h4 { margin:0; font-size:clamp(24px,2.25vw,34px); line-height:1.2; letter-spacing:-.55px; }
+.what-section .event-timing,.what-section .event-strip address { min-height:78px; padding:17px 19px !important; border:0 !important; border-radius:4px; background:#faf8f3; }
 .what-section .event-timing time { display:block; color:var(--brand-red); font-size:13px; font-weight:700; }
-.what-section .event-timing .event-schedule { margin-top:12px; color:#667269; font-size:12px; line-height:1.7; }
-.what-section .event-strip address { display:flex; flex-direction:column; gap:6px; padding:0; border:0 !important; color:#667269; font-size:12px; line-height:1.65; }
+.what-section .event-timing .event-schedule { margin-top:7px; color:#667269; font-size:12px; line-height:1.6; }
+.what-section .event-strip address { display:flex; flex-direction:column; justify-content:center; gap:5px; color:#667269; font-size:12px; line-height:1.55; }
 .what-section .event-strip address strong { color:#303833; font-weight:700; }
-@media(max-width:1000px) { .what-section .event-card.event-strip { grid-template-columns:220px minmax(0,1fr); } .what-section .event-strip .event-card-copy { grid-template-columns:1fr 1fr; } .what-section .event-strip address { grid-column:1/-1; } }
-@media(max-width:680px) { .community-work-page { grid-template-columns:1fr; } .community-work-page article:nth-child(n+2) { display:none; } .community-work-page figure { height:235px; } .what-section .event-card.event-strip { grid-template-columns:1fr; } .what-section .event-strip figure { height:245px; } .what-section .event-strip .event-card-copy { grid-template-columns:1fr; padding:24px; } .what-section .event-strip address { grid-column:auto; } }
+@media(max-width:1000px) { .what-section .event-card.event-strip { grid-template-columns:250px minmax(0,1fr); } .what-section .event-strip .event-card-copy { padding:28px; } }
+@media(max-width:680px) { .community-work-page { grid-template-columns:1fr; } .community-work-page article:nth-child(n+2) { display:none; } .community-work-page figure { height:235px; } .what-section .event-card.event-strip { grid-template-columns:1fr; } .what-section .event-strip figure { height:245px; } .what-section .event-strip .event-card-copy { grid-template-columns:1fr; grid-template-rows:auto; padding:25px; } .what-section .event-summary,.what-section .event-strip address { grid-column:auto; } }
 @media(prefers-reduced-motion:reduce) { .community-work-track { transition:none; } }
