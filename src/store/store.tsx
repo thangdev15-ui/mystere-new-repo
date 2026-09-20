@@ -92,6 +92,9 @@ function loadCurrentContent(): SiteContent {
   for (const block of [saved.home.intro, saved.home.thread]) {
     if (block.image === "/images/mystere-shop.jpg") block.image = "/images/mystere-shop.png";
   }
+  if (["/images/mystere-shop.png", "/images/shop.jpg"].includes(saved.home.intro.image)) {
+    saved.home.intro.image = defaultContent.home.intro.image;
+  }
   if (saved.home.heroImage.startsWith("https://lh3.googleusercontent.com")) saved.home.heroImage = defaultContent.home.heroImage;
   const legacy = (value: string, id: string) => value?.startsWith(`https://lh3.googleusercontent.com/d/${id}=`);
   if (legacy(saved.home.intro.image, "1WTrl0Uh0fHLZDlnP2dvLh4qD5_JiDnn7")) saved.home.intro.image = defaultContent.home.intro.image;

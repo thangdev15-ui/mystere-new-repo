@@ -729,6 +729,8 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
   object-fit:contain;
   object-position:center;
 }
+.who-section .mission-image::before,
+.about-detail-section .mission-image::before { display:none; content:none; }
 
 /* Keep event metadata aligned and give the long 2014 schedule enough room. */
 .what-section .event-strip .event-card-copy {
