@@ -353,14 +353,18 @@ figcaption { font-size:10px; line-height:1.6; color:#65716c; margin-top:13px; }
 .events-section { padding-bottom:0; }
 .community-work-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin-top:28px; }
 .community-work-grid article { min-height:310px; border:0; background:#fff; box-shadow:0 1px 0 rgba(207,216,208,.8); }
-.community-work-grid figure { margin:0; height:190px; overflow:hidden; }
-.community-work-grid figure img { width:100%; height:100%; object-fit:cover; }
+.community-work-grid { overflow:hidden; }
+.community-work-grid figure { margin:0; height:auto; aspect-ratio:16/9; overflow:hidden; background:#ecefea; }
+.community-work-grid figure img { width:100%; height:100%; object-fit:contain; object-position:center; }
 .community-work-grid article > div { padding:20px 24px 24px; }
 .community-work-grid h3 { font-size:19px; line-height:1.25; font-weight:700; }
-.community-work-grid article { animation:community-card-in .48s cubic-bezier(.22,1,.36,1) both; }
-.community-work-grid article:nth-child(2) { animation-delay:.06s; }
-.community-work-grid article:nth-child(3) { animation-delay:.12s; }
-@keyframes community-card-in { from { opacity:0; transform:translateX(18px); } to { opacity:1; transform:none; } }
+.community-work-grid article { animation:community-slide-from-right .62s cubic-bezier(.22,1,.36,1) both; }
+.community-work-grid article:nth-child(2) { animation-delay:.04s; }
+.community-work-grid article:nth-child(3) { animation-delay:.08s; }
+.community-work-grid:has(+ .community-carousel-controls button:last-child:disabled) article { animation-name:community-slide-from-left; }
+@keyframes community-slide-from-right { from { opacity:.2; transform:translateX(70%); } to { opacity:1; transform:none; } }
+@keyframes community-slide-from-left { from { opacity:.2; transform:translateX(-70%); } to { opacity:1; transform:none; } }
+@media(prefers-reduced-motion:reduce) { .community-work-grid article { animation:none; } }
 .community-carousel-controls { display:flex; justify-content:center; align-items:center; gap:10px; margin:24px 0 40px; }
 .community-carousel-controls span { display:none; }
 .community-carousel-controls button { width:10px; height:10px; padding:0; overflow:hidden; border:1px solid var(--brand-red); border-radius:50%; color:transparent; background:transparent; font-size:0; transition:background-color .25s ease,transform .25s ease; }
