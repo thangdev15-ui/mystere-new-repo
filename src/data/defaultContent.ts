@@ -465,6 +465,15 @@ export const defaultContent: SiteContent = {
       image: PLACEHOLDER,
       published: true,
     },
+    {
+      id: "cat5",
+      slug: "traditional-dress",
+      name: { en: "Traditional Dress", vi: "Trang phục truyền thống" },
+      short: { en: "Cloth, colour and identity", vi: "Vải vóc, màu sắc và bản sắc" },
+      description: { en: "Traditional garments made and worn by the communities we work with.", vi: "Trang phục truyền thống do các cộng đồng chúng tôi đồng hành làm và sử dụng." },
+      image: IMG_REDDAO_FAMILY,
+      published: true,
+    },
   ],
 
   products: [

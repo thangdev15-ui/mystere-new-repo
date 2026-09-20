@@ -66,6 +66,10 @@ function loadCurrentContent(): SiteContent {
   // Remove the temporary record created during initial CMS testing.
   saved.communities = (saved.communities ?? []).filter(item => item.id !== "new-community" && item.slug !== "new-community");
   saved.events ??= structuredClone(defaultContent.events);
+  saved.categories ??= structuredClone(defaultContent.categories);
+  for (const category of defaultContent.categories) {
+    if (!saved.categories.some(item => item.id === category.id)) saved.categories.push(structuredClone(category));
+  }
   for (const event of defaultContent.events) {
     const existing = saved.events.find(item => item.id === event.id);
     if (existing) { existing.image ??= event.image; existing.url ??= ""; }
