@@ -127,8 +127,8 @@ export const defaultContent: SiteContent = {
         vi: "Hơn cả một cửa hàng — hành trình đồng hành 25 năm",
       },
       body: {
-        en: "We bring the work of northern Vietnam’s artisans into view, support the communities who keep each craft alive, and create moments where their stories can be shared.",
-        vi: "Chúng tôi đưa nghề thủ công miền Bắc Việt Nam đến gần hơn, đồng hành cùng các cộng đồng gìn giữ nghề và tạo ra những dịp để câu chuyện của họ được chia sẻ.",
+        en: "Mystère Shop has traded the finest handmade jewellery and craft of Vietnam’s hill-tribe artisans since 2001. The relationship behind every piece runs deeper than a transaction. It began with a chance meeting, grew through fifteen years of trust, and continues today across five communities in Cao Bằng, Hà Giang and Sa Pa.",
+        vi: "Từ năm 2001, Mystère Shop đã giới thiệu những sản phẩm trang sức và thủ công tinh xảo nhất của các nghệ nhân vùng cao Việt Nam. Mối quan hệ phía sau mỗi sản phẩm sâu sắc hơn một giao dịch. Mối duyên ấy bắt đầu từ một cuộc gặp tình cờ, lớn lên qua mười lăm năm tin cậy và tiếp tục đến hôm nay cùng năm cộng đồng tại Cao Bằng, Hà Giang và Sa Pa.",
       },
     },
     thread: {
