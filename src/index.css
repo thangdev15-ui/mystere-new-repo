@@ -475,7 +475,6 @@ figcaption { font-size:10px; line-height:1.6; color:#65716c; margin-top:13px; }
 .what-section .project-copy > p:not(.kicker) { max-width:620px; font-size:16px; }
 .banner-content { padding-bottom:18px; }
 .banner-content h1 { font-family:'Kunstler Script','Edwardian Script ITC','Bickham Script Pro','Compendium','Allura',cursive; font-size:clamp(72px,9vw,132px); line-height:1.05; margin-top:8px; letter-spacing:0; }
-html[lang='en'] .banner-content h1 { font-size:clamp(58px,7.2vw,108px); }
 .banner-meta .banner-eyebrow { font-family:'Allura',cursive; text-transform:none; letter-spacing:0; font-size:27px; color:white; }
 .banner-bottom { position:absolute; right:0; bottom:26px; margin:0; }
 @media(max-width:1000px) { .what-section .project-row { grid-template-columns:minmax(250px,340px) minmax(0,1fr); gap:28px; } .what-section .projects-heading > span { display:none; } .banner-bottom { position:static; } }
