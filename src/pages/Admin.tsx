@@ -48,50 +48,48 @@ function Login() {
   const [email, setEmail] = useState("admin@mystere.vn");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-charcoal px-6">
-      <div className="w-full max-w-sm">
-        <Link to="/" className="flex items-center gap-3 font-serif text-[30px] text-ivory">
-          {content.contact.logo && <img src={content.contact.logo} alt="" className="h-12 w-12 object-contain" />}<span>Mystère</span>
-        </Link>
-        <p className="mt-2 text-[10px] uppercase tracking-[0.3em] text-cream/50">
-          Admin dashboard
-        </p>
+    <main className="login-page">
+      <section className="login-brand-panel" aria-label="Shop Huyền Bí">
+        <img className="login-brand-image" src="/images/Banner.png" alt="Nghệ nhân và cộng đồng vùng cao Việt Nam" />
+        <div className="login-brand-overlay" />
+        <div className="login-brand-content">
+          <Link to="/" className="login-brand-mark">{content.contact.logo && <img src={content.contact.logo} alt="" />}<span>Shop Huyền Bí<small>Mystère Shop</small></span></Link>
+          <div className="login-brand-story"><h1>Tinh hoa Việt Nam,<br/>bắt nguồn từ con người<br/>và vùng đất</h1><i/><p>Lan tỏa giá trị văn hóa, sản phẩm thủ công truyền thống Việt Nam đến gần hơn với bạn và thế giới.</p></div>
+        </div>
+      </section>
+      <section className="login-form-panel">
+        <div className="login-ornament" aria-hidden="true">✥</div>
+        <div className="login-form-wrap">
+          <p className="login-overline">Chào mừng bạn trở lại</p>
+          <h2>Đăng nhập</h2>
+          <p className="login-intro">Vui lòng đăng nhập để tiếp tục quản lý nội dung và khám phá những câu chuyện đặc sắc.</p>
         <form
-          className="mt-10 space-y-6"
-          onSubmit={(e) => {
+          className="login-form"
+          onSubmit={async (e) => {
             e.preventDefault();
-            void signIn(email, password).then(ok => { if (!ok) setError(true); });
+            setError(false); setLoading(true);
+            const ok = await signIn(email, password);
+            setLoading(false); if (!ok) setError(true);
           }}
         >
-          <label className="block">
-            <span className="text-[10px] uppercase tracking-[0.22em] text-cream/50">Email</span>
-            <input
-              className="mt-2 w-full border-b border-ivory/25 bg-transparent pb-2 text-ivory outline-none focus:border-ivory"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+          <label className="login-field"><span className="login-field-icon" aria-hidden="true">✉</span><input type="email" autoComplete="email" required placeholder="Email hoặc số điện thoại" value={email} onChange={(e) => setEmail(e.target.value)} />
           </label>
-          <label className="block">
-            <span className="text-[10px] uppercase tracking-[0.22em] text-cream/50">Password</span>
-            <input
-              type="password"
-              className="mt-2 w-full border-b border-ivory/25 bg-transparent pb-2 text-ivory outline-none focus:border-ivory"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+          <label className="login-field"><span className="login-field-icon" aria-hidden="true">⌑</span><input type={showPassword ? "text" : "password"} autoComplete="current-password" required placeholder="Mật khẩu" value={password} onChange={(e) => setPassword(e.target.value)} /><button type="button" className="login-reveal" aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"} onClick={() => setShowPassword(!showPassword)}>{showPassword ? 'Ẩn' : 'Hiện'}</button>
           </label>
-          {error && <p className="text-[13px] text-rust">Incorrect email or password.</p>}
-          <button className="w-full bg-ivory py-4 text-[11px] uppercase tracking-[0.28em] text-charcoal hover:bg-cream">
-            Sign in
-          </button>
+          <div className="login-options"><label><input type="checkbox" /> <span>Ghi nhớ đăng nhập</span></label><a href={`mailto:${content.contact.email}?subject=Quên mật khẩu`}>Quên mật khẩu?</a></div>
+          {error && <p className="login-error" role="alert">Email hoặc mật khẩu không chính xác.</p>}
+          <button className="login-submit" disabled={loading}>{loading ? 'ĐANG ĐĂNG NHẬP…' : 'ĐĂNG NHẬP  →'}</button>
+          <div className="login-divider"><span>Hoặc</span></div>
+          <button type="button" className="login-google" disabled title="Đăng nhập Google chưa được cấu hình"><b>G</b> Đăng nhập với Google</button>
         </form>
-        <p className="mt-8 text-[12px] leading-relaxed text-cream/40">
-          {import.meta.env.VITE_SUPABASE_URL ? 'Use the editor account created in Supabase Auth.' : <>Demo mode: <span className="text-cream/70">admin@mystere.vn</span> /{" "}<span className="text-cream/70">mystere2001</span></>}
-        </p>
-      </div>
-    </div>
+          <p className="login-register">Chưa có tài khoản? <a href={`mailto:${content.contact.email}?subject=Yêu cầu tài khoản quản trị`}>Đăng ký ngay →</a></p>
+        </div>
+      </section>
+    </main>
   );
 }
 
