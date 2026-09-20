@@ -229,6 +229,7 @@ export function AdminCard({
   collapsible?: boolean;
 }) {
   const [confirming, setConfirming] = useState(false);
+  const [editing, setEditing] = useState(false);
   const content = <>
       <header className="mb-5 flex items-center justify-between gap-4 border-b border-sand pb-3">
         <h3 className="font-serif text-[22px] text-charcoal">{title}</h3>
@@ -252,18 +253,20 @@ export function AdminCard({
       </header>
       <div className="space-y-5">{children}</div>
     </>;
-  const card = collapsible ? <details className="admin-card-collapsible border border-sand bg-ivory/60 p-5"><summary className="cursor-pointer list-none font-serif text-[22px] text-charcoal">{title}<span>Open editor</span></summary><div className="pt-5">{content}</div></details> : <section className="border border-sand bg-ivory/60 p-5">{content}</section>;
-  return <>{card}{confirming && <div className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal/45 p-5"><div className="w-full max-w-sm border border-sand bg-ivory p-6 shadow-xl"><h3 className="font-serif text-2xl text-charcoal">Delete this item?</h3><p className="mt-2 text-sm text-cocoa/70">This change will be included when you press Save changes.</p><div className="mt-6 flex justify-end gap-3"><button type="button" onClick={() => setConfirming(false)} className="border border-sand px-4 py-2 text-xs">Cancel</button><button type="button" onClick={() => { onDelete?.(); setConfirming(false); }} className="bg-rust px-4 py-2 text-xs text-white">Delete</button></div></div></div>}</>;
+  const card = collapsible ? <section className="admin-card-collapsible flex items-center justify-between border border-sand bg-white p-5"><h3 className="font-serif text-[22px] text-charcoal">{title}</h3><div className="flex items-center gap-4"><button type="button" onClick={() => setEditing(true)} className="text-[10px] uppercase tracking-[.18em] text-rust">Open editor</button>{onDelete && <button type="button" onClick={() => setConfirming(true)} className="text-[10px] uppercase tracking-[.18em] text-rust">Delete</button>}</div></section> : <section className="border border-sand bg-ivory/60 p-5">{content}</section>;
+  return <>{card}{editing && <div className="fixed inset-0 z-[90] flex items-center justify-center bg-charcoal/50 p-4" role="dialog" aria-modal="true" aria-label={`Edit ${title}`}><div className="admin-editor-modal max-h-[90vh] w-full max-w-3xl overflow-y-auto bg-white p-6 shadow-2xl"><div className="mb-5 flex items-center justify-between border-b border-sand pb-4"><div><p className="text-[10px] uppercase tracking-[.2em] text-rust">Editor</p><h2 className="mt-1 font-serif text-3xl text-charcoal">{title}</h2></div><button type="button" onClick={() => setEditing(false)} className="h-10 w-10 border border-sand text-xl">×</button></div>{content}<div className="sticky bottom-0 mt-6 flex justify-end border-t border-sand bg-white pt-4"><button type="button" onClick={() => setEditing(false)} className="bg-rust px-6 py-3 text-xs uppercase tracking-[.16em] text-white">Done</button></div></div></div>}{confirming && <div className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal/45 p-5"><div className="w-full max-w-sm border border-sand bg-white p-6 shadow-xl"><h3 className="font-serif text-2xl text-charcoal">Delete this item?</h3><p className="mt-2 text-sm text-cocoa/70">This change will be included when you press Save changes.</p><div className="mt-6 flex justify-end gap-3"><button type="button" onClick={() => setConfirming(false)} className="border border-sand px-4 py-2 text-xs">Cancel</button><button type="button" onClick={() => { onDelete?.(); setConfirming(false); setEditing(false); }} className="bg-rust px-4 py-2 text-xs text-white">Delete</button></div></div></div>}</>;
 }
 
 export function AddButton({ label, onClick }: { label: string; onClick: () => void }) {
+  const [creating, setCreating] = useState(false);
   return (
-    <button
-      onClick={onClick}
+    <><button
+      type="button"
+      onClick={() => setCreating(true)}
       className="w-full border border-dashed border-clay/70 py-4 text-[11px] uppercase tracking-[0.22em] text-clay hover:bg-cream"
     >
       + {label}
-    </button>
+    </button>{creating && <div className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal/45 p-5" role="dialog" aria-modal="true"><div className="w-full max-w-md bg-white p-6 shadow-xl"><p className="text-[10px] uppercase tracking-[.2em] text-rust">Create new</p><h3 className="mt-2 font-serif text-3xl text-charcoal">{label}</h3><p className="mt-3 text-sm leading-6 text-cocoa/70">A new draft will be created. Open it from the list to add content, then press Save changes.</p><div className="mt-7 flex justify-end gap-3"><button type="button" onClick={() => setCreating(false)} className="border border-sand px-4 py-2 text-xs">Cancel</button><button type="button" onClick={() => { onClick(); setCreating(false); }} className="bg-rust px-5 py-2 text-xs text-white">Create</button></div></div></div>}</>
   );
 }
 
