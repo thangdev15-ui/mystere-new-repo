@@ -448,3 +448,9 @@ figcaption { font-size:10px; line-height:1.6; color:#65716c; margin-top:13px; }
  .banner-content h1 { font-size:clamp(56px,15vw,100px); }
  .banner-meta .banner-eyebrow { font-size:23px; }
 }
+.brand > span { font-size:0; }
+.brand > span::before { content:'Mystère Shop'; font-size:31px; }
+.brand > span small { display:block; font-size:10px; }
+html[lang='vi'] .brand > span::before { content:'Shop Huyền Bí'; }
+html[lang='vi'] .brand > span small { font-size:0; }
+html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size:10px; }

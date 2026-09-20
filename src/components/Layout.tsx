@@ -7,6 +7,7 @@ function NavDropdown({ section, mobile = false, onNavigate }: { section: "who" |
   const [open, setOpen] = useState(false);
   const toggle = useRef<HTMLButtonElement>(null);
   const en = lang === 'en';
+  useEffect(() => { document.documentElement.lang = lang; }, [lang]);
   const id = `${section}-submenu-${mobile ? 'mobile' : 'desktop'}`;
   const title = section === 'who' ? (en ? 'Who we are' : 'Về chúng tôi') : (en ? 'What we do' : 'Chúng tôi làm gì');
   const target = section === 'who' ? '/#who-we-are' : '/#what-we-do';
