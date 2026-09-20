@@ -363,6 +363,9 @@ figcaption { font-size:10px; line-height:1.6; color:#65716c; margin-top:13px; }
 .community-work-grid p { margin-top:10px; color:#637067; font-size:13px; line-height:1.6; }
 .community-work-heading { margin-top:62px; }
 .what-section .projects-heading { border-top:0; }
+.what-section .projects-heading::before { display:none; }
+.what-section .projects-heading, .what-section .project-row, .what-section .event-grid, .what-section .event-strip, .community-work-grid { border:0 !important; }
+.what-section .project-list { border:0; }
 .event-strip { display:grid; grid-template-columns:250px minmax(0,1fr); min-height:170px; border-left:0; border-right:0; padding:0; align-items:stretch; }
 .event-strip figure { margin:0; }
 .event-strip figure img { height:170px; width:100%; object-fit:cover; }
