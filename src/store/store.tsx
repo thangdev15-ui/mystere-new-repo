@@ -67,7 +67,6 @@ function loadCurrentContent(): SiteContent {
   for (const event of defaultContent.events) {
     const existing = saved.events.find(item => item.id === event.id);
     if (existing) { existing.image ??= event.image; existing.url ??= ""; }
-    else saved.events.push(structuredClone(event));
   }
   for (const community of defaultContent.communities) {
     const existing = saved.communities.find(item => item.id === community.id);
