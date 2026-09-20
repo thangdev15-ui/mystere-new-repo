@@ -1,4 +1,4 @@
-import { useRef, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import type { L } from "../../lib/types";
 
 export function Field({ label, children }: { label: string; children: ReactNode }) {
@@ -24,6 +24,7 @@ export function TextInput({
   onChange: (v: string) => void;
   placeholder?: string;
 }) {
+  const [confirming, setConfirming] = useState(false);
   return (
     <input
       className={inputCls}
@@ -243,7 +244,7 @@ export function AdminCard({
             </button>
           )}
           {onDelete && (
-            <button onClick={onDelete} className="text-rust hover:underline">
+            <button type="button" onClick={(event) => { event.preventDefault(); event.stopPropagation(); setConfirming(true); }} className="text-rust hover:underline">
               Delete
             </button>
           )}
@@ -251,7 +252,8 @@ export function AdminCard({
       </header>
       <div className="space-y-5">{children}</div>
     </>;
-  return collapsible ? <details className="admin-card-collapsible border border-sand bg-ivory/60 p-5"><summary className="cursor-pointer list-none font-serif text-[22px] text-charcoal">{title}<span>Open editor</span></summary><div className="pt-5">{content}</div></details> : <section className="border border-sand bg-ivory/60 p-5">{content}</section>;
+  const card = collapsible ? <details className="admin-card-collapsible border border-sand bg-ivory/60 p-5"><summary className="cursor-pointer list-none font-serif text-[22px] text-charcoal">{title}<span>Open editor</span></summary><div className="pt-5">{content}</div></details> : <section className="border border-sand bg-ivory/60 p-5">{content}</section>;
+  return <>{card}{confirming && <div className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal/45 p-5"><div className="w-full max-w-sm border border-sand bg-ivory p-6 shadow-xl"><h3 className="font-serif text-2xl text-charcoal">Delete this item?</h3><p className="mt-2 text-sm text-cocoa/70">This change will be included when you press Save changes.</p><div className="mt-6 flex justify-end gap-3"><button type="button" onClick={() => setConfirming(false)} className="border border-sand px-4 py-2 text-xs">Cancel</button><button type="button" onClick={() => { onDelete?.(); setConfirming(false); }} className="bg-rust px-4 py-2 text-xs text-white">Delete</button></div></div></div>}</>;
 }
 
 export function AddButton({ label, onClick }: { label: string; onClick: () => void }) {
