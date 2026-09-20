@@ -123,12 +123,12 @@ export const defaultContent: SiteContent = {
     },
     projectsIntro: {
       title: {
-        en: "Standing beside the artisans, project by project",
-        vi: "Sát cánh cùng nghệ nhân, qua từng dự án",
+        en: "More than a shop — a 25-year partnership",
+        vi: "Hơn cả một cửa hàng — hành trình đồng hành 25 năm",
       },
       body: {
-        en: "Red Dao, Dao Tiền, Nùng, H'Mông and Black Lô Lô — the five communities whose craft you will find in the shop.",
-        vi: "Dao Đỏ, Dao Tiền, Nùng, H'Mông và Lô Lô Đen — năm cộng đồng mà tay nghề của họ hiện diện trong cửa hiệu.",
+        en: "We bring the work of northern Vietnam’s artisans into view, support the communities who keep each craft alive, and create moments where their stories can be shared.",
+        vi: "Chúng tôi đưa nghề thủ công miền Bắc Việt Nam đến gần hơn, đồng hành cùng các cộng đồng gìn giữ nghề và tạo ra những dịp để câu chuyện của họ được chia sẻ.",
       },
     },
     thread: {

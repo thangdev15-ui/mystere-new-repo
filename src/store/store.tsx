@@ -107,6 +107,8 @@ function loadCurrentContent(): SiteContent {
   if (saved.home.intro.title.en.startsWith("We help hill-tribe artisans")) saved.home.intro.title = defaultContent.home.intro.title;
   if (saved.home.artisan.body.en.startsWith("It started at a small fair for ethnic minority artisans,")) saved.home.artisan.body = defaultContent.home.artisan.body;
   if (saved.home.projectsIntro.body.en.startsWith("Red Dao, Dao Tiền, Nùng")) saved.home.projectsIntro.body = defaultContent.home.projectsIntro.body;
+  if (saved.home.projectsIntro.title.en.startsWith("Standing beside the artisans")) saved.home.projectsIntro.title = defaultContent.home.projectsIntro.title;
+  if (saved.home.projectsIntro.body.en.startsWith("Mystère Shop has been trading the finest handmade")) saved.home.projectsIntro.body = defaultContent.home.projectsIntro.body;
   if (saved.newsletter.title.en === "More stories are coming") {
     saved.newsletter.title = defaultContent.newsletter.title;
     saved.newsletter.body = defaultContent.newsletter.body;
