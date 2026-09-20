@@ -24,7 +24,6 @@ export function TextInput({
   onChange: (v: string) => void;
   placeholder?: string;
 }) {
-  const [confirming, setConfirming] = useState(false);
   return (
     <input
       className={inputCls}
@@ -229,6 +228,7 @@ export function AdminCard({
   onMoveDown?: () => void;
   collapsible?: boolean;
 }) {
+  const [confirming, setConfirming] = useState(false);
   const content = <>
       <header className="mb-5 flex items-center justify-between gap-4 border-b border-sand pb-3">
         <h3 className="font-serif text-[22px] text-charcoal">{title}</h3>
