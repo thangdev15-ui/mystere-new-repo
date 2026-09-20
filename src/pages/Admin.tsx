@@ -154,11 +154,8 @@ export default function Admin() {
     <div className="admin-shell min-h-screen bg-cream/60">
       <header className="admin-topbar sticky top-0 z-30 border-b border-sand bg-ivory">
         <div className="mx-auto flex max-w-[1500px] items-center justify-between px-6 py-4">
-          <div className="flex items-baseline gap-4">
-            <Link to="/" className="font-serif text-[24px] text-charcoal">
-              Mystère
-            </Link>
-            <span className="text-[10px] uppercase tracking-[0.28em] text-clay">Admin</span>
+          <div className="admin-topbar-brand">
+            <Link to="/">{content.contact.logo && <img src={content.contact.logo} alt="" />}<span>Shop Huyền Bí<small>Mystère Content Studio</small></span></Link>
           </div>
           <div className="flex items-center gap-6 text-[11px] uppercase tracking-[0.2em]">
             <span className={`${dirty ? "text-rust" : "text-moss"}`}>
