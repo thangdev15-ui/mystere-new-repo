@@ -183,6 +183,20 @@ figcaption { font-size:10px; line-height:1.6; color:#65716c; margin-top:13px; }
 
 /* Mystère CMS workspace. Kept under admin-shell so the public site remains untouched. */
 .admin-shell { --admin-red:#9f2630; --admin-ink:#292726; --admin-muted:#756f68; background:#f7f3ed; color:var(--admin-ink); }
+.admin-shell { --admin-red:var(--brand-red); --admin-ink:var(--body-ink); --admin-muted:#637067; background:#f3f5f3; }
+.admin-shell .admin-topbar { background:#fff; border-bottom:1px solid #d3dcd4; }
+.admin-shell .admin-workspace { max-width:1320px; }
+.admin-shell .admin-sidebar { width:230px; }
+.admin-shell .admin-sidebar-kicker { color:var(--brand-red); font-family:var(--font-serif); font-size:25px; }
+.admin-shell .admin-nav-item { border-radius:3px; color:#637067; }
+.admin-shell .admin-nav-item:hover { background:#e8eeea; color:var(--body-ink); }
+.admin-shell .admin-nav-item.bg-charcoal { background:var(--brand-red); border-color:var(--brand-red); }
+.admin-shell .admin-content section.border, .admin-shell .admin-content details.admin-card-collapsible { border-radius:0; background:#fff; border-color:#d3dcd4; box-shadow:0 3px 14px rgba(38,53,45,.04); }
+.admin-shell .admin-page-heading { border-color:#d3dcd4; }
+.admin-shell .admin-page-heading h1, .admin-shell .admin-content > h1 { font-family:var(--font-sans); font-weight:600; letter-spacing:-.04em; }
+.admin-shell .admin-stat-grid button { border-color:#d3dcd4; background:#fff; border-radius:0; }
+.admin-shell .admin-quick-actions { background:#d3dcd4; }
+.admin-shell .admin-quick-actions button { background:#fff; }
 .admin-shell .admin-topbar { background:#fffdf9; border-color:#ded6ca; }
 .admin-shell .admin-topbar > div { min-height:72px; }
 .admin-shell .admin-sidebar { width:250px; min-height:calc(100vh - 120px); position:relative; }
