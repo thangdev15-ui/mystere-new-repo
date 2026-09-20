@@ -24,6 +24,7 @@ type SectionKey =
   | "home"
   | "about"
   | "story"
+  | "projects"
   | "communities"
   | "categories"
   | "products"
@@ -36,6 +37,7 @@ type SectionKey =
 const SECTIONS: { key: SectionKey; label: string }[] = [
   { key: "dashboard", label: "Dashboard" },
   { key: "home", label: "NEW · Page content" },
+  { key: "projects", label: "What we do · Project" },
   { key: "communities", label: "What we do · Communities" },
   { key: "events", label: "What we do · Events" },
   { key: "newsletter", label: "Newsletter" },
@@ -197,8 +199,8 @@ export default function Admin() {
         <div className="admin-content min-w-0 flex-1 space-y-8">
           {section === "dashboard" && <>
             <div className="admin-page-heading"><div><p className="admin-overline">Dashboard</p><h1>Welcome back, Admin</h1><p>Keep the stories, people and events of Mystère up to date.</p></div><Link className="admin-preview" to="/">View site ↗</Link></div>
-            <div className="admin-stat-grid"><button onClick={() => setSection('home')}><strong>1</strong><span>Pages</span></button><button onClick={() => setSection('communities')}><strong>{content.communities.length}</strong><span>Communities</span></button><button onClick={() => setSection('events')}><strong>{content.events.length}</strong><span>Events</span></button><button onClick={() => setSection('newsletter')}><strong>{subscribers.length}</strong><span>Subscribers</span></button></div>
-            <AdminCard title="Quick actions"><div className="admin-quick-actions"><button onClick={() => setSection('home')}>Edit Who We Are <span>→</span></button><button onClick={() => setSection('communities')}>Manage communities <span>→</span></button><button onClick={() => setSection('events')}>Create an event <span>→</span></button><button onClick={() => setSection('newsletter')}>Manage newsletter <span>→</span></button></div></AdminCard>
+            <div className="admin-stat-grid"><button onClick={() => setSection('home')}><strong>1</strong><span>Pages</span></button><button onClick={() => setSection('projects')}><strong>{content.communities.length}</strong><span>Projects</span></button><button onClick={() => setSection('communities')}><strong>{(content.communityCards ?? []).length}</strong><span>Communities</span></button><button onClick={() => setSection('events')}><strong>{content.events.length}</strong><span>Events</span></button></div>
+            <AdminCard title="Quick actions"><div className="admin-quick-actions"><button onClick={() => setSection('home')}>Edit Who We Are <span>→</span></button><button onClick={() => setSection('projects')}>Manage projects <span>→</span></button><button onClick={() => setSection('communities')}>Manage communities <span>→</span></button><button onClick={() => setSection('events')}>Create an event <span>→</span></button></div></AdminCard>
           </>}
           {/* HOMEPAGE */}
           {section === "home" && (
@@ -215,7 +217,7 @@ export default function Admin() {
               <AdminCard title="2.1 · What we do — Our projects">
                 <LangField label="Title" value={content.home.projectsIntro.title} onChange={(v) => up((d) => (d.home.projectsIntro.title = v))} />
                 <LangField label="Body" multiline value={content.home.projectsIntro.body} onChange={(v) => up((d) => (d.home.projectsIntro.body = v))} />
-                <Note>Edit the five project summaries, photographs and expanded stories under What we do · Communities. Events follow the last project, then the newsletter.</Note>
+                <Note>Edit project summaries and detail pages under What we do · Project. Community cards and events have their own sections.</Note>
               </AdminCard>
               <BlockEditor title="2.2 · What we do — The thread that connects" block={content.home.thread} onChange={(fn) => up((d) => fn(d.home.thread))} />
             </>
@@ -388,19 +390,15 @@ export default function Admin() {
           )}
 
           {/* COMMUNITIES */}
-          {section === "communities" && (
+          {section === "projects" && (
             <>
-              <h1 className="font-serif text-4xl text-charcoal">Communities</h1>
-              <Note>
-                The client supplied photographs for the Red Dao chapter only. Where no image is set,
-                the site shows a quiet “Photograph to be added” tile — upload a file whenever one is
-                available.
-              </Note>
+              <h1 className="font-serif text-4xl text-charcoal">What we do · Project</h1>
+              <Note>Manage the project summaries and their detail pages. Community cards are managed separately.</Note>
               {content.communities.map((c, i) => (
                 <AdminCard
                   key={c.id}
                   collapsible
-                  title={c.name || "Community"}
+                  title={c.name || "Project"}
                   onDelete={() => up((d) => d.communities.splice(i, 1))}
                   onMoveUp={() => up((d) => move(d.communities, i, -1))}
                   onMoveDown={() => up((d) => move(d.communities, i, 1))}
@@ -468,13 +466,13 @@ export default function Admin() {
                 </AdminCard>
               ))}
               <AddButton
-                label="Add community"
+                label="Add project"
                 onClick={() =>
                   up((d) =>
                     d.communities.push({
                       id: `c${Date.now()}`,
-                      slug: "new-community",
-                      name: "New community",
+                      slug: "new-project",
+                      name: "New project",
                       region: { ...emptyL },
                       title: { ...emptyL },
                       line: { ...emptyL },
@@ -486,6 +484,29 @@ export default function Admin() {
                   )
                 }
               />
+            </>
+          )}
+
+          {section === "communities" && (
+            <>
+              <h1 className="font-serif text-4xl text-charcoal">What we do · Communities</h1>
+              <Note>These five cards are independent from Projects. Changes here only affect the “Communities we work with” carousel.</Note>
+              {(content.communityCards ?? []).map((c, i) => (
+                <AdminCard key={c.id} collapsible title={c.name || "Community"}
+                  onDelete={() => up((d) => (d.communityCards ??= []).splice(i, 1))}
+                  onMoveUp={() => up((d) => move((d.communityCards ??= []), i, -1))}
+                  onMoveDown={() => up((d) => move((d.communityCards ??= []), i, 1))}>
+                  <Toggle label={t(ui.published)} value={c.published} onChange={(v) => up((d) => (d.communityCards ??= [])[i].published = v)} />
+                  <Field label="Community name"><TextInput value={c.name} onChange={(v) => up((d) => (d.communityCards ??= [])[i].name = v)} /></Field>
+                  <LangField label="Product / craft line" multiline rows={2} value={c.craft} onChange={(v) => up((d) => (d.communityCards ??= [])[i].craft = v)} />
+                  <ImageField label="Image" value={c.image} onChange={(v) => up((d) => (d.communityCards ??= [])[i].image = v)} />
+                </AdminCard>
+              ))}
+              <AddButton label="Add community" onClick={() => up((d) => (d.communityCards ??= []).push({
+                id: `community-${Date.now()}`, slug: `community-${Date.now()}`, name: "New community",
+                region: { ...emptyL }, title: { ...emptyL }, line: { ...emptyL }, story: { ...emptyL },
+                craft: { ...emptyL }, image: "", published: true,
+              }))} />
             </>
           )}
 

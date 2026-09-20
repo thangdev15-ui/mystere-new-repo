@@ -150,6 +150,8 @@ export interface SiteContent {
     note: L;
   };
   communities: Community[];
+  /** Independent cards shown in "Communities we work with". */
+  communityCards?: Community[];
   categories: Category[];
   products: Product[];
   articles: Article[];

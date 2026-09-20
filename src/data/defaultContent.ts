@@ -80,19 +80,19 @@ export const defaultContent: SiteContent = {
     },
   ],
   home: {
-    heroImage: IMG_REDDAO_FAMILY,
+    heroImage: "/images/Banner.png",
     heroEyebrow: { en: "25 Years — Est. 2001", vi: "25 Năm — Thành lập 2001" },
     heroCta: { en: "Discover Our Story", vi: "Khám phá câu chuyện" },
     intro: {
       title: {
-        en: "We help hill-tribe artisans bring their craft to the world",
-        vi: "Chúng tôi giúp nghệ nhân vùng cao đưa tay nghề của mình ra thế giới",
+        en: "The Vietnamese Refinement, rooted in people and place",
+        vi: "Tinh hoa Việt Nam, bắt nguồn từ con người và vùng đất",
       },
       body: {
-        en: "Mystère Shop was born from a simple belief: the hands that weave, embroider and forge silver in the highlands of Cao Bằng, Hà Giang and Sa Pa deserve more than admiration — they deserve a future. We work alongside the Red Dao, Dao Tiền, Nùng, H'Mông and Black Lô Lô communities, helping their traditional craft find its way to new hands, new homes, and new stories.\n\nThe shop on Dong Khoi Street is a family business, built on a simple promise: a refined, one-of-a-kind shopping experience, with quality and uniqueness at the core.",
-        vi: "Mystère Shop ra đời từ một niềm tin giản dị: những đôi bàn tay dệt, thêu và rèn bạc ở vùng cao Cao Bằng, Hà Giang và Sa Pa xứng đáng có nhiều hơn sự ngưỡng mộ — họ xứng đáng có một tương lai. Chúng tôi đồng hành cùng các cộng đồng Dao Đỏ, Dao Tiền, Nùng, H'Mông và Lô Lô Đen, giúp tay nghề truyền thống của họ tìm đến những đôi tay mới, những mái nhà mới và những câu chuyện mới.\n\nCửa hiệu trên đường Đồng Khởi là một cơ sở gia đình, được xây dựng trên một lời hứa giản dị: một trải nghiệm mua sắm tinh tế và độc bản, lấy chất lượng và sự khác biệt làm cốt lõi.",
+        en: "Mystère Shop “The Vietnamese Refinement” at 141 Dong Khoi Street, District 1 in Ho Chi Minh City is an excellent location for buying finest handicraft made by the ethnic minorities of Vietnam. You will enjoy your shopping in a friendly and unique atmosphere.\n\nWe trade finest tribal art hand made from ethnic families of Red Dao, Money Dao, Nung, H’Mong and Black Lolo from the mountainous regions Cao Bang, Ha Giang and Sapa of northern Vietnam.",
+        vi: "Shop Huyền Bí — “Tinh hoa Việt Nam” — tại 141 Đồng Khởi, Quận 1, Thành phố Hồ Chí Minh là nơi bạn có thể tìm thấy những sản phẩm thủ công tinh túy của các dân tộc thiểu số Việt Nam trong một không gian thân thiện và độc đáo.\n\nChúng tôi giới thiệu nghệ thuật và nghề thủ công do các gia đình Dao Đỏ, Dao Tiền, Nùng, H’Mông và Lô Lô Đen ở Cao Bằng, Hà Giang và Sa Pa làm nên.",
       },
-      image: IMG_ABOUT,
+      image: "/images/nguoidantoc.png",
     },
     anniversary: {
       title: { en: "25 years in Saigon", vi: "25 năm ở Sài Gòn" },

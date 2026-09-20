@@ -61,10 +61,11 @@ function load<T>(key: string, fallback: T): T {
 
 // Update only untouched v2 defaults; preserve all existing customer edits.
 function loadCurrentContent(): SiteContent {
-  const saved = load<SiteContent>(CONTENT_KEY, defaultContent);
-  if (saved === defaultContent) return saved;
+  let saved = load<SiteContent>(CONTENT_KEY, defaultContent);
+  if (saved === defaultContent) saved = structuredClone(defaultContent);
   // Remove the temporary record created during initial CMS testing.
   saved.communities = (saved.communities ?? []).filter(item => item.id !== "new-community" && item.slug !== "new-community");
+  saved.communityCards ??= structuredClone(saved.communities);
   saved.events ??= structuredClone(defaultContent.events);
   saved.categories ??= structuredClone(defaultContent.categories);
   for (const category of defaultContent.categories) {
@@ -91,6 +92,7 @@ function loadCurrentContent(): SiteContent {
   for (const block of [saved.home.intro, saved.home.thread]) {
     if (block.image === "/images/mystere-shop.jpg") block.image = "/images/mystere-shop.png";
   }
+  if (saved.home.heroImage.startsWith("https://lh3.googleusercontent.com")) saved.home.heroImage = defaultContent.home.heroImage;
   const legacy = (value: string, id: string) => value?.startsWith(`https://lh3.googleusercontent.com/d/${id}=`);
   if (legacy(saved.home.intro.image, "1WTrl0Uh0fHLZDlnP2dvLh4qD5_JiDnn7")) saved.home.intro.image = defaultContent.home.intro.image;
   if (saved.home.artisan.image === "/images/red-dao.jpg" || legacy(saved.home.artisan.image, "1Nk-1AOnhOMu5sc-u0BTzQoyYw_ITK0lN")) saved.home.artisan.image = defaultContent.home.artisan.image;
@@ -99,6 +101,7 @@ function loadCurrentContent(): SiteContent {
   const redDao = saved.communities.find(c => c.slug === "red-dao");
   if (redDao && (redDao.image === "/images/red-dao.jpg" || legacy(redDao.image, "1g8jxhr1NKHeiMFGRS3YCvOXjXRTjfBSW"))) redDao.image = defaultContent.communities[0].image;
   if (saved.home.intro.body.en.startsWith("Mystère Shop was born from a simple belief:") || saved.home.intro.body.en.startsWith("Founded in Saigon in 2001, Mystère Shop is a family business connecting")) saved.home.intro.body = defaultContent.home.intro.body;
+  if (saved.home.intro.title.en.startsWith("We help hill-tribe artisans")) saved.home.intro.title = defaultContent.home.intro.title;
   if (saved.home.artisan.body.en.startsWith("It started at a small fair for ethnic minority artisans,")) saved.home.artisan.body = defaultContent.home.artisan.body;
   if (saved.home.projectsIntro.body.en.startsWith("Red Dao, Dao Tiền, Nùng")) saved.home.projectsIntro.body = defaultContent.home.projectsIntro.body;
   if (saved.newsletter.title.en === "More stories are coming") {
@@ -160,7 +163,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setContentState((prev) => updater(structuredClone(prev)));
   }, []);
 
-  const resetContent = useCallback(() => setContentState(structuredClone(defaultContent)), []);
+  const resetContent = useCallback(() => setContentState(() => {
+    const next = structuredClone(defaultContent);
+    next.communityCards = structuredClone(next.communities);
+    return next;
+  }), []);
 
   const t = useCallback((v: L | undefined) => (v ? v[lang] || v.en : ""), [lang]);
 

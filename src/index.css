@@ -702,4 +702,51 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
   .legal-details { grid-template-columns:1fr; gap:15px; }
   .footer-bottom { align-items:flex-start; flex-direction:column; }
 }
+
+/* Client feedback: equal, prominent What we do section headings. */
+.what-section .projects-heading {
+  min-height: 82px;
+  padding: 24px 0;
+  margin: 18px 0 26px;
+  align-items: center;
+}
+.what-section .projects-heading h2 {
+  color: #292f2c;
+  font-size: clamp(26px, 2.2vw, 34px);
+  font-weight: 750;
+  letter-spacing: -.65px;
+}
+.what-section .community-work-heading { margin-top:52px; }
+.what-section .events-intro { margin-top:50px; }
+
+/* The supplied Who we are photograph is panoramic; keep every person visible. */
+.who-section .mission-image>img,
+.about-detail-section .mission-image>img {
+  width:100%;
+  height:auto;
+  max-height:none;
+  aspect-ratio:1991/790;
+  object-fit:contain;
+  object-position:center;
+}
+
+/* Keep event metadata aligned and give the long 2014 schedule enough room. */
+.what-section .event-strip .event-card-copy {
+  grid-template-columns:minmax(280px,1.3fr) minmax(205px,.8fr) minmax(245px,1fr);
+  align-items:center;
+}
+.what-section .event-timing .event-schedule { white-space:pre-line; }
+
+/* The fixed site header already occupies its own space. */
+.about-mystere-page { padding-top:0; }
+.about-mystere-page .about-page-hero { padding-top:52px; }
+@media(max-width:850px) {
+  .what-section .event-strip .event-card-copy { grid-template-columns:1fr 1fr; }
+}
+@media(max-width:680px) {
+  .what-section .projects-heading { min-height:0; margin:14px 0 20px; }
+  .what-section .event-strip .event-card-copy { grid-template-columns:1fr; }
+  .about-mystere-page { padding-top:0; }
+  .about-mystere-page .about-page-hero { padding-top:34px; }
+}
 @media(prefers-reduced-motion:reduce) { .community-work-track { transition:none; } }

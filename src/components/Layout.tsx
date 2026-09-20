@@ -26,9 +26,8 @@ function NavDropdown({ section, mobile = false, onNavigate }: { section: "who" |
         <li><Link to="/about-mystere#our-mission" onClick={close}>{en ? 'Our mission' : 'Sứ mệnh'}</Link></li>
         <li><Link to="/about-mystere#where-it-began" onClick={close}>{en ? 'Where it began' : 'Khởi nguồn'}</Link></li>
       </> : <>
-        <li><Link to="/#what-we-do" onClick={close}>{en ? 'Our Project' : 'Dự án của chúng tôi'}</Link>
-          <ul>{content.communities.filter(c => c.published).map(c => <li key={c.id}><Link to={`/projects#${c.slug}`} onClick={close}>{c.name}</Link></li>)}</ul>
-        </li>
+        <li><Link to="/#projects" onClick={close}>{en ? 'Our Project' : 'Dự án của chúng tôi'}</Link></li>
+        <li><Link to="/#communities" onClick={close}>{en ? 'Communities we work with' : 'Cộng đồng chúng tôi đồng hành'}</Link></li>
         <li><Link to="/#our-event" onClick={close}>{en ? 'Our Event' : 'Sự kiện của chúng tôi'}</Link></li>
       </>}
     </ul>
@@ -83,7 +82,7 @@ export default function Layout() {
       <div className="footer-main"><div className="content-width footer-grid">
         <div className="footer-intro"><Link to="/" className="footer-brand" aria-label="Mystère Shop — Home"><img src={content.contact.logo} alt="Mystère Shop" /></Link><p>{en ? 'Vietnamese craft. Human connections.' : 'Nghề thủ công Việt. Kết nối con người.'}</p></div>
         <div><h2>{en ? 'Visit us' : 'Ghé thăm'}</h2><address>{content.contact.addressLines.map(l => <span key={l}>{l}<br/></span>)}</address><p>{t(content.contact.hours)}</p><a href={content.contact.mapsUrl} target="_blank" rel="noreferrer">{en ? 'Get directions' : 'Chỉ đường'} ↗</a></div>
-        <div><h2>{en ? 'Explore' : 'Khám phá'}</h2>{nav.map(n => <Link key={n.to} to={n.to}>{n.label}</Link>)}<Link to="/projects">{en ? 'Projects' : 'Dự án'}</Link><a href={`mailto:${content.contact.email}`}>{en ? 'Contact us' : 'Liên hệ'}</a></div>
+        <div><h2>{en ? 'Explore' : 'Khám phá'}</h2>{nav.map(n => <Link key={n.to} to={n.to}>{n.label}</Link>)}</div>
         <div><h2>{en ? 'Social media' : 'Mạng xã hội'}</h2><a href={content.contact.facebook} target="_blank" rel="noreferrer">Facebook <span>↗</span></a><a href={content.contact.instagram} target="_blank" rel="noreferrer">Instagram <span>↗</span></a><a href={`tel:${content.contact.phone.replace(/[^+\d]/g,'')}`}>{content.contact.phone}</a></div>
       </div></div>
       <div className="footer-legal"><div className="content-width">
