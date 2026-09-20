@@ -333,7 +333,7 @@ export const defaultContent: SiteContent = {
         en: "Embroidery and silver jewellery.",
         vi: "Nghề thêu và trang sức bạc.",
       },
-      image: IMG_REDDAO_FAMILY,
+      image: "/images/Red dao.jpg",
       published: true,
     },
     {
@@ -354,7 +354,7 @@ export const defaultContent: SiteContent = {
         en: "Beeswax batik on cotton: wax drawn by hand, then dyed.",
         vi: "Vẽ sáp ong trên vải bông: vẽ sáp bằng tay, rồi nhuộm.",
       },
-      image: PLACEHOLDER,
+      image: "/images/Money Dao.jpg",
       published: true,
     },
     {
@@ -375,7 +375,7 @@ export const defaultContent: SiteContent = {
         en: "Natural dyes, embroidery and sewing.",
         vi: "Nhuộm tự nhiên, thêu và may.",
       },
-      image: PLACEHOLDER,
+      image: "/images/Nùng.jpg",
       published: true,
     },
     {
@@ -393,7 +393,7 @@ export const defaultContent: SiteContent = {
         vi: "Cây lanh, được trồng và xe sợi bằng tay, trở thành thứ vải bền đến mức dùng được qua nhiều thế hệ. Người H'Mông dệt và thêu lên đó những hoa văn mang ý nghĩa — một thứ ngôn ngữ không lời, được khâu lại thay vì nói ra. Chúng tôi vẫn đang học cách đọc nó.",
       },
       craft: { en: "Hemp, weaving and embroidery.", vi: "Cây lanh, dệt và thêu." },
-      image: PLACEHOLDER,
+      image: "/images/H'Mong.jpg",
       published: true,
     },
     {
@@ -411,7 +411,7 @@ export const defaultContent: SiteContent = {
         vi: "Ngày càng ít đôi bàn tay còn biết nghề này. Kỹ thuật ghép vải của người Lô Lô Đen — nhỏ, hình học, chắc chắn — là một trong những truyền thống hiếm hơn mà chúng tôi làm việc cùng, và là điều chúng tôi lặng lẽ cố gắng giúp tồn tại.",
       },
       craft: { en: "Patchwork embroidery.", vi: "Thêu ghép vải." },
-      image: PLACEHOLDER,
+      image: "/images/Lolo.jpg",
       published: true,
     },
   ],

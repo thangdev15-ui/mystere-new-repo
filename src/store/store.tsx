@@ -85,7 +85,7 @@ function loadCurrentContent(): SiteContent {
   }
   for (const community of defaultContent.communities) {
     const existing = saved.communities.find(item => item.id === community.id);
-    if (existing && (!existing.image || existing.image.startsWith("https://lh3.googleusercontent.com"))) existing.image = community.image;
+    if (existing && (!existing.image || existing.image.startsWith("https://lh3.googleusercontent.com") || existing.image.startsWith("/images/project-"))) existing.image = community.image;
   }
   // Migrate the previous bundled JPG without overwriting custom image URLs.
   for (const block of [saved.home.intro, saved.home.thread]) {
