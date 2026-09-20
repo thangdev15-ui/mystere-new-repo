@@ -306,7 +306,7 @@ figcaption { font-size:10px; line-height:1.6; color:#65716c; margin-top:13px; }
 /* Compact event grid matching the supplied image-and-details sketch. */
 .projects-heading { display:block; }
 .what-section { display:flow-root; padding-bottom:65px; }
-.event-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0; margin-top:32px; border-top:1px solid #d3dcd4; border-left:1px solid #d3dcd4; }
+.event-grid { display:block; margin-top:32px; border-top:1px solid #d3dcd4; }
 .event-card { display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); gap:25px; padding:28px; border-right:1px solid #d3dcd4; border-bottom:1px solid #d3dcd4; background:#fff; align-items:start; }
 .event-card figure { margin:0; overflow:hidden; }
 .event-card figure img { height:260px; width:100%; object-fit:cover; }
@@ -342,7 +342,7 @@ figcaption { font-size:10px; line-height:1.6; color:#65716c; margin-top:13px; }
 .community-work-grid h3 { font-size:19px; line-height:1.25; }
 .community-work-grid p { margin-top:14px; color:#637067; font-size:13px; line-height:1.6; }
 .community-work-heading { margin-top:62px; }
-.event-strip { grid-template-columns:180px 1fr; min-height:250px; }
+.event-strip { grid-template-columns:220px 1fr; min-height:250px; border-left:0; border-right:0; }
 .event-strip figure img { height:210px; }
 .event-strip .event-card-copy { padding-top:2px; }
 @media(min-width:761px) {
