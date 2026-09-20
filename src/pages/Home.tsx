@@ -31,7 +31,7 @@ function Events() {
   const { content, t, lang } = useStore();
   const en = lang === 'en';
   return <section id="our-event" data-scroll-part className="events-section" aria-labelledby="events-heading">
-    <div className="events-intro"><div><p className="kicker">{en ? 'Our Event' : 'Sự kiện'}</p><h3 id="events-heading">{en ? 'Our events' : 'Sự kiện của chúng tôi'}</h3></div><span className="events-archive-label">{en ? 'Past events' : 'Sự kiện đã diễn ra'}</span></div>
+    <div className="projects-heading events-intro"><h2 id="events-heading">{en ? 'Events' : 'Sự kiện'}</h2><span>{en ? 'Past events' : 'Sự kiện đã diễn ra'}</span></div>
     <div className="event-grid">{content.events.filter(event => event.published).map(event => <article className="event-card event-strip" key={event.id}>
       <figure><Img src={event.image} alt={t(event.title)} ratio="aspect-[4/5]" /></figure>
       <div className="event-card-copy"><p className="kicker">{en ? 'Event' : 'Sự kiện'}</p><h4>{t(event.title)}</h4><time dateTime={event.dateStart}>{t(event.dateLabel)}</time><p className="event-schedule">{t(event.schedule)}</p><address><strong>{event.venue}</strong><br/>{t(event.address)}</address></div>
