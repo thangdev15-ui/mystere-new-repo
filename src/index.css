@@ -736,6 +736,9 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
   aspect-ratio:auto;
   object-fit:cover;
   object-position:center center;
+  border:1px solid rgba(37,43,40,.08);
+  border-radius:14px;
+  box-shadow:0 14px 34px rgba(34,43,38,.08);
 }
 
 /* Keep event metadata aligned and give the long 2014 schedule enough room. */
