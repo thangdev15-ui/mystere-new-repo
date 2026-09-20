@@ -44,7 +44,7 @@ const SECTIONS: { key: SectionKey; label: string }[] = [
 ];
 
 function Login() {
-  const { signIn } = useStore();
+  const { signIn, content } = useStore();
   const [email, setEmail] = useState("admin@mystere.vn");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
@@ -52,8 +52,8 @@ function Login() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-charcoal px-6">
       <div className="w-full max-w-sm">
-        <Link to="/" className="font-serif text-[30px] text-ivory">
-          Mystère
+        <Link to="/" className="flex items-center gap-3 font-serif text-[30px] text-ivory">
+          {content.contact.logo && <img src={content.contact.logo} alt="" className="h-12 w-12 object-contain" />}<span>Mystère</span>
         </Link>
         <p className="mt-2 text-[10px] uppercase tracking-[0.3em] text-cream/50">
           Admin dashboard
