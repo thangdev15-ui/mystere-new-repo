@@ -804,6 +804,17 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
 .project-detail-gallery img { width:100%; height:300px; object-fit:cover; border-radius:10px; }
 .projects-page-back { padding-bottom:58px; }
 
+/* Final project hierarchy: one reading column, no duplicated title or split prose. */
+.project-detail-section { gap:28px 38px; padding:36px; }
+.project-detail-media { grid-column:1/6; }
+.project-detail-media img { height:300px; }
+.project-detail-copy { grid-column:6/13; }
+.project-detail-copy h2 { max-width:690px; font-size:clamp(34px,3vw,48px); line-height:1.08; letter-spacing:-.8px; }
+.project-detail-prose { grid-column:1/13; max-width:900px; columns:auto; column-count:1; }
+.project-detail-prose>.kicker { margin-bottom:14px; color:var(--brand-red); }
+.project-detail-prose p:not(.kicker) { margin-bottom:18px; white-space:pre-line; }
+.project-detail-aside { grid-column:1/13; }
+
 /* About / Our Mission page. */
 .about-page-hero { padding:48px 0 34px; }
 .about-page-hero h1 { font-size:clamp(40px,4.4vw,64px); }

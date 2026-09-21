@@ -37,7 +37,6 @@ type SectionKey =
 const SECTIONS: { key: SectionKey; label: string }[] = [
   { key: "dashboard", label: "Dashboard" },
   { key: "home", label: "NEW · Page content" },
-  { key: "about", label: "Who we are · Page" },
   { key: "projects", label: "What we do · Project" },
   { key: "communities", label: "What we do · Communities" },
   { key: "events", label: "What we do · Events" },
@@ -223,96 +222,6 @@ export default function Admin() {
                 <Note>Edit project summaries and detail pages under What we do · Project. Community cards and events have their own sections.</Note>
               </AdminCard>
               <BlockEditor title="2.2 · What we do — The thread that connects" block={content.home.thread} onChange={(fn) => up((d) => fn(d.home.thread))} />
-            </>
-          )}
-
-          {/* ABOUT */}
-          {section === "about" && (
-            <>
-              <h1 className="font-serif text-4xl text-charcoal">About Us</h1>
-              <AdminCard title="Header">
-                <ImageField
-                  label="Hero image"
-                  value={content.about.heroImage}
-                  onChange={(v) => up((d) => (d.about.heroImage = v))}
-                />
-                <LangField
-                  label="Title"
-                  value={content.about.title}
-                  onChange={(v) => up((d) => (d.about.title = v))}
-                />
-                <LangField
-                  label="Lead paragraph"
-                  multiline
-                  rows={5}
-                  value={content.about.lead}
-                  onChange={(v) => up((d) => (d.about.lead = v))}
-                />
-              </AdminCard>
-
-              <h2 className="font-serif text-2xl text-charcoal">Key numbers</h2>
-              {content.about.numbers.map((n, i) => (
-                <AdminCard
-                  key={i}
-                  title={n.value || "Number"}
-                  onDelete={() => up((d) => d.about.numbers.splice(i, 1))}
-                  onMoveUp={() => up((d) => move(d.about.numbers, i, -1))}
-                  onMoveDown={() => up((d) => move(d.about.numbers, i, 1))}
-                >
-                  <Field label="Value">
-                    <TextInput
-                      value={n.value}
-                      onChange={(v) => up((d) => (d.about.numbers[i].value = v))}
-                    />
-                  </Field>
-                  <LangField
-                    label="Label"
-                    value={n.label}
-                    onChange={(v) => up((d) => (d.about.numbers[i].label = v))}
-                  />
-                </AdminCard>
-              ))}
-              <AddButton
-                label="Add number"
-                onClick={() => up((d) => d.about.numbers.push({ value: "", label: { ...emptyL } }))}
-              />
-
-              <h2 className="font-serif text-2xl text-charcoal">Editorial blocks</h2>
-              {content.about.blocks.map((b, i) => (
-                <AdminCard
-                  key={i}
-                  title={b.title.en || `Block ${i + 1}`}
-                  onDelete={() => up((d) => d.about.blocks.splice(i, 1))}
-                  onMoveUp={() => up((d) => move(d.about.blocks, i, -1))}
-                  onMoveDown={() => up((d) => move(d.about.blocks, i, 1))}
-                >
-                  <LangField
-                    label="Title"
-                    value={b.title}
-                    onChange={(v) => up((d) => (d.about.blocks[i].title = v))}
-                  />
-                  <LangField
-                    label="Body"
-                    multiline
-                    rows={6}
-                    value={b.body}
-                    onChange={(v) => up((d) => (d.about.blocks[i].body = v))}
-                  />
-                  <ImageField
-                    label="Image"
-                    value={b.image}
-                    onChange={(v) => up((d) => (d.about.blocks[i].image = v))}
-                  />
-                </AdminCard>
-              ))}
-              <AddButton
-                label="Add block"
-                onClick={() =>
-                  up((d) =>
-                    d.about.blocks.push({ title: { ...emptyL }, body: { ...emptyL }, image: "" }),
-                  )
-                }
-              />
             </>
           )}
 

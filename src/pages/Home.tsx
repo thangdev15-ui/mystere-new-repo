@@ -61,8 +61,8 @@ export function AllProjectsPage() {
           <div className="project-detail-media">
             <Img src={image} alt={community.name} ratio="aspect-[4/3]" priority={community.slug === 'red-dao'} />
           </div>
-          <div className="project-detail-copy"><p className="kicker">{t(community.region)}</p><h2>{community.name}</h2><p className="project-detail-title">{t(community.title)}</p></div>
-          <div className="project-detail-prose">{t(community.story).split("\n\n").map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
+          <div className="project-detail-copy"><p className="kicker">{t(community.region)}</p><h2>{community.name}</h2></div>
+          <div className="project-detail-prose"><p className="kicker">{en ? 'Project story' : 'Câu chuyện dự án'}</p>{t(community.story).split("\n\n").map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
           <aside className="project-detail-aside"><div><p className="kicker">{en ? 'The craft' : 'Nghề thủ công'}</p><p>{t(community.craft)}</p></div><Link to="/#contact" className="contact-project-link">{en ? 'Contact us for more information' : 'Liên hệ để biết thêm thông tin'} <span aria-hidden="true">→</span></Link></aside>
           {!!community.gallery?.filter(Boolean).length && <div className="project-detail-gallery">{community.gallery.filter(Boolean).map((src,index) => <Img key={`${src}-${index}`} src={src} alt={`${community.name} ${index + 2}`} ratio="aspect-[4/3]" />)}</div>}
         </section>;
@@ -77,9 +77,6 @@ export function AboutMysterePage() {
   const h = content.home;
   const en = lang === 'en';
   return <article className="about-mystere-page">
-    <header className="about-page-hero content-width">
-      <p className="section-label">{en ? 'About Mystère' : 'Về Mystère'}</p><h1>{t(content.about.title)}</h1><p>{t(content.about.lead)}</p>
-    </header>
     <section id="our-mission" data-scroll-part className="about-detail-section content-width">
       <div>
         <p className="kicker">{en ? 'Our mission' : 'Sứ mệnh của chúng tôi'}</p>
