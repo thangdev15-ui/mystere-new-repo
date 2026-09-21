@@ -815,6 +815,8 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
 
 .admin-gallery-field { padding:16px; border:1px solid #e2d9ce; border-radius:8px; background:#faf8f3; }
 .admin-gallery-remove { margin-top:12px; color:#b42331; font-size:10px; letter-spacing:.14em; text-transform:uppercase; }
+.admin-save-error { position:sticky; top:92px; z-index:24; display:flex; flex-direction:column; gap:4px; padding:14px 18px; border:1px solid #d99aa0; border-radius:8px; background:#fff3f3; color:#8f1f2b; font-size:13px; }
+.admin-save-error span { color:#6f343a; font-size:12px; }
 .community-work-viewport { touch-action:pan-y; cursor:grab; }
 .community-work-viewport:active { cursor:grabbing; }
 .community-body { grid-template-columns:1fr; gap:28px; }

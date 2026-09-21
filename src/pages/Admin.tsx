@@ -102,6 +102,7 @@ export default function Admin() {
   const [saved, setSaved] = useState(false);
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const [connection, setConnection] = useState<'idle' | 'checking' | 'connected' | 'error'>(isSupabaseConfigured ? 'checking' : 'idle');
   const checkConnection = async () => {
     if (!supabase) { setConnection('idle'); return; }
@@ -123,7 +124,7 @@ export default function Admin() {
     window.clearTimeout((window as any).__mystereSaveTimer);
     (window as any).__mystereSaveTimer = window.setTimeout(() => setSaved(false), 1200);
   };
-  const save = async () => { setSaving(true); const ok = await saveContent(); setSaving(false); setDirty(!ok); setSaved(ok); window.setTimeout(() => setSaved(false), 1800); };
+  const save = async () => { setSaving(true); setSaveError(""); const result = await saveContent(); setSaving(false); setDirty(!result.ok); setSaved(result.ok); if (!result.ok) setSaveError(result.error || "Save failed. Please try again."); window.setTimeout(() => setSaved(false), 1800); };
 
   const move = <T,>(arr: T[], i: number, dir: -1 | 1) => {
     const j = i + dir;
@@ -161,8 +162,8 @@ export default function Admin() {
             <Link to="/">{content.contact.logo && <img src={content.contact.logo} alt="" />}<span>Shop Huyền Bí<small>Mystère Content Studio</small></span></Link>
           </div>
           <div className="flex items-center gap-6 text-[11px] uppercase tracking-[0.2em]">
-            <span className={`${dirty ? "text-rust" : "text-moss"}`}>
-              {saving ? 'Saving…' : dirty ? 'Unsaved changes' : saved ? 'Saved just now' : 'All changes saved'}
+            <span className={`${dirty || saveError ? "text-rust" : "text-moss"}`} title={saveError}>
+              {saving ? 'Saving…' : saveError ? 'Save failed' : dirty ? 'Unsaved changes' : saved ? 'Saved just now' : 'All changes saved'}
             </span>
             <button onClick={() => void save()} disabled={!dirty || saving} className="border border-charcoal px-3 py-2 text-[10px] uppercase tracking-[0.16em] disabled:cursor-not-allowed disabled:opacity-40">Save changes</button>
             <Link to="/" className="text-cocoa/70 hover:text-charcoal">
@@ -198,6 +199,7 @@ export default function Admin() {
         </aside>
 
         <div className="admin-content min-w-0 flex-1 space-y-8">
+          {saveError && <div className="admin-save-error" role="alert"><strong>Could not save changes.</strong><span>{saveError}</span></div>}
           {section === "dashboard" && <>
             <div className="admin-page-heading"><div><p className="admin-overline">Dashboard</p><h1>Welcome back, Admin</h1><p>Keep the stories, people and events of Mystère up to date.</p></div><Link className="admin-preview" to="/">View site ↗</Link></div>
             <div className="admin-stat-grid"><button onClick={() => setSection('home')}><strong>1</strong><span>Pages</span></button><button onClick={() => setSection('projects')}><strong>{content.communities.length}</strong><span>Projects</span></button><button onClick={() => setSection('communities')}><strong>{(content.communityCards ?? []).length}</strong><span>Communities</span></button><button onClick={() => setSection('events')}><strong>{content.events.length}</strong><span>Events</span></button></div>

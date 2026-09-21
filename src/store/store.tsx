@@ -36,7 +36,7 @@ export interface Subscriber {
 interface StoreValue {
   content: SiteContent;
   setContent: (updater: (draft: SiteContent) => SiteContent) => void;
-  saveContent: () => Promise<boolean>;
+  saveContent: () => Promise<{ ok: boolean; error?: string }>;
   resetContent: () => void;
   lang: Lang;
   setLang: (l: Lang) => void;
@@ -193,22 +193,32 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     return false;
   }, []);
   const saveContent = useCallback(async () => {
-    if (!supabase || !user) { localStorage.setItem(CONTENT_KEY, JSON.stringify(content)); return true; }
+    if (!supabase || !user) { localStorage.setItem(CONTENT_KEY, JSON.stringify(content)); return { ok: true }; }
     const communityIds = [...content.communities.map(row => row.id), SITE_CONTENT_ROW];
     const eventIds = content.events.map(row => row.id);
-    const [communityDelete, eventDelete] = await Promise.all([
-      communityIds.length ? supabase.from('communities').delete().not('id', 'in', `(${communityIds.join(',')})`) : supabase.from('communities').delete().neq('id', ''),
-      eventIds.length ? supabase.from('events').delete().not('id', 'in', `(${eventIds.join(',')})`) : supabase.from('events').delete().neq('id', ''),
-    ]);
-    if (communityDelete.error || eventDelete.error) return false;
+    const updated_at = new Date().toISOString();
+    const communityRows = content.communities.map((row, sort_order) => ({
+      id:row.id, slug:row.slug, name:row.name, region:row.region, title:row.title,
+      line:row.line, story:{ ...row.story, gallery:row.gallery ?? [] }, craft:row.craft,
+      image:row.image, published:row.published, sort_order, updated_at,
+    }));
+    const sitePayload = { home:content.home, about:content.about, story:content.story, craft:content.craft, journal:content.journal, newsletter:content.newsletter, contact:content.contact, categories:content.categories, products:content.products, articles:content.articles, partners:content.partners, communityCards:content.communityCards };
     const [communities, events] = await Promise.all([
       supabase.from('communities').upsert([
-        ...content.communities.map((row, sort_order) => { const { gallery, ...rest } = row; return { ...rest, story: { ...row.story, gallery: gallery ?? [] }, sort_order }; }),
-        { id:SITE_CONTENT_ROW, slug:SITE_CONTENT_ROW, name:'Site content', region:{en:'',vi:''}, title:{en:'',vi:''}, line:{en:'',vi:''}, story:{ payload:{ home:content.home, about:content.about, story:content.story, craft:content.craft, journal:content.journal, newsletter:content.newsletter, contact:content.contact, categories:content.categories, products:content.products, articles:content.articles, partners:content.partners, communityCards:content.communityCards } }, craft:{en:'',vi:''}, image:'', published:true, sort_order:-1 },
+        ...communityRows,
+        { id:SITE_CONTENT_ROW, slug:SITE_CONTENT_ROW, name:'Site content', region:{en:'',vi:''}, title:{en:'',vi:''}, line:{en:'',vi:''}, story:{payload:sitePayload}, craft:{en:'',vi:''}, image:'', published:true, sort_order:-1, updated_at },
       ]),
       supabase.from('events').upsert(content.events.map((row, sort_order) => ({ id: row.id, image: row.image, url: row.url, title: row.title, date_label: row.dateLabel, date_start: row.dateStart || null, schedule: row.schedule, venue: row.venue, address: row.address, published: row.published, sort_order }))),
     ]);
-    return !communities.error && !events.error;
+    if (communities.error || events.error) return { ok:false, error:communities.error?.message || events.error?.message || 'Unable to save content.' };
+    const quoteIds = (ids: string[]) => `(${ids.map(id => `"${id.replace(/"/g,'\\"')}"`).join(',')})`;
+    const [communityDelete, eventDelete] = await Promise.all([
+      supabase.from('communities').delete().not('id', 'in', quoteIds(communityIds)),
+      eventIds.length ? supabase.from('events').delete().not('id', 'in', quoteIds(eventIds)) : supabase.from('events').delete().neq('id', ''),
+    ]);
+    if (communityDelete.error || eventDelete.error) return { ok:false, error:communityDelete.error?.message || eventDelete.error?.message || 'Saved changes, but could not remove deleted records.' };
+    localStorage.setItem(CONTENT_KEY, JSON.stringify(content));
+    return { ok:true };
   }, [content, user]);
 
   const value = useMemo<StoreValue>(
