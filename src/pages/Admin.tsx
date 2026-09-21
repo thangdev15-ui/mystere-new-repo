@@ -10,6 +10,7 @@ import {
   Field,
   ImageField,
   LangField,
+  RichLangField,
   Note,
   TextArea,
   TextInput,
@@ -208,13 +209,14 @@ export default function Admin() {
           {section === "home" && (
             <>
               <h1 className="font-serif text-4xl text-charcoal">NEW · Page content</h1>
-              <Note>The website has two main sections. Use photographs without embedded document text. Community stories expand within What we do. Changes and subscriber registrations are stored in this browser only.</Note>
+              <Note>The website has two main sections. Use photographs without embedded document text. Our Story and Our Mission are separate blocks. Saved content is shared through Supabase.</Note>
               <AdminCard title="Opening banner">
                 <ImageField label="Banner image" value={content.home.heroImage} onChange={(v) => up((d) => (d.home.heroImage = v))} />
                 <LangField label="Eyebrow" value={content.home.heroEyebrow} onChange={(v) => up((d) => (d.home.heroEyebrow = v))} />
                 <LangField label="Button label" value={content.home.heroCta} onChange={(v) => up((d) => (d.home.heroCta = v))} />
               </AdminCard>
-              <BlockEditor title="Home · Our story" block={content.home.intro} onChange={(fn) => up((d) => fn(d.home.intro))} />
+              <BlockEditor title="Home page · Our Story" block={content.home.intro} onChange={(fn) => up((d) => fn(d.home.intro))} />
+              <BlockEditor title="About Mystère page · Our Mission" block={content.home.mission ?? content.home.intro} onChange={(fn) => up((d) => { d.home.mission ??= structuredClone(d.home.intro); fn(d.home.mission); })} />
               <BlockEditor title="1.2 · Who we are — Where it began" block={content.home.artisan} onChange={(fn) => up((d) => fn(d.home.artisan))} />
               <AdminCard title="2.1 · What we do — Our projects">
                 <LangField label="Title" value={content.home.projectsIntro.title} onChange={(v) => up((d) => (d.home.projectsIntro.title = v))} />
@@ -356,10 +358,8 @@ export default function Admin() {
                     value={c.line}
                     onChange={(v) => up((d) => (d.communities[i].line = v))}
                   />
-                  <LangField
+                  <RichLangField
                     label="Story"
-                    multiline
-                    rows={6}
                     value={c.story}
                     onChange={(v) => up((d) => (d.communities[i].story = v))}
                   />

@@ -4,6 +4,7 @@ import { useStore } from '../store/store';
 import Img, { HeroImage } from '../components/Img';
 import { useSectionScroll } from '../hooks/useSectionScroll';
 import type { Community } from '../lib/types';
+import RichText from '../components/RichText';
 
 function Project({ community: c }: { community: Community }) {
   const { t, lang } = useStore();
@@ -39,7 +40,7 @@ export function CommunityPage() {
   const en = lang === 'en';
   return <article className="community-page">
     <header className="community-hero content-width"><div><p className="kicker">{t(community.region)}</p><p className="community-index">{en ? 'Our project' : 'Dự án cộng đồng'}</p><h1>{community.name}</h1><p className="community-strapline">{t(community.title)}</p></div><figure><Img src={image} alt={community.name} ratio="aspect-[4/3]" priority /></figure></header>
-    <div className="community-body content-width"><div className="community-story"><p className="kicker">{en ? 'The story' : 'Câu chuyện'}</p><h2>{t(community.title)}</h2><div className="community-prose">{t(community.story).split("\n\n").map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div></div><aside className="community-aside"><div><p className="kicker">{en ? 'The craft' : 'Nghề thủ công'}</p><p>{t(community.craft)}</p></div><Link to="/#contact" className="contact-project-link">{en ? 'Contact us for more information' : 'Liên hệ để biết thêm thông tin'} <span aria-hidden="true">→</span></Link></aside>{!!community.gallery?.filter(Boolean).length && <div className="community-gallery">{community.gallery.filter(Boolean).map((src,index) => <Img key={`${src}-${index}`} src={src} alt={`${community.name} ${index + 2}`} ratio="aspect-[4/3]" />)}</div>}<Link to="/#what-we-do" className="back-link">← {en ? 'Back to What we do' : 'Quay lại Chúng tôi làm gì'}</Link></div>
+    <div className="community-body content-width"><div className="community-story"><p className="kicker">{en ? 'The story' : 'Câu chuyện'}</p><h2>{t(community.title)}</h2><RichText className="community-prose" html={t(community.story)} /></div><aside className="community-aside"><div><p className="kicker">{en ? 'The craft' : 'Nghề thủ công'}</p><p>{t(community.craft)}</p></div><Link to="/#contact" className="contact-project-link">{en ? 'Contact us for more information' : 'Liên hệ để biết thêm thông tin'} <span aria-hidden="true">→</span></Link></aside>{!!community.gallery?.filter(Boolean).length && <div className="community-gallery">{community.gallery.filter(Boolean).map((src,index) => <Img key={`${src}-${index}`} src={src} alt={`${community.name} ${index + 2}`} ratio="aspect-[4/3]" />)}</div>}<Link to="/#what-we-do" className="back-link">← {en ? 'Back to What we do' : 'Quay lại Chúng tôi làm gì'}</Link></div>
   </article>;
 }
 
@@ -62,7 +63,7 @@ export function AllProjectsPage() {
             <Img src={image} alt={community.name} ratio="aspect-[4/3]" priority={community.slug === 'red-dao'} />
           </div>
           <div className="project-detail-copy"><p className="kicker">{t(community.region)}</p><h2>{community.name}</h2></div>
-          <div className="project-detail-prose"><p className="kicker">{en ? 'Project story' : 'Câu chuyện dự án'}</p>{t(community.story).split("\n\n").map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
+          <div className="project-detail-prose"><p className="kicker">{en ? 'Project story' : 'Câu chuyện dự án'}</p><RichText html={t(community.story)} /></div>
           <aside className="project-detail-aside"><div><p className="kicker">{en ? 'The craft' : 'Nghề thủ công'}</p><p>{t(community.craft)}</p></div><Link to="/#contact" className="contact-project-link">{en ? 'Contact us for more information' : 'Liên hệ để biết thêm thông tin'} <span aria-hidden="true">→</span></Link></aside>
           {!!community.gallery?.filter(Boolean).length && <div className="project-detail-gallery">{community.gallery.filter(Boolean).map((src,index) => <Img key={`${src}-${index}`} src={src} alt={`${community.name} ${index + 2}`} ratio="aspect-[4/3]" />)}</div>}
         </section>;
@@ -75,17 +76,18 @@ export function AllProjectsPage() {
 export function AboutMysterePage() {
   const { content, t, lang } = useStore();
   const h = content.home;
+  const mission = h.mission ?? h.intro;
   const en = lang === 'en';
   return <article className="about-mystere-page">
     <section id="our-mission" data-scroll-part className="about-detail-section content-width">
       <div>
         <p className="kicker">{en ? 'Our mission' : 'Sứ mệnh của chúng tôi'}</p>
-        <h2>{t(h.intro.title)}</h2>
+        <h2>{t(mission.title)}</h2>
         <div className="red-rule" />
-        <p>{t(h.intro.body)}</p>
+        <p>{t(mission.body)}</p>
       </div>
       <figure className="mission-image">
-        <Img src={h.intro.image} alt={en ? 'Ethnic minority artisans standing at the Mystère Shop' : 'Các nghệ nhân dân tộc tại Shop Huyền Bí'} ratio="aspect-[1991/790]" priority/>
+        <Img src={mission.image} alt={en ? 'Ethnic minority artisans standing at the Mystère Shop' : 'Các nghệ nhân dân tộc tại Shop Huyền Bí'} ratio="aspect-[1991/790]" priority/>
         <figcaption><span>141 Đồng Khởi, Saigon</span><span>{en ? 'Since 2001' : 'Từ năm 2001'}</span></figcaption>
       </figure>
     </section>

@@ -1,5 +1,6 @@
-import { useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import type { L } from "../../lib/types";
+import { plainTextToHtml, sanitizeRichHtml } from "../RichText";
 
 export function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -97,6 +98,97 @@ export function LangField({
       )}
     </div>
   );
+}
+
+function RichEditor({ value, onChange, language }: { value: string; onChange: (v: string) => void; language: string }) {
+  const editorRef = useRef<HTMLDivElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [selectedImage, setSelectedImage] = useState<HTMLImageElement | null>(null);
+
+  useEffect(() => {
+    const editor = editorRef.current;
+    if (editor && document.activeElement !== editor) editor.innerHTML = sanitizeRichHtml(plainTextToHtml(value));
+  }, [value]);
+
+  const emit = () => {
+    if (editorRef.current) onChange(sanitizeRichHtml(editorRef.current.innerHTML));
+  };
+  const command = (name: string, argument?: string) => {
+    editorRef.current?.focus();
+    document.execCommand(name, false, argument);
+    emit();
+  };
+  const toolbar = (event: MouseEvent<HTMLButtonElement>, name: string, argument?: string) => {
+    event.preventDefault();
+    command(name, argument);
+  };
+  const insertImage = (src: string) => {
+    if (!src) return;
+    command("insertHTML", `<img src="${src.replace(/"/g, "&quot;")}" alt="" data-width="100">`);
+  };
+  const upload = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const image = new Image();
+      image.onload = () => {
+        const max = 1800;
+        const scale = Math.min(1, max / Math.max(image.width, image.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(image.width * scale));
+        canvas.height = Math.max(1, Math.round(image.height * scale));
+        canvas.getContext("2d")?.drawImage(image, 0, 0, canvas.width, canvas.height);
+        insertImage(canvas.toDataURL("image/webp", .82));
+      };
+      image.src = String(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+  const resizeImage = (width: "25" | "50" | "75" | "100") => {
+    if (!selectedImage) return;
+    selectedImage.dataset.width = width;
+    emit();
+  };
+
+  return <div className="rich-editor">
+    <div className="rich-editor-toolbar" role="toolbar" aria-label={`${language} text formatting`}>
+      <button type="button" title="Bold" onMouseDown={event => toolbar(event, "bold")}><strong>B</strong></button>
+      <button type="button" title="Italic" onMouseDown={event => toolbar(event, "italic")}><em>I</em></button>
+      <button type="button" title="Underline" onMouseDown={event => toolbar(event, "underline")}><u>U</u></button>
+      <button type="button" title="Heading" onMouseDown={event => toolbar(event, "formatBlock", "h3")}>H3</button>
+      <button type="button" title="Paragraph" onMouseDown={event => toolbar(event, "formatBlock", "p")}>P</button>
+      <button type="button" title="Quote" onMouseDown={event => toolbar(event, "formatBlock", "blockquote")}>“ ”</button>
+      <button type="button" title="Bulleted list" onMouseDown={event => toolbar(event, "insertUnorderedList")}>• List</button>
+      <button type="button" title="Numbered list" onMouseDown={event => toolbar(event, "insertOrderedList")}>1. List</button>
+      <button type="button" title="Add link" onMouseDown={event => { event.preventDefault(); const url = window.prompt("Link URL"); if (url) command("createLink", url); }}>Link</button>
+      <button type="button" title="Upload image" onMouseDown={event => { event.preventDefault(); fileRef.current?.click(); }}>Image</button>
+      <button type="button" title="Insert image URL" onMouseDown={event => { event.preventDefault(); const url = window.prompt("Image URL"); if (url) insertImage(url); }}>Image URL</button>
+      <button type="button" title="Undo" onMouseDown={event => toolbar(event, "undo")}>↶</button>
+      <button type="button" title="Redo" onMouseDown={event => toolbar(event, "redo")}>↷</button>
+    </div>
+    {selectedImage && <div className="rich-editor-image-tools"><span>Image width</span>{(["25", "50", "75", "100"] as const).map(width => <button type="button" key={width} onClick={() => resizeImage(width)} className={selectedImage.dataset.width === width ? "is-active" : ""}>{width}%</button>)}<button type="button" onClick={() => { selectedImage.remove(); setSelectedImage(null); emit(); }}>Remove image</button></div>}
+    <div
+      ref={editorRef}
+      className="rich-editor-canvas"
+      contentEditable
+      suppressContentEditableWarning
+      data-placeholder="Write and format the content here…"
+      onInput={emit}
+      onBlur={emit}
+      onClick={event => setSelectedImage(event.target instanceof HTMLImageElement ? event.target : null)}
+    />
+    <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={event => { const file = event.target.files?.[0]; if (file) upload(file); event.target.value = ""; }} />
+  </div>;
+}
+
+export function RichLangField({ label, value, onChange }: { label: string; value: L; onChange: (v: L) => void }) {
+  return <div>
+    <span className="mb-2 block text-[10px] uppercase tracking-[0.2em] text-cocoa/60">{label}</span>
+    <div className="space-y-5">
+      <div><span className="mb-1 block text-[10px] font-medium tracking-wide text-clay">EN</span><RichEditor language="English" value={value.en} onChange={en => onChange({ ...value, en })} /></div>
+      <div><span className="mb-1 block text-[10px] font-medium tracking-wide text-clay">VN</span><RichEditor language="Vietnamese" value={value.vi} onChange={vi => onChange({ ...value, vi })} /></div>
+    </div>
+    <p className="mt-2 text-[11px] text-cocoa/45">Formatting and inline images are saved as HTML.</p>
+  </div>;
 }
 
 export function ImageField({
@@ -254,7 +346,7 @@ export function AdminCard({
       <div className="space-y-5">{children}</div>
     </>;
   const card = collapsible ? <section className="admin-card-collapsible flex items-center justify-between border border-sand bg-white p-5"><h3 className="font-serif text-[22px] text-charcoal">{title}</h3><div className="flex items-center gap-4"><button type="button" onClick={() => setEditing(true)} className="text-[10px] uppercase tracking-[.18em] text-rust">Open editor</button>{onDelete && <button type="button" onClick={() => setConfirming(true)} className="text-[10px] uppercase tracking-[.18em] text-rust">Delete</button>}</div></section> : <section className="border border-sand bg-ivory/60 p-5">{content}</section>;
-  return <>{card}{editing && <div className="fixed inset-0 z-[90] flex items-center justify-center bg-charcoal/50 p-4" role="dialog" aria-modal="true" aria-label={`Edit ${title}`}><div className="admin-editor-modal max-h-[90vh] w-full max-w-3xl overflow-y-auto bg-white p-6 shadow-2xl"><div className="mb-5 flex items-center justify-between border-b border-sand pb-4"><div><p className="text-[10px] uppercase tracking-[.2em] text-rust">Editor</p><h2 className="mt-1 font-serif text-3xl text-charcoal">{title}</h2></div><button type="button" onClick={() => setEditing(false)} className="h-10 w-10 border border-sand text-xl">×</button></div>{content}<div className="sticky bottom-0 mt-6 flex justify-end border-t border-sand bg-white pt-4"><button type="button" onClick={() => setEditing(false)} className="bg-rust px-6 py-3 text-xs uppercase tracking-[.16em] text-white">Done</button></div></div></div>}{confirming && <div className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal/45 p-5"><div className="w-full max-w-sm border border-sand bg-white p-6 shadow-xl"><h3 className="font-serif text-2xl text-charcoal">Delete this item?</h3><p className="mt-2 text-sm text-cocoa/70">This change will be included when you press Save changes.</p><div className="mt-6 flex justify-end gap-3"><button type="button" onClick={() => setConfirming(false)} className="border border-sand px-4 py-2 text-xs">Cancel</button><button type="button" onClick={() => { onDelete?.(); setConfirming(false); setEditing(false); }} className="bg-rust px-4 py-2 text-xs text-white">Delete</button></div></div></div>}</>;
+  return <>{card}{editing && <div className="fixed inset-0 z-[90] flex items-center justify-center bg-charcoal/50 p-4" role="dialog" aria-modal="true" aria-label={`Edit ${title}`}><div className="admin-editor-modal max-h-[90vh] w-full max-w-6xl overflow-y-auto bg-white p-6 shadow-2xl"><div className="mb-5 flex items-center justify-between border-b border-sand pb-4"><div><p className="text-[10px] uppercase tracking-[.2em] text-rust">Editor</p><h2 className="mt-1 font-serif text-3xl text-charcoal">{title}</h2></div><button type="button" onClick={() => setEditing(false)} className="h-10 w-10 border border-sand text-xl">×</button></div>{content}<div className="sticky bottom-0 mt-6 flex justify-end border-t border-sand bg-white pt-4"><button type="button" onClick={() => setEditing(false)} className="bg-rust px-6 py-3 text-xs uppercase tracking-[.16em] text-white">Done</button></div></div></div>}{confirming && <div className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal/45 p-5"><div className="w-full max-w-sm border border-sand bg-white p-6 shadow-xl"><h3 className="font-serif text-2xl text-charcoal">Delete this item?</h3><p className="mt-2 text-sm text-cocoa/70">This change will be included when you press Save changes.</p><div className="mt-6 flex justify-end gap-3"><button type="button" onClick={() => setConfirming(false)} className="border border-sand px-4 py-2 text-xs">Cancel</button><button type="button" onClick={() => { onDelete?.(); setConfirming(false); setEditing(false); }} className="bg-rust px-4 py-2 text-xs text-white">Delete</button></div></div></div>}</>;
 }
 
 export function AddButton({ label, onClick }: { label: string; onClick: () => void }) {

@@ -90,6 +90,8 @@ export interface SiteContent {
     heroEyebrow: L;
     heroCta: L;
     intro: Block;
+    /** Independent content for the Our Mission block on the About Mystère page. */
+    mission?: Block;
     anniversary: Block;
     artisan: Block & { quote: L; quoteAuthor: L };
     projectsIntro: { title: L; body: L };

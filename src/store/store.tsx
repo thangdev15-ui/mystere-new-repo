@@ -67,6 +67,7 @@ function loadCurrentContent(): SiteContent {
   // Remove the temporary record created during initial CMS testing.
   saved.communities = (saved.communities ?? []).filter(item => item.id !== "new-community" && item.slug !== "new-community");
   saved.communityCards ??= structuredClone(saved.communities);
+  saved.home.mission ??= structuredClone(saved.home.intro);
   saved.events ??= structuredClone(defaultContent.events);
   saved.categories ??= structuredClone(defaultContent.categories);
   for (const category of defaultContent.categories) {
@@ -144,6 +145,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         if (!communities.error && communities.data) {
           const sitePayload = communities.data.find(row => row.id === SITE_CONTENT_ROW)?.story?.payload;
           if (sitePayload && typeof sitePayload === 'object') Object.assign(next, sitePayload);
+          next.home.mission ??= structuredClone(next.home.intro);
           next.communities = communities.data.filter(row => row.id !== SITE_CONTENT_ROW && row.id !== "new-community" && row.slug !== "new-community").map(row => ({ ...row, region: row.region, title: row.title, line: row.line, story: { en: row.story?.en ?? '', vi: row.story?.vi ?? '' }, gallery: Array.isArray(row.story?.gallery) ? row.story.gallery : [], craft: row.craft }));
         }
         if (!events.error && events.data?.length) next.events = events.data.map(row => ({ id: row.id, image: row.image, url: row.url ?? '', title: row.title, dateLabel: row.date_label, dateStart: row.date_start ?? '', schedule: row.schedule, venue: row.venue, address: row.address, published: row.published }));

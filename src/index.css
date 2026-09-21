@@ -601,6 +601,34 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
 .admin-editor-modal { border-radius:10px; border:1px solid #e1ddd7; background:#faf8f3 !important; }
 .admin-editor-modal input,.admin-editor-modal textarea,.admin-editor-modal select { border-radius:7px; border-color:#d8d5cf; background:white; }
 .admin-editor-modal input:focus,.admin-editor-modal textarea:focus,.admin-editor-modal select:focus { border-color:#a91d2a; box-shadow:0 0 0 3px rgba(169,29,42,.08); }
+
+/* CMS rich text editor and the matching project-page renderer. */
+.rich-editor { overflow:hidden; border:1px solid #d8d5cf; border-radius:8px; background:#fff; }
+.rich-editor:focus-within { border-color:#a91d2a; box-shadow:0 0 0 3px rgba(169,29,42,.08); }
+.rich-editor-toolbar { display:flex; flex-wrap:wrap; gap:4px; padding:8px; border-bottom:1px solid #e7e2da; background:#f8f5ef; }
+.rich-editor-toolbar button { min-width:34px; height:32px; padding:0 9px; border:1px solid #ddd6cb; border-radius:5px; background:white; color:#463f39; font-size:11px; }
+.rich-editor-toolbar button:hover { border-color:#a91d2a; color:#a91d2a; }
+.rich-editor-image-tools { display:flex; align-items:center; gap:5px; padding:7px 10px; border-bottom:1px solid #e7e2da; background:#fff8f5; font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:#7b5d52; }
+.rich-editor-image-tools button { padding:4px 8px; border:1px solid #d8c6be; border-radius:4px; background:white; }
+.rich-editor-image-tools button.is-active { border-color:#a91d2a; background:#a91d2a; color:white; }
+.rich-editor-canvas { min-height:250px; max-height:460px; overflow:auto; padding:18px; color:#303532; font-size:15px; line-height:1.75; outline:0; }
+.rich-editor-canvas:empty::before { content:attr(data-placeholder); color:#a19a93; pointer-events:none; }
+.rich-editor-canvas p,.rich-content p { margin:0 0 1em; }
+.rich-editor-canvas h2,.rich-content h2 { margin:1.1em 0 .5em; font-size:1.7em; font-weight:700; line-height:1.25; }
+.rich-editor-canvas h3,.rich-content h3 { margin:1em 0 .45em; font-size:1.35em; font-weight:700; line-height:1.3; }
+.rich-editor-canvas ul,.rich-editor-canvas ol,.rich-content ul,.rich-content ol { margin:1em 0; padding-left:1.5em; }
+.rich-editor-canvas ul,.rich-content ul { list-style:disc; }
+.rich-editor-canvas ol,.rich-content ol { list-style:decimal; }
+.rich-editor-canvas blockquote,.rich-content blockquote { margin:1.25em 0; padding:.25em 0 .25em 1.1em; border-left:3px solid var(--brand-red); color:#637067; font-style:italic; }
+.rich-editor-canvas a,.rich-content a { color:var(--brand-red); text-decoration:underline; text-underline-offset:3px; }
+.rich-editor-canvas img,.rich-content img { display:block; max-width:100%; height:auto; margin:1.5em auto; border-radius:8px; }
+.rich-editor-canvas img { cursor:pointer; }
+.rich-editor-canvas img[data-width="25"],.rich-content img[data-width="25"] { width:25%; }
+.rich-editor-canvas img[data-width="50"],.rich-content img[data-width="50"] { width:50%; }
+.rich-editor-canvas img[data-width="75"],.rich-content img[data-width="75"] { width:75%; }
+.rich-editor-canvas img[data-width="100"],.rich-content img[data-width="100"] { width:100%; }
+.project-detail-prose > .rich-content,.community-prose.rich-content { color:#4f5e55; font-size:17px; line-height:1.82; }
+.project-detail-prose > .rich-content p,.community-prose.rich-content p { margin:0 0 19px; }
 @media(max-width:1023px) { .admin-shell .admin-workspace { padding:24px; } .admin-shell .admin-sidebar { width:100%; min-height:0; } .admin-content { width:100%; } .admin-shell .admin-sidebar ul { position:static; } }
 @media(max-width:700px) { .admin-shell .admin-topbar > div { align-items:flex-start; gap:14px; padding:14px 18px; } .admin-shell .admin-topbar > div > div:last-child { flex-wrap:wrap; gap:10px; justify-content:flex-end; } .admin-topbar-brand a { font-size:22px; } .admin-topbar-brand img { width:40px; height:40px; } .admin-shell .admin-workspace { padding:18px 14px 45px; } .admin-shell .admin-sidebar { padding:16px 12px; } .admin-stat-grid { grid-template-columns:repeat(2,1fr); } .admin-editor-modal { padding:18px; } }
 
