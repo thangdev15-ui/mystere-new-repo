@@ -37,6 +37,7 @@ type SectionKey =
 const SECTIONS: { key: SectionKey; label: string }[] = [
   { key: "dashboard", label: "Dashboard" },
   { key: "home", label: "NEW · Page content" },
+  { key: "about", label: "Who we are · Page" },
   { key: "projects", label: "What we do · Project" },
   { key: "communities", label: "What we do · Communities" },
   { key: "events", label: "What we do · Events" },
@@ -212,7 +213,7 @@ export default function Admin() {
                 <LangField label="Eyebrow" value={content.home.heroEyebrow} onChange={(v) => up((d) => (d.home.heroEyebrow = v))} />
                 <LangField label="Button label" value={content.home.heroCta} onChange={(v) => up((d) => (d.home.heroCta = v))} />
               </AdminCard>
-              <BlockEditor title="1.1 · Who we are — Mission" block={content.home.intro} onChange={(fn) => up((d) => fn(d.home.intro))} />
+              <BlockEditor title="Home · Our story" block={content.home.intro} onChange={(fn) => up((d) => fn(d.home.intro))} />
               <BlockEditor title="1.2 · Who we are — Where it began" block={content.home.artisan} onChange={(fn) => up((d) => fn(d.home.artisan))} />
               <AdminCard title="2.1 · What we do — Our projects">
                 <LangField label="Title" value={content.home.projectsIntro.title} onChange={(v) => up((d) => (d.home.projectsIntro.title = v))} />
@@ -463,6 +464,8 @@ export default function Admin() {
                     value={c.image}
                     onChange={(v) => up((d) => (d.communities[i].image = v))}
                   />
+                  {(c.gallery ?? []).map((image, imageIndex) => <div key={imageIndex} className="admin-gallery-field"><ImageField label={`Gallery image ${imageIndex + 1}`} value={image} onChange={(v) => up((d) => (d.communities[i].gallery ??= [])[imageIndex] = v)} /><button type="button" className="admin-gallery-remove" onClick={() => up((d) => (d.communities[i].gallery ??= []).splice(imageIndex,1))}>Remove image</button></div>)}
+                  <AddButton label="Add gallery image" onClick={() => up((d) => (d.communities[i].gallery ??= []).push(""))} />
                 </AdminCard>
               ))}
               <AddButton
@@ -479,6 +482,7 @@ export default function Admin() {
                       story: { ...emptyL },
                       craft: { ...emptyL },
                       image: "",
+                      gallery: [],
                       published: true,
                     }),
                   )

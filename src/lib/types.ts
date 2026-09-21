@@ -15,6 +15,7 @@ export interface Community {
   story: L;
   craft: L;
   image: string;
+  gallery?: string[];
   published: boolean;
 }
 

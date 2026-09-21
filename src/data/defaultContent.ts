@@ -165,7 +165,7 @@ export const defaultContent: SiteContent = {
 
   about: {
     heroImage: IMG_ABOUT,
-    title: { en: "About Mystère", vi: "Về Mystère" },
+    title: { en: "Mystère Shop: Unique Art, Craft & Cultural Heritage", vi: "Shop Huyền Bí: Nghệ thuật, nghề thủ công và di sản văn hóa độc đáo" },
     lead: {
       en: "Mystère Shop — “The Vietnamese Refinement” — at 141 Dong Khoi Street, Sai Gon Ward, Ho Chi Minh City, is a Vietnamese family-owned business established in 2001. We trade in finest tribal art and craft, hand made by the ethnic families of the Red Dao, Dao Tiền, Nùng, H'Mông and Black Lô Lô, in the mountainous northern provinces of Cao Bằng, Hà Giang and Sa Pa.",
       vi: "Mystère Shop — “The Vietnamese Refinement” — tại 141 Đồng Khởi, phường Sài Gòn, Thành phố Hồ Chí Minh, là một doanh nghiệp gia đình Việt Nam được thành lập năm 2001. Chúng tôi kinh doanh những sản phẩm mỹ nghệ tinh xảo nhất, được làm thủ công bởi các gia đình người Dao Đỏ, Dao Tiền, Nùng, H'Mông và Lô Lô Đen, tại các tỉnh miền núi phía Bắc: Cao Bằng, Hà Giang và Sa Pa.",

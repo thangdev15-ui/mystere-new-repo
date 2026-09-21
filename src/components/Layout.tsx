@@ -3,7 +3,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useStore } from '../store/store';
 
 function NavDropdown({ section, mobile = false, onNavigate }: { section: "who" | "what"; mobile?: boolean; onNavigate: () => void }) {
-  const { content, lang } = useStore();
+  const { lang } = useStore();
   const [open, setOpen] = useState(false);
   const toggle = useRef<HTMLButtonElement>(null);
   const en = lang === 'en';

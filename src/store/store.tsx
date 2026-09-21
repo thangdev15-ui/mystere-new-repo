@@ -15,6 +15,7 @@ const CONTENT_KEY = "mystere.content.v2";
 const LANG_KEY = "mystere.lang.v1";
 const AUTH_KEY = "mystere.auth.v1";
 const SUBS_KEY = "mystere.subscribers.v1";
+const SITE_CONTENT_ROW = "__site_content__";
 
 /**
  * NOTE ON DATA LAYER
@@ -105,6 +106,7 @@ function loadCurrentContent(): SiteContent {
   if (redDao && (redDao.image === "/images/red-dao.jpg" || legacy(redDao.image, "1g8jxhr1NKHeiMFGRS3YCvOXjXRTjfBSW"))) redDao.image = defaultContent.communities[0].image;
   if (saved.home.intro.body.en.startsWith("Mystère Shop was born from a simple belief:") || saved.home.intro.body.en.startsWith("Founded in Saigon in 2001, Mystère Shop is a family business connecting")) saved.home.intro.body = defaultContent.home.intro.body;
   if (saved.home.intro.title.en.startsWith("We help hill-tribe artisans")) saved.home.intro.title = defaultContent.home.intro.title;
+  if (saved.about.title.en === "About Mystère") saved.about.title = defaultContent.about.title;
   if (saved.home.artisan.body.en.startsWith("It started at a small fair for ethnic minority artisans,")) saved.home.artisan.body = defaultContent.home.artisan.body;
   if (saved.home.projectsIntro.body.en.startsWith("Red Dao, Dao Tiền, Nùng")) saved.home.projectsIntro.body = defaultContent.home.projectsIntro.body;
   if (saved.home.projectsIntro.title.en.startsWith("Standing beside the artisans")) saved.home.projectsIntro.title = defaultContent.home.projectsIntro.title;
@@ -139,7 +141,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (!active) return;
       setContentState(prev => {
         const next = structuredClone(prev);
-        if (!communities.error && communities.data) next.communities = communities.data.filter(row => row.id !== "new-community" && row.slug !== "new-community").map(row => ({ ...row, region: row.region, title: row.title, line: row.line, story: row.story, craft: row.craft }));
+        if (!communities.error && communities.data) {
+          const sitePayload = communities.data.find(row => row.id === SITE_CONTENT_ROW)?.story?.payload;
+          if (sitePayload && typeof sitePayload === 'object') Object.assign(next, sitePayload);
+          next.communities = communities.data.filter(row => row.id !== SITE_CONTENT_ROW && row.id !== "new-community" && row.slug !== "new-community").map(row => ({ ...row, region: row.region, title: row.title, line: row.line, story: { en: row.story?.en ?? '', vi: row.story?.vi ?? '' }, gallery: Array.isArray(row.story?.gallery) ? row.story.gallery : [], craft: row.craft }));
+        }
         if (!events.error && events.data?.length) next.events = events.data.map(row => ({ id: row.id, image: row.image, url: row.url ?? '', title: row.title, dateLabel: row.date_label, dateStart: row.date_start ?? '', schedule: row.schedule, venue: row.venue, address: row.address, published: row.published }));
         return next;
       });
@@ -188,7 +194,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, []);
   const saveContent = useCallback(async () => {
     if (!supabase || !user) { localStorage.setItem(CONTENT_KEY, JSON.stringify(content)); return true; }
-    const communityIds = content.communities.map(row => row.id);
+    const communityIds = [...content.communities.map(row => row.id), SITE_CONTENT_ROW];
     const eventIds = content.events.map(row => row.id);
     const [communityDelete, eventDelete] = await Promise.all([
       communityIds.length ? supabase.from('communities').delete().not('id', 'in', `(${communityIds.join(',')})`) : supabase.from('communities').delete().neq('id', ''),
@@ -196,7 +202,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     ]);
     if (communityDelete.error || eventDelete.error) return false;
     const [communities, events] = await Promise.all([
-      supabase.from('communities').upsert(content.communities.map((row, sort_order) => ({ ...row, sort_order }))),
+      supabase.from('communities').upsert([
+        ...content.communities.map((row, sort_order) => { const { gallery, ...rest } = row; return { ...rest, story: { ...row.story, gallery: gallery ?? [] }, sort_order }; }),
+        { id:SITE_CONTENT_ROW, slug:SITE_CONTENT_ROW, name:'Site content', region:{en:'',vi:''}, title:{en:'',vi:''}, line:{en:'',vi:''}, story:{ payload:{ home:content.home, about:content.about, story:content.story, craft:content.craft, journal:content.journal, newsletter:content.newsletter, contact:content.contact, categories:content.categories, products:content.products, articles:content.articles, partners:content.partners, communityCards:content.communityCards } }, craft:{en:'',vi:''}, image:'', published:true, sort_order:-1 },
+      ]),
       supabase.from('events').upsert(content.events.map((row, sort_order) => ({ id: row.id, image: row.image, url: row.url, title: row.title, date_label: row.dateLabel, date_start: row.dateStart || null, schedule: row.schedule, venue: row.venue, address: row.address, published: row.published, sort_order }))),
     ]);
     return !communities.error && !events.error;

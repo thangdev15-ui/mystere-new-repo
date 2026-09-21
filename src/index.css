@@ -762,3 +762,82 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
   .who-section .mission-image>img { height:260px; }
 }
 @media(prefers-reduced-motion:reduce) { .community-work-track { transition:none; } }
+
+/* Project detail page: readable editorial cards with full-width story copy. */
+.projects-page { padding-top:0; }
+.projects-page-hero { padding:52px 0 38px; }
+.projects-page-hero h1 { max-width:860px; font-size:clamp(40px,4.2vw,62px); }
+.projects-page-list { display:grid; gap:30px; padding:36px 0 48px; }
+.project-detail-section {
+  display:grid;
+  grid-template-columns:repeat(12,minmax(0,1fr));
+  gap:30px 42px;
+  padding:34px;
+  border:0;
+  border-radius:16px;
+  background:#fff;
+  box-shadow:0 10px 35px rgba(35,45,39,.055);
+}
+.project-detail-media { position:static; grid-column:1/6; }
+.project-detail-media img { height:330px; max-height:none; border-radius:11px; }
+.project-detail-copy { display:block; grid-column:6/13; align-self:center; }
+.project-detail-copy h2 { margin-top:12px; font-size:clamp(38px,3.5vw,56px); line-height:1.04; }
+.project-detail-title { margin-top:18px; max-width:650px; font-size:clamp(20px,2vw,27px); line-height:1.35; }
+.project-detail-prose { grid-column:1/13; max-width:none; columns:2; column-gap:46px; }
+.project-detail-prose p { break-inside:avoid; font-size:16px; line-height:1.82; }
+.project-detail-aside {
+  grid-column:1/13;
+  grid-row:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:32px;
+  margin:0;
+  padding:22px 24px;
+  border:0;
+  border-radius:10px;
+  background:#f3f5f2;
+}
+.project-detail-aside>div>p:not(.kicker) { margin-top:6px; color:#4f5e55; font-size:15px; }
+.project-detail-aside .contact-project-link { flex-shrink:0; margin:0; }
+.project-detail-gallery { grid-column:1/13; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+.project-detail-gallery img { width:100%; height:300px; object-fit:cover; border-radius:10px; }
+.projects-page-back { padding-bottom:58px; }
+
+/* About / Our Mission page. */
+.about-page-hero { padding:48px 0 34px; }
+.about-page-hero h1 { font-size:clamp(40px,4.4vw,64px); }
+.about-detail-section { grid-template-columns:minmax(0,1.05fr) minmax(380px,.95fr); gap:58px; padding:54px 0; align-items:center; }
+.about-detail-section h2 { font-size:clamp(36px,3.7vw,54px); }
+.about-detail-section p:not(.kicker) { font-size:16px; line-height:1.82; }
+.about-detail-section .mission-image>img { width:100%; height:360px; aspect-ratio:auto; object-fit:cover; border-radius:14px; }
+.about-detail-section-alt figure img { width:100%; height:360px; max-height:none; border-radius:14px; }
+
+.admin-gallery-field { padding:16px; border:1px solid #e2d9ce; border-radius:8px; background:#faf8f3; }
+.admin-gallery-remove { margin-top:12px; color:#b42331; font-size:10px; letter-spacing:.14em; text-transform:uppercase; }
+.community-work-viewport { touch-action:pan-y; cursor:grab; }
+.community-work-viewport:active { cursor:grabbing; }
+.community-body { grid-template-columns:1fr; gap:28px; }
+.community-prose { max-width:100%; columns:2; column-gap:48px; }
+.community-aside { display:flex; align-items:center; justify-content:space-between; gap:30px; padding:22px 24px; border:0; border-radius:10px; background:#f3f5f2; }
+.community-aside .contact-project-link { flex-shrink:0; margin:0; }
+.community-gallery { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+.community-gallery img { width:100%; height:300px; object-fit:cover; border-radius:10px; }
+
+@media(max-width:900px) {
+  .project-detail-media,.project-detail-copy,.project-detail-prose,.project-detail-aside,.project-detail-gallery { grid-column:1/13; }
+  .project-detail-prose { columns:1; }
+  .about-detail-section,.about-detail-section-alt { grid-template-columns:1fr; }
+}
+@media(max-width:680px) {
+  .projects-page-hero { padding-top:34px; }
+  .project-detail-section { padding:20px; gap:24px; border-radius:12px; }
+  .project-detail-media img { height:260px; }
+  .project-detail-aside { align-items:flex-start; flex-direction:column; }
+  .project-detail-gallery { grid-template-columns:1fr; }
+  .project-detail-gallery img { height:250px; }
+  .about-detail-section .mission-image>img,.about-detail-section-alt figure img { height:280px; }
+  .community-prose { columns:1; }
+  .community-aside { align-items:flex-start; flex-direction:column; }
+  .community-gallery { grid-template-columns:1fr; }
+}
