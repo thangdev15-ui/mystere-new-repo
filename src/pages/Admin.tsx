@@ -970,7 +970,11 @@ export default function Admin() {
                   </button>
                   <button
                     onClick={() => {
-                      if (confirm("Reset all content to the shipped version?")) resetContent();
+                      if (confirm("Reset all content to the shipped version?")) {
+                        resetContent();
+                        setDirty(true);
+                        setSaved(false);
+                      }
                     }}
                     className="border border-rust px-5 py-3 text-[11px] uppercase tracking-[0.2em] text-rust hover:bg-rust hover:text-ivory"
                   >
