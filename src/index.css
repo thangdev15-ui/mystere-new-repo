@@ -629,6 +629,7 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
 .rich-editor-canvas img[data-width="100"],.rich-content img[data-width="100"] { width:100%; }
 .project-detail-prose > .rich-content,.community-prose.rich-content { color:#4f5e55; font-size:17px; line-height:1.82; }
 .project-detail-prose > .rich-content p,.community-prose.rich-content p { margin:0 0 19px; }
+.project-detail-prose .rich-content p,.community-prose.rich-content p { white-space:normal; }
 @media(max-width:1023px) { .admin-shell .admin-workspace { padding:24px; } .admin-shell .admin-sidebar { width:100%; min-height:0; } .admin-content { width:100%; } .admin-shell .admin-sidebar ul { position:static; } }
 @media(max-width:700px) { .admin-shell .admin-topbar > div { align-items:flex-start; gap:14px; padding:14px 18px; } .admin-shell .admin-topbar > div > div:last-child { flex-wrap:wrap; gap:10px; justify-content:flex-end; } .admin-topbar-brand a { font-size:22px; } .admin-topbar-brand img { width:40px; height:40px; } .admin-shell .admin-workspace { padding:18px 14px 45px; } .admin-shell .admin-sidebar { padding:16px 12px; } .admin-stat-grid { grid-template-columns:repeat(2,1fr); } .admin-editor-modal { padding:18px; } }
 

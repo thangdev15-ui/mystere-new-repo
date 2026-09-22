@@ -47,6 +47,9 @@ export function sanitizeRichHtml(value: string) {
         child.setAttribute("alt", alt);
         child.setAttribute("data-width", /^(25|50|75|100)$/.test(width) ? width : "100");
       }
+      if (["P", "H2", "H3", "BLOCKQUOTE", "LI"].includes(tag) &&
+          !(child.textContent ?? "").replace(/\u00a0/g, " ").trim() &&
+          !child.querySelector("img")) child.remove();
     }
   };
   clean(root);
