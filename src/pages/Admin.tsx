@@ -41,6 +41,8 @@ const SECTIONS: { key: SectionKey; label: string }[] = [
   { key: "projects", label: "What we do · Project" },
   { key: "communities", label: "What we do · Communities" },
   { key: "events", label: "What we do · Events" },
+  { key: "categories", label: "Craft & Products · Categories" },
+  { key: "products", label: "Craft & Products · Products" },
   { key: "newsletter", label: "Newsletter" },
   { key: "contact", label: "Logo & Contact" },
   { key: "settings", label: "Settings" },

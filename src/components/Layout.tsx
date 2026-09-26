@@ -26,6 +26,7 @@ function NavDropdown({ section, mobile = false, onNavigate }: { section: "who" |
       {section === 'who' ? <>
         <li><Link to="/about-mystere#our-mission" onClick={close}>{en ? 'Our mission' : 'Sứ mệnh'}</Link></li>
         <li><Link to="/about-mystere#where-it-began" onClick={close}>{en ? 'Where it began' : 'Khởi nguồn'}</Link></li>
+        <li><Link to="/craft" onClick={close}>{en ? 'Our Product' : 'Sản phẩm'}</Link></li>
       </> : <>
         <li><Link to="/#projects" onClick={close}>{en ? 'Our Project' : 'Dự án của chúng tôi'}</Link></li>
         <li><Link to="/#communities" onClick={close}>{en ? 'Communities we work with' : 'Cộng đồng chúng tôi đồng hành'}</Link></li>
@@ -84,10 +85,10 @@ export default function Layout() {
         <div className="footer-intro"><Link to="/" className="footer-brand" aria-label="Mystère Shop — Home"><img src={content.contact.logo} alt="Mystère Shop" /></Link><p>{en ? 'Vietnamese craft. Human connections.' : 'Nghề thủ công Việt. Kết nối con người.'}</p></div>
         <div><h2>{en ? 'Visit us' : 'Ghé thăm'}</h2><address>{content.contact.addressLines.map(l => <span key={l}>{l}<br/></span>)}</address><p>{t(content.contact.hours)}</p><a href={content.contact.mapsUrl} target="_blank" rel="noreferrer">{en ? 'Get directions' : 'Chỉ đường'} ↗</a></div>
         <div><h2>{en ? 'Explore' : 'Khám phá'}</h2>{nav.map(n => <Link key={n.to} to={n.to}>{n.label}</Link>)}</div>
-        <div><h2>{en ? 'Social media' : 'Mạng xã hội'}</h2><a href={content.contact.facebook} target="_blank" rel="noreferrer">Facebook <span>↗</span></a><a href={content.contact.instagram} target="_blank" rel="noreferrer">Instagram <span>↗</span></a><a href={`tel:${content.contact.phone.replace(/[^+\d]/g,'')}`}>{content.contact.phone}</a></div>
+        <div><h2>{en ? 'Social media' : 'Mạng xã hội'}</h2><a href={content.contact.facebook} target="_blank" rel="noreferrer">Facebook <span>↗</span></a><a href={content.contact.instagram} target="_blank" rel="noreferrer">Instagram <span>↗</span></a><p className="footer-contact-label">{en ? 'Contact us' : 'Liên hệ'}</p><a href={`tel:${content.contact.phone.replace(/[^+\d]/g,'')}`}>{content.contact.phone}</a><a href={`mailto:${content.contact.email}`}>{content.contact.email}</a></div>
       </div></div>
       <div className="footer-legal"><div className="content-width">
-        <div className="legal-card"><p className="legal-kicker">{en ? 'Website owned and operated by' : 'Website thuộc quyền sở hữu và vận hành bởi'}</p><h2>{en ? 'HUYEN BI HOUSEHOLD BUSINESS' : 'HỘ KINH DOANH HUYỀN BÍ'}</h2><div className="legal-details"><p>{en ? 'Business registration number' : 'Mã số đăng ký hộ kinh doanh'}: <strong>41A8015729</strong><br/>{en ? 'First registered on 13 March 2001 · Updated on 29 September 2023' : 'Đăng ký lần đầu ngày 13/03/2001 · Thay đổi lần 2 ngày 29/09/2023'}</p><p>141 Đồng Khởi, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh, Việt Nam<br/>{content.contact.phone} · {content.contact.email}</p></div></div>
+        <div className="legal-card"><p className="legal-kicker">{en ? 'Website owned and operated by' : 'Website thuộc quyền sở hữu và vận hành bởi'}</p><h2>HUYEN BI SHOP</h2><div className="legal-details"><p>{en ? 'Business registration number' : 'Mã số đăng ký hộ kinh doanh'}: <strong>41A8015729</strong><br/>{en ? 'First registered on 13 March 2001 · Updated on 29 September 2023' : 'Đăng ký lần đầu ngày 13/03/2001 · Thay đổi lần 2 ngày 29/09/2023'}</p><p>141 Đồng Khởi, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh, Việt Nam<br/>{content.contact.phone} · {content.contact.email}</p></div></div>
         <div className="footer-bottom"><span>© {new Date().getFullYear()} Mystère Shop — Huyền Bí. {en ? 'All rights reserved.' : 'Bảo lưu mọi quyền.'}</span><Link to="/#contact" className="footer-contact">{en ? 'Contact' : 'Liên hệ'}</Link></div>
       </div></div>
     </footer></>;
