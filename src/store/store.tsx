@@ -70,6 +70,11 @@ function loadCurrentContent(): SiteContent {
   saved.home.mission ??= structuredClone(saved.home.intro);
   saved.events ??= structuredClone(defaultContent.events);
   saved.categories ??= structuredClone(defaultContent.categories);
+  saved.products ??= structuredClone(defaultContent.products);
+  for (const product of saved.products) {
+    product.story ??= structuredClone(product.description);
+    product.gallery ??= [];
+  }
   for (const category of defaultContent.categories) {
     if (!saved.categories.some(item => item.id === category.id)) saved.categories.push(structuredClone(category));
   }
@@ -145,6 +150,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         if (!communities.error && communities.data) {
           const sitePayload = communities.data.find(row => row.id === SITE_CONTENT_ROW)?.story?.payload;
           if (sitePayload && typeof sitePayload === 'object') Object.assign(next, sitePayload);
+          next.products ??= structuredClone(defaultContent.products);
+          next.products.forEach(product => { product.story ??= structuredClone(product.description); product.gallery ??= []; });
           next.home.mission ??= structuredClone(next.home.intro);
           next.communities = communities.data.filter(row => row.id !== SITE_CONTENT_ROW && row.id !== "new-community" && row.slug !== "new-community").map(row => ({ ...row, region: row.region, title: row.title, line: row.line, story: { en: row.story?.en ?? '', vi: row.story?.vi ?? '' }, gallery: Array.isArray(row.story?.gallery) ? row.story.gallery : [], craft: row.craft }));
         }

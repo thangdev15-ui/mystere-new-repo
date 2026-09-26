@@ -531,6 +531,11 @@ export default function Admin() {
                     value={p.description}
                     onChange={(v) => up((d) => (d.products[i].description = v))}
                   />
+                  <RichLangField
+                    label="Full product story"
+                    value={p.story ?? p.description}
+                    onChange={(v) => up((d) => (d.products[i].story = v))}
+                  />
                   <div className="grid gap-4 md:grid-cols-2">
                     <Field label="Category">
                       <select
@@ -562,6 +567,8 @@ export default function Admin() {
                     value={p.image}
                     onChange={(v) => up((d) => (d.products[i].image = v))}
                   />
+                  {(p.gallery ?? []).map((image, imageIndex) => <div key={imageIndex} className="admin-gallery-field"><ImageField label={`Supporting image ${imageIndex + 1}`} value={image} onChange={(v) => up((d) => (d.products[i].gallery ??= [])[imageIndex] = v)} /><button type="button" className="admin-gallery-remove" onClick={() => up((d) => (d.products[i].gallery ??= []).splice(imageIndex,1))}>Remove image</button></div>)}
+                  <AddButton label="Add supporting image" onClick={() => up((d) => (d.products[i].gallery ??= []).push(""))} />
                 </AdminCard>
               ))}
               <AddButton
@@ -576,6 +583,8 @@ export default function Admin() {
                       community: "",
                       materials: { ...emptyL },
                       image: "",
+                      story: { ...emptyL },
+                      gallery: [],
                       published: true,
                     }),
                   )

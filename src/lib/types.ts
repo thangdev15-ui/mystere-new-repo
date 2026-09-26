@@ -34,9 +34,13 @@ export interface Product {
   categoryId: string;
   name: L;
   description: L;
+  /** Full editorial story, stored as rich HTML. */
+  story?: L;
   community: string;
   materials: L;
   image: string;
+  /** Supporting photographs displayed beneath the product story. */
+  gallery?: string[];
   published: boolean;
 }
 

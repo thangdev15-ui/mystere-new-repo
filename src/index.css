@@ -980,3 +980,23 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
   .product-collection-grid { grid-template-columns:1fr; }
   .product-collection-grid article>img { height:420px; }
 }
+
+/* Collaboration and product editorial reading layout. */
+.project-copy>p:not(.kicker),
+.projects-page-hero>p:last-child,
+.product-detail-copy>p:not(.kicker),
+.product-detail-prose,
+.product-collaboration-row>div>p:not(.kicker) { text-align:justify; text-wrap:pretty; }
+.site-footer .footer-grid { grid-template-columns:1.15fr 1fr 1fr; }
+.product-collaboration-list { display:grid; gap:28px; margin-top:28px; }
+.product-collaboration-row { display:grid; grid-template-columns:minmax(280px,38%) minmax(0,1fr); gap:48px; align-items:center; padding:0 0 28px; border-bottom:1px solid #d7ded8; }
+.product-collaboration-row:last-child { border-bottom:0; }
+.product-collaboration-image { width:100%; height:270px; border-radius:12px; object-fit:cover; }
+.product-collaboration-row h2 { margin-top:7px; font-size:clamp(28px,2.4vw,40px); line-height:1.12; }
+.product-collaboration-row>div>p:not(.kicker) { max-width:780px; margin-top:14px; color:#56645d; font-size:16px; line-height:1.8; }
+.product-collaboration-row .project-more { margin-top:20px; }
+@media(max-width:760px) {
+  .site-footer .footer-grid { grid-template-columns:1fr 1fr; }
+  .product-collaboration-row { grid-template-columns:1fr; gap:20px; }
+  .product-collaboration-image { height:250px; }
+}
