@@ -195,14 +195,22 @@ export function ImageField({
   label,
   value,
   onChange,
+  maxFileSizeMb = 5,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
+  maxFileSizeMb?: number;
 }) {
   const fileRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState("");
 
   const upload = (file: File) => {
+    if (file.size > maxFileSizeMb * 1024 * 1024) {
+      setError(`Please choose an image up to ${maxFileSizeMb} MB.`);
+      return;
+    }
+    setError("");
     const reader = new FileReader();
     reader.onload = () => {
       const image = new Image();
@@ -215,8 +223,10 @@ export function ImageField({
         canvas.getContext('2d')?.drawImage(image, 0, 0, canvas.width, canvas.height);
         onChange(canvas.toDataURL('image/webp', .82));
       };
+      image.onerror = () => setError("This image could not be processed. Please try another file.");
       image.src = String(reader.result);
     };
+    reader.onerror = () => setError("This image could not be read. Please try another file.");
     reader.readAsDataURL(file);
   };
 
@@ -255,6 +265,8 @@ export function ImageField({
               </button>
             )}
           </div>
+          <p className="text-[11px] text-cocoa/45">Maximum upload size: {maxFileSizeMb} MB. Images are optimized before saving.</p>
+          {error && <p className="text-[11px] text-rust" role="alert">{error}</p>}
           <input
             ref={fileRef}
             type="file"

@@ -213,7 +213,7 @@ export default function Admin() {
               <h1 className="font-serif text-4xl text-charcoal">NEW · Page content</h1>
               <Note>The website has two main sections. Use photographs without embedded document text. Our Story and Our Mission are separate blocks. Saved content is shared through Supabase.</Note>
               <AdminCard title="Opening banner">
-                <ImageField label="Banner image" value={content.home.heroImage} onChange={(v) => up((d) => (d.home.heroImage = v))} />
+                <ImageField label="Banner image" maxFileSizeMb={5} value={content.home.heroImage} onChange={(v) => up((d) => (d.home.heroImage = v))} />
                 <LangField label="Eyebrow" value={content.home.heroEyebrow} onChange={(v) => up((d) => (d.home.heroEyebrow = v))} />
                 <LangField label="Button label" value={content.home.heroCta} onChange={(v) => up((d) => (d.home.heroCta = v))} />
               </AdminCard>
