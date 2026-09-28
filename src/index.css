@@ -1000,3 +1000,19 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
   .product-collaboration-row { grid-template-columns:1fr; gap:20px; }
   .product-collaboration-image { height:250px; }
 }
+
+/* Correct the homepage hierarchy and preserve the supplied Mission photograph. */
+.about-detail-section .mission-image>img { height:auto; aspect-ratio:auto; object-fit:contain; }
+.who-section>.section-top { margin-top:30px; }
+.mission-grid { padding-block:38px 62px; }
+.mission-copy h3 { font-size:clamp(38px,3.1vw,50px); max-width:650px; }
+.what-section { padding-top:38px; }
+.what-section .projects-intro { margin:18px 0 34px; }
+.what-section .projects-intro h2 { max-width:1060px; font-size:clamp(34px,3vw,48px); line-height:1.12; white-space:normal; }
+.site-footer .footer-grid { grid-template-columns:1.15fr 1fr 1fr 1fr; }
+@media(max-width:900px) { .site-footer .footer-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:760px) {
+  .mission-grid { padding-block:30px 45px; }
+  .mission-copy h3,.what-section .projects-intro h2 { font-size:34px; }
+  .site-footer .footer-grid { grid-template-columns:1fr 1fr; }
+}
