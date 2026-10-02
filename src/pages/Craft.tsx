@@ -2,6 +2,27 @@ import { Link, useParams } from "react-router-dom";
 import { useStore } from "../store/store";
 import Img from "../components/Img";
 import RichText from "../components/RichText";
+import type { Category, L } from "../lib/types";
+
+function CollectionImageStrip({ images, name }: { images: string[]; name: string }) {
+  if (!images.length) return null;
+  return <div className="category-image-strip" aria-label={`${name} gallery`}>
+    {images.map((image, index) => <Img key={`${image}-${index}`} src={image} alt={`${name} ${index + 1}`} ratio="aspect-[4/3]" />)}
+  </div>;
+}
+
+function CollectionIntro({ category, en, t, heading = "h2" }: { category: Category; en: boolean; t: (value: L | undefined) => string; heading?: "h1" | "h2" }) {
+  const Heading = heading;
+  const description = t(category.description) || t(category.short);
+  return <>
+    <div className="product-detail-media"><Img src={category.image} alt={t(category.name)} ratio="aspect-[3/4]" /></div>
+    <div className="product-detail-copy">
+      <p className="kicker">{en ? "Craft collection" : "Bộ sưu tập thủ công"}</p>
+      <Heading>{t(category.name)}</Heading>
+      {description && <p className="category-description">{description}</p>}
+    </div>
+  </>;
+}
 
 export function CraftIndex() {
   const { content, t, lang } = useStore();
@@ -15,11 +36,13 @@ export function CraftIndex() {
       <p>{t(content.craft.lead)}</p>
     </header>
     <div className="products-page-list content-width">
-      {categories.map((category) => <section key={category.id} className="product-detail-section">
-        <div className="product-detail-media"><Img src={category.image} alt={t(category.name)} ratio="aspect-[3/4]" /></div>
-        <div className="product-detail-copy"><p className="kicker">{en ? "Craft collection" : "Bộ sưu tập thủ công"}</p><h2>{t(category.name)}</h2><p>{t(category.short)}</p></div>
-        <div className="product-detail-prose"><p>{t(category.description)}</p></div>
-      </section>)}
+      {categories.map((category) => {
+        const gallery = category.gallery?.filter(Boolean) ?? [];
+        return <section key={category.id} className="product-detail-section category-intro-section">
+          <CollectionIntro category={category} en={en} t={t} />
+          <CollectionImageStrip images={gallery} name={t(category.name)} />
+        </section>;
+      })}
     </div>
   </article>;
 }
@@ -33,11 +56,11 @@ export function CategoryPage() {
   if (!category) return <article className="products-page"><div className="products-empty content-width"><h1>{en ? "Collection not found" : "Không tìm thấy bộ sưu tập"}</h1><Link to="/craft" className="project-more">← {en ? "Back to Craft & Products" : "Quay lại Sản phẩm thủ công"}</Link></div></article>;
 
   const products = content.products.filter((product) => product.categoryId === category.id && product.published);
+  const gallery = category.gallery?.filter(Boolean) ?? [];
   return <article className="products-page">
-    <section className="product-detail-section content-width product-detail-hero">
-      <div className="product-detail-media"><Img src={category.image} alt={t(category.name)} ratio="aspect-[3/4]" priority /></div>
-      <div className="product-detail-copy"><p className="kicker">{en ? "Craft collection" : "Bộ sưu tập thủ công"}</p><h1>{t(category.name)}</h1><p>{t(category.short)}</p></div>
-      <div className="product-detail-prose"><p>{t(category.description)}</p></div>
+    <section className="product-detail-section content-width product-detail-hero category-intro-section">
+      <CollectionIntro category={category} en={en} t={t} heading="h1" />
+      <CollectionImageStrip images={gallery} name={t(category.name)} />
     </section>
     <section className="product-collection content-width">
       <div className="projects-heading"><h2>{en ? "Selected pieces" : "Sản phẩm chọn lọc"}</h2><span>{en ? "Made by hand" : "Làm bằng tay"}</span></div>

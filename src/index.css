@@ -1016,3 +1016,63 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
   .mission-copy h3,.what-section .projects-intro h2 { font-size:34px; }
   .site-footer .footer-grid { grid-template-columns:1fr 1fr; }
 }
+
+/* October client review: keep the panoramic home photograph whole and make collection cards editorial. */
+.who-section .mission-grid {
+  grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);
+  gap:clamp(38px,5vw,76px);
+}
+.who-section .mission-image { width:100%; max-width:680px; }
+.who-section .mission-image>img {
+  height:auto;
+  aspect-ratio:1024 / 682;
+  object-fit:contain;
+  object-position:center;
+}
+.category-intro-section { align-items:center; }
+.category-intro-section .product-detail-copy { align-self:center; }
+.category-intro-section .category-description {
+  max-width:860px;
+  white-space:pre-line;
+  text-align:justify;
+  text-wrap:pretty;
+}
+.category-image-strip {
+  grid-column:1 / 13;
+  display:flex;
+  gap:14px;
+  width:100%;
+  margin-top:4px;
+  padding-top:4px;
+  overflow-x:auto;
+  overscroll-behavior-inline:contain;
+  scrollbar-width:thin;
+}
+.category-image-strip img {
+  width:clamp(180px,22vw,310px);
+  height:190px;
+  flex:0 0 auto;
+  border-radius:10px;
+  object-fit:cover;
+}
+.category-image-strip>img:only-child { width:100%; }
+.admin-image-strip-editor { margin-top:20px; padding-top:20px; border-top:1px solid #e2d9ce; }
+.admin-image-strip-editor-label { display:block; color:#796e63; font-size:10px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; }
+.admin-image-strip-editor p { margin:7px 0 14px; color:#80766d; font-size:12px; line-height:1.55; }
+@media(min-width:1180px) {
+  .what-section .projects-intro h2 {
+    max-width:none;
+    font-size:clamp(30px,2.35vw,44px);
+    letter-spacing:-.8px;
+    white-space:nowrap;
+  }
+}
+@media(max-width:900px) {
+  .who-section .mission-grid { grid-template-columns:1fr; }
+  .who-section .mission-image { max-width:none; }
+  .category-image-strip { grid-column:1; }
+}
+@media(max-width:680px) {
+  .who-section .mission-image>img { height:auto; aspect-ratio:1024 / 682; }
+  .category-image-strip img { width:220px; height:145px; }
+}

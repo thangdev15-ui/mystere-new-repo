@@ -70,6 +70,15 @@ function loadCurrentContent(): SiteContent {
   saved.home.mission ??= structuredClone(saved.home.intro);
   saved.events ??= structuredClone(defaultContent.events);
   saved.categories ??= structuredClone(defaultContent.categories);
+  for (const category of saved.categories) {
+    const description = {
+      en: category.description?.en || category.short?.en || "",
+      vi: category.description?.vi || category.short?.vi || "",
+    };
+    category.description = description;
+    category.short = { ...description };
+    category.gallery ??= [];
+  }
   saved.products ??= structuredClone(defaultContent.products);
   for (const product of saved.products) {
     product.story ??= structuredClone(product.description);
@@ -150,6 +159,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         if (!communities.error && communities.data) {
           const sitePayload = communities.data.find(row => row.id === SITE_CONTENT_ROW)?.story?.payload;
           if (sitePayload && typeof sitePayload === 'object') Object.assign(next, sitePayload);
+          next.categories ??= structuredClone(defaultContent.categories);
+          next.categories.forEach(category => {
+            const description = { en: category.description?.en || category.short?.en || "", vi: category.description?.vi || category.short?.vi || "" };
+            category.description = description;
+            category.short = { ...description };
+            category.gallery ??= [];
+          });
           next.products ??= structuredClone(defaultContent.products);
           next.products.forEach(product => { product.story ??= structuredClone(product.description); product.gallery ??= []; });
           next.home.mission ??= structuredClone(next.home.intro);

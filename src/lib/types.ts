@@ -26,6 +26,8 @@ export interface Category {
   short: L;
   description: L;
   image: string;
+  /** Optional image-only strip displayed beneath the collection introduction. */
+  gallery?: string[];
   published: boolean;
 }
 

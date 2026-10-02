@@ -461,21 +461,26 @@ export default function Admin() {
                     />
                   </Field>
                   <LangField
-                    label="Short line"
-                    value={c.short}
-                    onChange={(v) => up((d) => (d.categories[i].short = v))}
-                  />
-                  <LangField
                     label="Description"
                     multiline
-                    value={c.description}
-                    onChange={(v) => up((d) => (d.categories[i].description = v))}
+                    rows={7}
+                    value={{ en: c.description.en || c.short.en, vi: c.description.vi || c.short.vi }}
+                    onChange={(v) => up((d) => {
+                      d.categories[i].description = v;
+                      d.categories[i].short = { ...v };
+                    })}
                   />
                   <ImageField
-                    label="Image"
+                    label="Main image"
                     value={c.image}
                     onChange={(v) => up((d) => (d.categories[i].image = v))}
                   />
+                  <div className="admin-image-strip-editor">
+                    <span className="admin-image-strip-editor-label">Image strip</span>
+                    <p>Optional horizontal images only. Add as many as needed; no text is shown with them.</p>
+                    {(c.gallery ?? []).map((image, imageIndex) => <div key={imageIndex} className="admin-gallery-field"><ImageField label={`Strip image ${imageIndex + 1}`} value={image} onChange={(v) => up((d) => (d.categories[i].gallery ??= [])[imageIndex] = v)} /><button type="button" className="admin-gallery-remove" onClick={() => up((d) => (d.categories[i].gallery ??= []).splice(imageIndex, 1))}>Remove image</button></div>)}
+                    <AddButton label="Add strip image" onClick={() => up((d) => (d.categories[i].gallery ??= []).push(""))} />
+                  </div>
                 </AdminCard>
               ))}
               <AddButton
@@ -489,6 +494,7 @@ export default function Admin() {
                       short: { ...emptyL },
                       description: { ...emptyL },
                       image: "",
+                      gallery: [],
                       published: true,
                     }),
                   )
