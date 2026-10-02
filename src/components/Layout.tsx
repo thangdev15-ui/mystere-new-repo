@@ -28,7 +28,7 @@ function NavDropdown({ section, mobile = false, onNavigate }: { section: "who" |
         <li><Link to="/about-mystere#where-it-began" onClick={close}>{en ? 'Where it began' : 'Khởi nguồn'}</Link></li>
         <li><Link to="/craft" onClick={close}>{en ? 'Our Product' : 'Sản phẩm'}</Link></li>
       </> : <>
-        <li><Link to="/#projects" onClick={close}>{en ? 'Our Project' : 'Dự án của chúng tôi'}</Link></li>
+        <li><Link to="/#projects" onClick={close}>{en ? 'Our Collaboration' : 'Dự án của chúng tôi'}</Link></li>
         <li><Link to="/#communities" onClick={close}>{en ? 'Communities we work with' : 'Cộng đồng chúng tôi đồng hành'}</Link></li>
         <li><Link to="/#our-event" onClick={close}>{en ? 'Our Event' : 'Sự kiện của chúng tôi'}</Link></li>
       </>}

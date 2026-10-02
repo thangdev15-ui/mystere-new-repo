@@ -1076,3 +1076,15 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
   .who-section .mission-image>img { height:auto; aspect-ratio:1024 / 682; }
   .category-image-strip img { width:220px; height:145px; }
 }
+
+
+/* Keep the two homepage section labels as one visual system. */
+.new-home .who-heading,
+.new-home .what-section .section-label {
+  color:var(--brand-red);
+  font-size:clamp(27px,3vw,40px);
+  font-weight:750;
+  line-height:1.15;
+  letter-spacing:-.6px;
+  text-transform:uppercase;
+}
