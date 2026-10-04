@@ -15,10 +15,12 @@ function CollectionIntro({ category, en, t, heading = "h2" }: { category: Catego
   const Heading = heading;
   const description = t(category.description) || t(category.short);
   return <>
-    <div className="product-detail-media"><Img src={category.image} alt={t(category.name)} ratio="aspect-[3/4]" /></div>
-    <div className="product-detail-copy">
+    <header className="category-topic-heading">
       <p className="kicker">{en ? "Craft collection" : "Bộ sưu tập thủ công"}</p>
       <Heading>{t(category.name)}</Heading>
+    </header>
+    <div className="product-detail-media"><Img src={category.image} alt={t(category.name)} ratio="aspect-[3/4]" /></div>
+    <div className="product-detail-copy">
       {description && <RichText className="category-description" html={description} />}
     </div>
   </>;
