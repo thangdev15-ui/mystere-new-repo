@@ -66,6 +66,11 @@ function loadCurrentContent(): SiteContent {
   if (saved === defaultContent) saved = structuredClone(defaultContent);
   // Remove the temporary record created during initial CMS testing.
   saved.communities = (saved.communities ?? []).filter(item => item.id !== "new-community" && item.slug !== "new-community");
+  for (const community of saved.communities) {
+    const defaults = defaultContent.communities.find(item => item.id === community.id);
+    community.documentUrl ??= defaults?.documentUrl ?? "";
+    community.documentLabel ??= structuredClone(defaults?.documentLabel ?? { en: "", vi: "" });
+  }
   saved.communityCards ??= structuredClone(saved.communities);
   saved.home.mission ??= structuredClone(saved.home.intro);
   saved.events ??= structuredClone(defaultContent.events);
@@ -169,7 +174,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           next.products ??= structuredClone(defaultContent.products);
           next.products.forEach(product => { product.story ??= structuredClone(product.description); product.gallery ??= []; });
           next.home.mission ??= structuredClone(next.home.intro);
-          next.communities = communities.data.filter(row => row.id !== SITE_CONTENT_ROW && row.id !== "new-community" && row.slug !== "new-community").map(row => ({ ...row, region: row.region, title: row.title, line: row.line, story: { en: row.story?.en ?? '', vi: row.story?.vi ?? '' }, gallery: Array.isArray(row.story?.gallery) ? row.story.gallery : [], craft: row.craft }));
+          next.communities = communities.data.filter(row => row.id !== SITE_CONTENT_ROW && row.id !== "new-community" && row.slug !== "new-community").map(row => {
+            const defaults = defaultContent.communities.find(item => item.id === row.id);
+            const savedReference = next.communities.find(item => item.id === row.id);
+            return { ...row, region: row.region, title: row.title, line: row.line, story: { en: row.story?.en ?? '', vi: row.story?.vi ?? '' }, gallery: Array.isArray(row.story?.gallery) ? row.story.gallery : [], craft: row.craft, documentUrl: savedReference?.documentUrl ?? defaults?.documentUrl ?? "", documentLabel: savedReference?.documentLabel ?? defaults?.documentLabel ?? { en: "", vi: "" } };
+          });
         }
         if (!events.error && events.data?.length) next.events = events.data.map(row => ({ id: row.id, image: row.image, url: row.url ?? '', title: row.title, dateLabel: row.date_label, dateStart: row.date_start ?? '', schedule: row.schedule, venue: row.venue, address: row.address, published: row.published }));
         return next;

@@ -12,6 +12,13 @@ const projectEditorialImage = (community: Community) => {
   return community.image;
 };
 
+function ProjectDocumentLink({ community, className = "" }: { community: Community; className?: string }) {
+  const { t, lang } = useStore();
+  if (!community.documentUrl) return null;
+  const label = t(community.documentLabel) || (lang === "en" ? "Read the DECEN presentation" : "Xem tài liệu DECEN");
+  return <a className={`project-document-link ${className}`} href={community.documentUrl} target="_blank" rel="noreferrer">{label} <span aria-hidden="true">↗</span><small>PDF</small></a>;
+}
+
 function Project({ community: c }: { community: Community }) {
   const { t, lang } = useStore();
   const fallbackImages: Record<string, string> = { 'red-dao':'/images/red-dao.png', 'dao-tien':'/images/project-dao-tien.jpg', nung:'/images/project-nung.jpg', hmong:'/images/project-hmong.jpg', 'black-lo-lo':'/images/project-lo-lo.jpg' };
@@ -19,8 +26,7 @@ function Project({ community: c }: { community: Community }) {
   return <article className="project-row" id={c.slug} data-scroll-part>
     {image ? <Img src={image} alt={c.name} ratio="aspect-[3/2]" className="project-photo" /> : <div className="project-photo photo-pending"><span>{t(c.region)}</span><small>{lang === 'en' ? 'Field photograph forthcoming' : 'Ảnh thực địa sẽ được bổ sung'}</small></div>}
     <div className="project-copy"><p className="kicker">{t(c.region)}</p><h3>{c.name}</h3><p>{t(c.line)}</p>
-      <Link className="project-more" to={`/projects#${c.slug}`}>{lang === 'en' ? 'More about' : 'Xem thêm'} <span aria-hidden="true">↗</span></Link>
-
+      <div className="project-actions"><Link className="project-more" to={`/projects#${c.slug}`}>{lang === 'en' ? 'More about' : 'Xem thêm'} <span aria-hidden="true">↗</span></Link><ProjectDocumentLink community={c} /></div>
     </div>
   </article>;
 }
@@ -46,7 +52,7 @@ export function CommunityPage() {
   const en = lang === 'en';
   return <article className="community-page">
     <header className="community-hero content-width"><div><p className="kicker">{t(community.region)}</p><p className="community-index">{en ? 'Our project' : 'Dự án cộng đồng'}</p><h1>{community.name}</h1><p className="community-strapline">{t(community.title)}</p></div><figure><Img src={image} alt={community.name} ratio="aspect-[4/3]" priority /></figure></header>
-    <div className="community-body content-width"><div className="community-story"><p className="kicker">{en ? 'The story' : 'Câu chuyện'}</p><h2>{t(community.title)}</h2><RichText className="community-prose" html={t(community.story)} /></div><aside className="community-aside"><div><p className="kicker">{en ? 'The craft' : 'Nghề thủ công'}</p><p>{t(community.craft)}</p></div><Link to="/#contact" className="contact-project-link">{en ? 'Contact us for more information' : 'Liên hệ để biết thêm thông tin'} <span aria-hidden="true">→</span></Link></aside>{!!community.gallery?.filter(Boolean).length && <div className="community-gallery">{community.gallery.filter(Boolean).map((src,index) => <Img key={`${src}-${index}`} src={src} alt={`${community.name} ${index + 2}`} ratio="aspect-[4/3]" />)}</div>}<Link to="/#what-we-do" className="back-link">← {en ? 'Back to What we do' : 'Quay lại Chúng tôi làm gì'}</Link></div>
+    <div className="community-body content-width"><div className="community-story"><p className="kicker">{en ? 'The story' : 'Câu chuyện'}</p><h2>{t(community.title)}</h2><RichText className="community-prose" html={t(community.story)} /></div><aside className="community-aside"><div><p className="kicker">{en ? 'The craft' : 'Nghề thủ công'}</p><p>{t(community.craft)}</p></div><div className="community-reference-actions"><ProjectDocumentLink community={community} /><Link to="/#contact" className="contact-project-link">{en ? 'Contact us for more information' : 'Liên hệ để biết thêm thông tin'} <span aria-hidden="true">→</span></Link></div></aside>{!!community.gallery?.filter(Boolean).length && <div className="community-gallery">{community.gallery.filter(Boolean).map((src,index) => <Img key={`${src}-${index}`} src={src} alt={`${community.name} ${index + 2}`} ratio="aspect-[4/3]" />)}</div>}<Link to="/#what-we-do" className="back-link">← {en ? 'Back to What we do' : 'Quay lại Chúng tôi làm gì'}</Link></div>
   </article>;
 }
 
@@ -71,7 +77,7 @@ export function AllProjectsPage() {
           <div className="project-detail-copy"><p className="kicker">{t(community.region)}</p><h2>{community.name}</h2></div>
           {community.id === 'c1' && <p className="project-partnership-note">{en ? 'Mystère Shop accompanies the LIVE programme, supporting its work with ethnic minority artisan communities in Cao Bằng.' : 'Mystère Shop đồng hành cùng chương trình LIVE, hỗ trợ các hoạt động cùng cộng đồng nghệ nhân dân tộc thiểu số tại Cao Bằng.'}</p>}
           <div className="project-detail-prose"><p className="kicker">{en ? 'Project story' : 'Câu chuyện dự án'}</p><RichText html={t(community.story)} /></div>
-          <aside className="project-detail-aside"><div><p className="kicker">{en ? 'The craft' : 'Nghề thủ công'}</p><p>{t(community.craft)}</p></div><Link to="/#contact" className="contact-project-link">{en ? 'Contact us for more information' : 'Liên hệ để biết thêm thông tin'} <span aria-hidden="true">→</span></Link></aside>
+          <aside className="project-detail-aside"><div><p className="kicker">{en ? 'The craft' : 'Nghề thủ công'}</p><p>{t(community.craft)}</p></div><div className="community-reference-actions"><ProjectDocumentLink community={community} /><Link to="/#contact" className="contact-project-link">{en ? 'Contact us for more information' : 'Liên hệ để biết thêm thông tin'} <span aria-hidden="true">→</span></Link></div></aside>
           {!!community.gallery?.filter(Boolean).length && <div className="project-detail-gallery">{community.gallery.filter(Boolean).map((src,index) => <Img key={`${src}-${index}`} src={src} alt={`${community.name} ${index + 2}`} ratio="aspect-[4/3]" />)}</div>}
           {community.id === 'c1' && <div className="project-support-gallery"><Img src="/images/live-water-collection.webp" alt={en ? 'Community members collecting water in Cao Bằng' : 'Người dân lấy nước tại Cao Bằng'} ratio="aspect-[16/10]"/><Img src="/images/live-child-water.webp" alt={en ? 'A child carrying water in Cao Bằng' : 'Một em nhỏ gùi nước tại Cao Bằng'} ratio="aspect-[16/10]"/></div>}
           {community.id === 'c2' && <div className="project-support-gallery project-house-gallery"><Img src="/images/craft-belt-house-retouched.png" alt={en ? 'Craft Belt House in Cao Bằng' : 'Ngôi nhà Craft Belt tại Cao Bằng'} ratio="aspect-[3/2]"/></div>}

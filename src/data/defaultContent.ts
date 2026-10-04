@@ -334,6 +334,8 @@ export const defaultContent: SiteContent = {
         vi: "Nghề thêu và trang sức bạc.",
       },
       image: "/images/Red dao.jpg",
+      documentUrl: "/Decen/DECEN%20PRESENTATION%202014%2010.5.2014-1.pdf",
+      documentLabel: { en: "Read the DECEN presentation", vi: "Xem tài liệu DECEN" },
       published: true,
     },
     {
@@ -355,6 +357,8 @@ export const defaultContent: SiteContent = {
         vi: "Vẽ sáp ong trên vải bông: vẽ sáp bằng tay, rồi nhuộm.",
       },
       image: "/images/Money Dao.jpg",
+      documentUrl: "/Decen/DECEN%20PRESENTATION%202014%2010.5.2014-1.pdf",
+      documentLabel: { en: "Read the DECEN presentation", vi: "Xem tài liệu DECEN" },
       published: true,
     },
     {

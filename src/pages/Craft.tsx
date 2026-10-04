@@ -19,7 +19,7 @@ function CollectionIntro({ category, en, t, heading = "h2" }: { category: Catego
     <div className="product-detail-copy">
       <p className="kicker">{en ? "Craft collection" : "Bộ sưu tập thủ công"}</p>
       <Heading>{t(category.name)}</Heading>
-      {description && <p className="category-description">{description}</p>}
+      {description && <RichText className="category-description" html={description} />}
     </div>
   </>;
 }

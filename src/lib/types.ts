@@ -16,6 +16,9 @@ export interface Community {
   craft: L;
   image: string;
   gallery?: string[];
+  /** Optional supporting PDF or external reference shown with a collaboration. */
+  documentUrl?: string;
+  documentLabel?: L;
   published: boolean;
 }
 

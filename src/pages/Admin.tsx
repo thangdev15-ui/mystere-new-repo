@@ -41,7 +41,7 @@ const SECTIONS: { key: SectionKey; label: string }[] = [
   { key: "projects", label: "What we do · Project" },
   { key: "communities", label: "What we do · Communities" },
   { key: "events", label: "What we do · Events" },
-  { key: "categories", label: "Craft & Products · Categories" },
+  { key: "categories", label: "Craft & Products · Topics" },
   { key: "products", label: "Craft & Products · Products" },
   { key: "newsletter", label: "Newsletter" },
   { key: "contact", label: "Logo & Contact" },
@@ -377,6 +377,10 @@ export default function Admin() {
                     value={c.image}
                     onChange={(v) => up((d) => (d.communities[i].image = v))}
                   />
+                  <Field label="DECEN / reference PDF URL">
+                    <TextInput value={c.documentUrl ?? ""} onChange={(v) => up((d) => (d.communities[i].documentUrl = v))} placeholder="/Decen/document.pdf" />
+                  </Field>
+                  <LangField label="PDF button label" value={c.documentLabel ?? { ...emptyL }} onChange={(v) => up((d) => (d.communities[i].documentLabel = v))} />
                   {(c.gallery ?? []).map((image, imageIndex) => <div key={imageIndex} className="admin-gallery-field"><ImageField label={`Gallery image ${imageIndex + 1}`} value={image} onChange={(v) => up((d) => (d.communities[i].gallery ??= [])[imageIndex] = v)} /><button type="button" className="admin-gallery-remove" onClick={() => up((d) => (d.communities[i].gallery ??= []).splice(imageIndex,1))}>Remove image</button></div>)}
                   <AddButton label="Add gallery image" onClick={() => up((d) => (d.communities[i].gallery ??= []).push(""))} />
                 </AdminCard>
@@ -396,6 +400,8 @@ export default function Admin() {
                       craft: { ...emptyL },
                       image: "",
                       gallery: [],
+                      documentUrl: "",
+                      documentLabel: { ...emptyL },
                       published: true,
                     }),
                   )
@@ -430,7 +436,8 @@ export default function Admin() {
           {/* CATEGORIES */}
           {section === "categories" && (
             <>
-              <h1 className="font-serif text-4xl text-charcoal">Categories</h1>
+              <h1 className="font-serif text-4xl text-charcoal">Craft & Products · Topics</h1>
+              <Note>Each topic is an editorial page: write and format its content like a document, add inline images, then arrange its main and supporting photographs.</Note>
               {content.categories.map((c, i) => (
                 <AdminCard
                   key={c.id}
@@ -460,10 +467,8 @@ export default function Admin() {
                       onChange={(v) => up((d) => (d.categories[i].slug = slugify(v)))}
                     />
                   </Field>
-                  <LangField
-                    label="Description"
-                    multiline
-                    rows={7}
+                  <RichLangField
+                    label="Editorial content"
                     value={{ en: c.description.en || c.short.en, vi: c.description.vi || c.short.vi }}
                     onChange={(v) => up((d) => {
                       d.categories[i].description = v;
@@ -484,7 +489,7 @@ export default function Admin() {
                 </AdminCard>
               ))}
               <AddButton
-                label="Add category"
+                label="Add topic"
                 onClick={() =>
                   up((d) =>
                     d.categories.push({

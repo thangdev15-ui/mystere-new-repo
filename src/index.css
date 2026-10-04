@@ -1088,3 +1088,42 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
   letter-spacing:-.6px;
   text-transform:uppercase;
 }
+
+/* Collaboration references and the flexible Craft & Products editorial canvas. */
+.project-actions { display:flex; flex-wrap:wrap; align-items:center; gap:14px 28px; margin-top:18px; }
+.project-actions .project-more,.project-actions .project-document-link { margin-top:0; }
+.project-document-link {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:var(--brand-red);
+  font-size:12px;
+  font-weight:650;
+  line-height:1.4;
+}
+.project-document-link:hover { text-decoration:underline; text-underline-offset:5px; }
+.project-document-link small { padding:2px 5px; border:1px solid currentColor; border-radius:2px; font-size:8px; font-weight:700; letter-spacing:.1em; }
+.community-reference-actions { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:18px 28px; }
+.category-intro-section {
+  padding:clamp(24px,3.4vw,48px);
+  border-top:1px solid #d7ded8;
+  border-radius:0;
+  box-shadow:none;
+}
+.category-intro-section:first-child { border-top:0; }
+.category-intro-section .product-detail-media img { height:clamp(320px,34vw,480px); object-fit:contain; background:#fff; }
+.category-intro-section .product-detail-copy { padding:12px 0; }
+.category-intro-section .category-description { margin-top:20px; max-width:760px; color:#526158; font-size:16px; line-height:1.85; }
+.category-intro-section .category-description > :first-child { margin-top:0; }
+.category-intro-section .category-description h2,.category-intro-section .category-description h3 { margin:24px 0 10px; color:#292f2c; font-size:clamp(21px,2vw,29px); line-height:1.2; }
+.category-intro-section .category-description p { margin:0 0 16px; }
+.category-intro-section .category-description img { display:block; width:var(--rich-image-width,100%); max-width:100%; margin:20px 0; border-radius:10px; }
+.category-intro-section .category-description img[data-width="25"] { --rich-image-width:25%; }
+.category-intro-section .category-description img[data-width="50"] { --rich-image-width:50%; }
+.category-intro-section .category-description img[data-width="75"] { --rich-image-width:75%; }
+@media(max-width:900px) { .community-reference-actions { justify-content:flex-start; } }
+@media(max-width:680px) {
+  .project-actions,.community-reference-actions { align-items:flex-start; flex-direction:column; gap:13px; }
+  .category-intro-section { padding:24px 0; }
+  .category-intro-section .product-detail-media img { height:310px; }
+}
