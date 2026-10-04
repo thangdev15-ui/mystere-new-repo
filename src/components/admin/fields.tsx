@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type DragEvent, type MouseEvent, type ReactNode } from "react";
 import type { L } from "../../lib/types";
 import { plainTextToHtml, sanitizeRichHtml } from "../RichText";
 
@@ -124,7 +124,7 @@ function RichEditor({ value, onChange, language }: { value: string; onChange: (v
   };
   const insertImage = (src: string) => {
     if (!src) return;
-    command("insertHTML", `<img src="${src.replace(/"/g, "&quot;")}" alt="" data-width="100">`);
+    command("insertHTML", `<img src="${src.replace(/"/g, "&quot;")}" alt="" data-width="100" data-align="center" draggable="true">`);
   };
   const upload = (file: File) => {
     const reader = new FileReader();
@@ -148,6 +148,25 @@ function RichEditor({ value, onChange, language }: { value: string; onChange: (v
     selectedImage.dataset.width = width;
     emit();
   };
+  const resizeImageTo = (width: number) => {
+    if (!selectedImage) return;
+    selectedImage.dataset.width = String(Math.max(25, Math.min(100, Math.round(width / 5) * 5)));
+    emit();
+  };
+  const alignImage = (align: "left" | "center" | "right") => {
+    if (!selectedImage) return;
+    selectedImage.dataset.align = align;
+    emit();
+  };
+  const handleDrop = (event: DragEvent<HTMLDivElement>) => {
+    const file = Array.from(event.dataTransfer.files).find(item => item.type.startsWith("image/"));
+    if (file) {
+      event.preventDefault();
+      upload(file);
+      return;
+    }
+    window.setTimeout(emit, 0);
+  };
 
   return <div className="rich-editor">
     <div className="rich-editor-toolbar" role="toolbar" aria-label={`${language} text formatting`}>
@@ -165,7 +184,15 @@ function RichEditor({ value, onChange, language }: { value: string; onChange: (v
       <button type="button" title="Undo" onMouseDown={event => toolbar(event, "undo")}>↶</button>
       <button type="button" title="Redo" onMouseDown={event => toolbar(event, "redo")}>↷</button>
     </div>
-    {selectedImage && <div className="rich-editor-image-tools"><span>Image width</span>{(["25", "50", "75", "100"] as const).map(width => <button type="button" key={width} onClick={() => resizeImage(width)} className={selectedImage.dataset.width === width ? "is-active" : ""}>{width}%</button>)}<button type="button" onClick={() => { selectedImage.remove(); setSelectedImage(null); emit(); }}>Remove image</button></div>}
+    {selectedImage && <div className="rich-editor-image-tools">
+      <span>Image size</span>
+      <input aria-label="Image width" type="range" min="25" max="100" step="5" value={Number(selectedImage.dataset.width || 100)} onChange={event => resizeImageTo(Number(event.target.value))} />
+      <strong>{selectedImage.dataset.width || 100}%</strong>
+      {(["25", "50", "75", "100"] as const).map(width => <button type="button" key={width} onClick={() => resizeImage(width)} className={selectedImage.dataset.width === width ? "is-active" : ""}>{width}%</button>)}
+      <span>Position</span>
+      {(["left", "center", "right"] as const).map(align => <button type="button" key={align} onClick={() => alignImage(align)} className={(selectedImage.dataset.align || "center") === align ? "is-active" : ""}>{align}</button>)}
+      <button type="button" onClick={() => { selectedImage.remove(); setSelectedImage(null); emit(); }}>Remove image</button>
+    </div>}
     <div
       ref={editorRef}
       className="rich-editor-canvas"
@@ -174,6 +201,9 @@ function RichEditor({ value, onChange, language }: { value: string; onChange: (v
       data-placeholder="Write and format the content here…"
       onInput={emit}
       onBlur={emit}
+      onDragOver={event => { if (Array.from(event.dataTransfer.types).includes("Files")) event.preventDefault(); }}
+      onDrop={handleDrop}
+      onDragEnd={() => window.setTimeout(emit, 0)}
       onClick={event => setSelectedImage(event.target instanceof HTMLImageElement ? event.target : null)}
     />
     <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={event => { const file = event.target.files?.[0]; if (file) upload(file); event.target.value = ""; }} />
