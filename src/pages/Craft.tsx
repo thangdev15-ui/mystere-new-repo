@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { useStore } from "../store/store";
 import Img from "../components/Img";
 import RichText from "../components/RichText";
+import { craftSheets } from "../data/craftSheets";
 import type { Category, L } from "../lib/types";
 
 function CollectionImageStrip({ images, name }: { images: string[]; name: string }) {
@@ -13,16 +14,26 @@ function CollectionImageStrip({ images, name }: { images: string[]; name: string
 
 function CollectionIntro({ category, t, heading = "h2" }: { category: Category; t: (value: L | undefined) => string; heading?: "h1" | "h2" }) {
   const Heading = heading;
+  const sheet = t(category.pageImage) || category.pageImage?.en;
+  if (sheet) {
+    const dimensions = craftSheets.find(item => item.src === sheet);
+    return <section className="craft-approved-sheet" aria-label={t(category.name)}>
+      <Heading className="sr-only">{t(category.name)}</Heading>
+      <a href={sheet} target="_blank" rel="noopener noreferrer" aria-label={`${t(category.name)} — full-size image`}>
+        <img src={sheet} alt={t(category.name)} width={dimensions?.width} height={dimensions?.height} loading="lazy" decoding="async" />
+      </a>
+    </section>;
+  }
   const description = t(category.description) || t(category.short);
-  return <>
-    <header className="category-topic-heading">
-      <Heading>{t(category.name)}</Heading>
-    </header>
-    <div className="product-detail-media"><Img src={category.image} alt={t(category.name)} ratio="aspect-[3/4]" /></div>
-    <div className="product-detail-copy">
+  const hasInlineImage = /<img[\s>]/i.test(description);
+  return <section className="category-paper">
+    <header className="category-topic-heading"><Heading>{t(category.name)}</Heading></header>
+    <div className="category-paper-content">
+      {!hasInlineImage && category.image && <Img src={category.image} alt={t(category.name)} ratio="" className="category-paper-fallback-image" />}
       {description && <RichText className="category-description" html={description} />}
     </div>
-  </>;
+    <CollectionImageStrip images={category.gallery?.filter(Boolean) ?? []} name={t(category.name)} />
+  </section>;
 }
 
 export function CraftIndex() {
@@ -37,13 +48,7 @@ export function CraftIndex() {
       <p>{t(content.craft.lead)}</p>
     </header>
     <div className="products-page-list content-width">
-      {categories.map((category) => {
-        const gallery = category.gallery?.filter(Boolean) ?? [];
-        return <section key={category.id} className="product-detail-section category-intro-section">
-          <CollectionIntro category={category} t={t} />
-          <CollectionImageStrip images={gallery} name={t(category.name)} />
-        </section>;
-      })}
+      {categories.map(category => <CollectionIntro key={category.id} category={category} t={t} />)}
     </div>
   </article>;
 }
@@ -56,19 +61,10 @@ export function CategoryPage() {
 
   if (!category) return <article className="products-page"><div className="products-empty content-width"><h1>{en ? "Collection not found" : "Không tìm thấy bộ sưu tập"}</h1><Link to="/craft" className="project-more">← {en ? "Back to Craft & Products" : "Quay lại Sản phẩm thủ công"}</Link></div></article>;
 
-  const description = t(category.description) || t(category.short);
-  // Keep the configured main image on the sheet unless that exact image was
-  // also inserted into the editorial content. Supporting images inserted in
-  // the editor then flow around the text beside it.
-  const hasInlineMainImage = Boolean(category.image && description.includes(category.image));
   return <article className="products-page">
-    <section className="category-paper content-width">
-      <header className="category-topic-heading"><h1>{t(category.name)}</h1></header>
-      <div className="category-paper-content">
-        {!hasInlineMainImage && category.image && <Img src={category.image} alt={t(category.name)} ratio="aspect-[3/4]" className="category-paper-fallback-image" />}
-        {description && <RichText className="category-description" html={description} />}
-      </div>
-    </section>
+    <div className="products-page-list content-width">
+      <CollectionIntro category={category} t={t} heading="h1" />
+    </div>
     <div className="products-page-back content-width"><Link to="/craft" className="back-link">← {en ? "Back to Craft & Products" : "Quay lại Sản phẩm thủ công"}</Link></div>
   </article>;
 }

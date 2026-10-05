@@ -23,6 +23,8 @@ export interface Community {
 }
 
 export interface Category {
+  /** Finished page artwork. Vietnamese falls back to the supplied English page. */
+  pageImage?: L;
   id: string;
   slug: string;
   name: L;
@@ -131,6 +133,7 @@ export interface SiteContent {
     partnersNote: L;
   };
   craft: {
+    sheetVersion?: number;
     heroImage: string;
     title: L;
     lead: L;

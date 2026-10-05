@@ -435,7 +435,7 @@ export default function Admin() {
           {section === "categories" && (
             <>
               <h1 className="font-serif text-4xl text-charcoal">Craft & Products · Topics</h1>
-              <Note>Each topic is an editorial page: write and format its content like a document, add inline images, then arrange its main and supporting photographs.</Note>
+              <Note>The approved pages use the original artwork to keep the exact layout. Replace the full page image below to update it. Text inside an image cannot be edited separately. Vietnamese uses the English artwork unless a Vietnamese page is uploaded.</Note>
               {content.categories.map((c, i) => (
                 <AdminCard
                   key={c.id}
@@ -465,6 +465,9 @@ export default function Admin() {
                       onChange={(v) => up((d) => (d.categories[i].slug = slugify(v)))}
                     />
                   </Field>
+                  <ImageField label="Full page artwork · EN" value={c.pageImage?.en ?? ""} onChange={v => up(d => { d.categories[i].pageImage = { en: v, vi: c.pageImage?.vi ?? "" }; })} />
+                  <ImageField label="Full page artwork · VN (optional)" value={c.pageImage?.vi ?? ""} onChange={v => up(d => { d.categories[i].pageImage = { en: c.pageImage?.en ?? "", vi: v }; })} />
+                  {!c.pageImage?.en && !c.pageImage?.vi && <>
                   <RichLangField
                     label="Editorial content"
                     value={{ en: c.description.en || c.short.en, vi: c.description.vi || c.short.vi }}
@@ -484,6 +487,7 @@ export default function Admin() {
                     {(c.gallery ?? []).map((image, imageIndex) => <div key={imageIndex} className="admin-gallery-field"><ImageField label={`Strip image ${imageIndex + 1}`} value={image} onChange={(v) => up((d) => (d.categories[i].gallery ??= [])[imageIndex] = v)} /><button type="button" className="admin-gallery-remove" onClick={() => up((d) => (d.categories[i].gallery ??= []).splice(imageIndex, 1))}>Remove image</button></div>)}
                     <AddButton label="Add strip image" onClick={() => up((d) => (d.categories[i].gallery ??= []).push(""))} />
                   </div>
+                  </>}
                 </AdminCard>
               ))}
               <AddButton

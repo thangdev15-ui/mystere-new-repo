@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { migrateCraftSheets } from "../data/craftSheets";
 import { defaultContent } from "../data/defaultContent";
 import type { L, Lang, SiteContent } from "../lib/types";
 import { supabase } from "../lib/supabase";
@@ -92,7 +93,7 @@ function loadCurrentContent(): SiteContent {
     product.gallery ??= [];
   }
   for (const category of defaultContent.categories) {
-    if (!saved.categories.some(item => item.id === category.id)) saved.categories.push(structuredClone(category));
+    if (!saved.craft.sheetVersion && !saved.categories.some(item => item.id === category.id)) saved.categories.push(structuredClone(category));
   }
   for (const event of defaultContent.events) {
     const existing = saved.events.find(item => item.id === event.id);
@@ -137,6 +138,7 @@ function loadCurrentContent(): SiteContent {
     saved.newsletter.title = defaultContent.newsletter.title;
     saved.newsletter.body = defaultContent.newsletter.body;
   }
+  migrateCraftSheets(saved);
   return saved;
 }
 
@@ -184,6 +186,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           });
         }
         if (!events.error && events.data?.length) next.events = events.data.map(row => ({ id: row.id, image: row.image, url: row.url ?? '', title: row.title, dateLabel: row.date_label, dateStart: row.date_start ?? '', schedule: row.schedule, venue: row.venue, address: row.address, published: row.published }));
+        migrateCraftSheets(next);
         return next;
       });
       remoteReady.current = true;

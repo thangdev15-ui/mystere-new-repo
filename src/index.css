@@ -1188,3 +1188,18 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
   .category-paper .category-description { font-size:17px; }
   .category-paper-fallback-image { width:42% !important; margin-right:18px; }
 }
+
+/* Finished client artwork: retain every original pixel and the page proportions. */
+.craft-approved-sheet {
+  width:min(100%, 800px);
+  margin:0 auto 32px;
+  background:#fff;
+  box-shadow:0 8px 30px rgba(35,43,38,.07);
+}
+.craft-approved-sheet a { display:block; cursor:zoom-in; }
+.craft-approved-sheet img { display:block; width:100%; height:auto; max-width:100%; border-radius:0; }
+.products-page-list > .category-paper { margin:0 auto 32px; }
+.category-paper-fallback-image { aspect-ratio:auto; object-fit:contain; }
+@media(max-width:680px) {
+  .craft-approved-sheet { margin-bottom:20px; }
+}
