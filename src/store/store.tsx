@@ -182,7 +182,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             const defaults = defaultContent.communities.find(item => item.id === row.id);
             const savedReference = next.communities.find(item => item.id === row.id);
             const documentLabel = savedReference?.documentLabel?.en === "Read the DECEN presentation" ? defaults?.documentLabel : savedReference?.documentLabel;
-            return { ...row, region: row.region, title: row.title, line: row.line, story: { en: row.story?.en ?? '', vi: row.story?.vi ?? '' }, gallery: Array.isArray(row.story?.gallery) ? row.story.gallery : [], craft: row.craft, documentUrl: savedReference?.documentUrl ?? defaults?.documentUrl ?? "", documentLabel: documentLabel ?? defaults?.documentLabel ?? { en: "", vi: "" } };
+            const savedGallery = Array.isArray(row.story?.gallery) ? row.story.gallery.filter(Boolean) : [];
+            return { ...row, region: row.region, title: row.title, line: row.line, story: { en: row.story?.en ?? '', vi: row.story?.vi ?? '' }, gallery: savedGallery.length ? savedGallery : (savedReference?.gallery ?? defaults?.gallery ?? []), craft: row.craft, documentUrl: savedReference?.documentUrl ?? defaults?.documentUrl ?? "", documentLabel: documentLabel ?? defaults?.documentLabel ?? { en: "", vi: "" } };
           });
         }
         if (!events.error && events.data?.length) next.events = events.data.map(row => ({ id: row.id, image: row.image, url: row.url ?? '', title: row.title, dateLabel: row.date_label, dateStart: row.date_start ?? '', schedule: row.schedule, venue: row.venue, address: row.address, published: row.published }));

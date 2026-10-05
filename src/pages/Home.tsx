@@ -79,8 +79,6 @@ export function AllProjectsPage() {
           <div className="project-detail-prose"><p className="kicker">{en ? 'Project story' : 'Câu chuyện dự án'}</p><RichText html={t(community.story)} /></div>
           <aside className="project-detail-aside"><div><p className="kicker">{en ? 'The craft' : 'Nghề thủ công'}</p><p>{t(community.craft)}</p></div><div className="community-reference-actions"><ProjectDocumentLink community={community} /><Link to="/#contact" className="contact-project-link">{en ? 'Contact us for more information' : 'Liên hệ để biết thêm thông tin'} <span aria-hidden="true">→</span></Link></div></aside>
           {!!community.gallery?.filter(Boolean).length && <div className="project-detail-gallery">{community.gallery.filter(Boolean).map((src,index) => <Img key={`${src}-${index}`} src={src} alt={`${community.name} ${index + 2}`} ratio="aspect-[4/3]" />)}</div>}
-          {community.id === 'c1' && <div className="project-support-gallery"><Img src="/images/live-water-collection.webp" alt={en ? 'Community members collecting water in Cao Bằng' : 'Người dân lấy nước tại Cao Bằng'} ratio="aspect-[16/10]"/><Img src="/images/live-child-water.webp" alt={en ? 'A child carrying water in Cao Bằng' : 'Một em nhỏ gùi nước tại Cao Bằng'} ratio="aspect-[16/10]"/></div>}
-          {community.id === 'c2' && <div className="project-support-gallery project-house-gallery"><Img src="/images/craft-belt-house-retouched.png" alt={en ? 'Craft Belt House in Cao Bằng' : 'Ngôi nhà Craft Belt tại Cao Bằng'} ratio="aspect-[3/2]"/></div>}
         </section>;
       })}
     </div>
