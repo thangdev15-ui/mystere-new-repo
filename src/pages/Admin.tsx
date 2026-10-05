@@ -513,9 +513,8 @@ export default function Admin() {
             <>
               <h1 className="font-serif text-4xl text-charcoal">Products</h1>
               <Note>
-                Products are presented editorially — no prices, no cart, no online sales. The client
-                has not yet supplied individual product photography; upload it here when available,
-                and the cards will update immediately.
+                Products are shown inside each topic page after clicking “Explore the collection”
+                on Craft & Products. Edit the story here and it will appear in that collection.
               </Note>
               {content.products.map((p, i) => (
                 <AdminCard

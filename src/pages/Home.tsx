@@ -15,7 +15,7 @@ const projectEditorialImage = (community: Community) => {
 function ProjectDocumentLink({ community, className = "" }: { community: Community; className?: string }) {
   const { t, lang } = useStore();
   if (!community.documentUrl) return null;
-  const label = t(community.documentLabel) || (lang === "en" ? "Read the DECEN presentation" : "Xem tài liệu DECEN");
+  const label = t(community.documentLabel) || (lang === "en" ? "Discover more about DECEN" : "Tìm hiểu thêm về DECEN");
   return <a className={`project-document-link ${className}`} href={community.documentUrl} target="_blank" rel="noreferrer">{label} <span aria-hidden="true">↗</span><small>PDF</small></a>;
 }
 

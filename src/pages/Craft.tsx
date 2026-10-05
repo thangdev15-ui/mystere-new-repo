@@ -11,17 +11,17 @@ function CollectionImageStrip({ images, name }: { images: string[]; name: string
   </div>;
 }
 
-function CollectionIntro({ category, en, t, heading = "h2" }: { category: Category; en: boolean; t: (value: L | undefined) => string; heading?: "h1" | "h2" }) {
+function CollectionIntro({ category, en, t, heading = "h2", showLink = false }: { category: Category; en: boolean; t: (value: L | undefined) => string; heading?: "h1" | "h2"; showLink?: boolean }) {
   const Heading = heading;
   const description = t(category.description) || t(category.short);
   return <>
     <header className="category-topic-heading">
-      <p className="kicker">{en ? "Craft collection" : "Bộ sưu tập thủ công"}</p>
       <Heading>{t(category.name)}</Heading>
     </header>
     <div className="product-detail-media"><Img src={category.image} alt={t(category.name)} ratio="aspect-[3/4]" /></div>
     <div className="product-detail-copy">
       {description && <RichText className="category-description" html={description} />}
+      {showLink && <Link className="project-more category-collection-link" to={`/craft/${category.slug}`}>{en ? "Explore the collection" : "Xem bộ sưu tập"} <span aria-hidden="true">→</span></Link>}
     </div>
   </>;
 }
@@ -41,7 +41,7 @@ export function CraftIndex() {
       {categories.map((category) => {
         const gallery = category.gallery?.filter(Boolean) ?? [];
         return <section key={category.id} className="product-detail-section category-intro-section">
-          <CollectionIntro category={category} en={en} t={t} />
+          <CollectionIntro category={category} en={en} t={t} showLink />
           <CollectionImageStrip images={gallery} name={t(category.name)} />
         </section>;
       })}

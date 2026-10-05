@@ -335,7 +335,7 @@ export const defaultContent: SiteContent = {
       },
       image: "/images/Red dao.jpg",
       documentUrl: "/Decen/DECEN%20PRESENTATION%202014%2010.5.2014-1.pdf",
-      documentLabel: { en: "Read the DECEN presentation", vi: "Xem tài liệu DECEN" },
+      documentLabel: { en: "Discover more about DECEN", vi: "Tìm hiểu thêm về DECEN" },
       published: true,
     },
     {
@@ -358,7 +358,7 @@ export const defaultContent: SiteContent = {
       },
       image: "/images/Money Dao.jpg",
       documentUrl: "/Decen/DECEN%20PRESENTATION%202014%2010.5.2014-1.pdf",
-      documentLabel: { en: "Read the DECEN presentation", vi: "Xem tài liệu DECEN" },
+      documentLabel: { en: "Discover more about DECEN", vi: "Tìm hiểu thêm về DECEN" },
       published: true,
     },
     {
