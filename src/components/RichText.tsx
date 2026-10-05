@@ -37,6 +37,8 @@ export function sanitizeRichHtml(value: string) {
       const alt = child.getAttribute("alt") ?? "";
       const width = child.getAttribute("data-width") ?? "100";
       const align = child.getAttribute("data-align") ?? "center";
+      const pixelWidth = child.getAttribute("width") ?? "";
+      const pixelHeight = child.getAttribute("height") ?? "";
       for (const attr of Array.from(child.attributes)) child.removeAttribute(attr.name);
       if (tag === "A") {
         if (/^(https?:|mailto:|tel:|\/|#)/i.test(href)) child.setAttribute("href", href);
@@ -48,6 +50,8 @@ export function sanitizeRichHtml(value: string) {
         child.setAttribute("alt", alt);
         child.setAttribute("data-width", /^(25|50|75|100)$/.test(width) ? width : "100");
         child.setAttribute("data-align", /^(left|center|right)$/.test(align) ? align : "center");
+        if (/^[1-9]\d{0,4}$/.test(pixelWidth)) child.setAttribute("width", pixelWidth);
+        if (/^[1-9]\d{0,4}$/.test(pixelHeight)) child.setAttribute("height", pixelHeight);
         child.setAttribute("draggable", "true");
       }
       if (["P", "H2", "H3", "BLOCKQUOTE", "LI"].includes(tag) &&

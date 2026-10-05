@@ -1,6 +1,37 @@
 import { useEffect, useRef, useState, type DragEvent, type MouseEvent, type ReactNode } from "react";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import TiptapImage from "@tiptap/extension-image";
 import type { L } from "../../lib/types";
 import { plainTextToHtml, sanitizeRichHtml } from "../RichText";
+
+const EditorialImage = TiptapImage.extend({
+  addAttributes() {
+    return {
+      ...(this.parent?.() ?? {}),
+      "data-align": {
+        default: "center",
+        parseHTML: (element: HTMLElement) => element.getAttribute("data-align") ?? "center",
+        renderHTML: (attributes: Record<string, string>) => ({ "data-align": attributes["data-align"] ?? "center" }),
+      },
+      "data-width": {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.getAttribute("data-width"),
+        renderHTML: (attributes: Record<string, string | null>) => attributes["data-width"] ? { "data-width": attributes["data-width"] } : {},
+      },
+    };
+  },
+}).configure({
+  inline: true,
+  allowBase64: true,
+  resize: {
+    enabled: true,
+    directions: ["top-left", "top-right", "bottom-left", "bottom-right"],
+    minWidth: 60,
+    minHeight: 60,
+    alwaysPreserveAspectRatio: true,
+  },
+});
 
 export function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -101,37 +132,64 @@ export function LangField({
 }
 
 function RichEditor({ value, onChange, language }: { value: string; onChange: (v: string) => void; language: string }) {
-  const editorRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
-  const [selectedImage, setSelectedImage] = useState<HTMLImageElement | null>(null);
+  const onChangeRef = useRef(onChange);
+  const [selectionVersion, setSelectionVersion] = useState(0);
+  onChangeRef.current = onChange;
+
+  const editor = useEditor({
+    immediatelyRender: false,
+    extensions: [
+      StarterKit.configure({ link: { openOnClick: false } }),
+      EditorialImage,
+    ],
+    content: sanitizeRichHtml(plainTextToHtml(value)),
+    onUpdate: ({ editor: current }) => onChangeRef.current(sanitizeRichHtml(current.getHTML())),
+  });
 
   useEffect(() => {
-    const editor = editorRef.current;
-    if (editor && document.activeElement !== editor) editor.innerHTML = sanitizeRichHtml(plainTextToHtml(value));
-  }, [value]);
+    if (!editor) return;
+    const update = () => setSelectionVersion(version => version + 1);
+    editor.on("selectionUpdate", update);
+    editor.on("transaction", update);
+    return () => {
+      editor.off("selectionUpdate", update);
+      editor.off("transaction", update);
+    };
+  }, [editor]);
 
-  const emit = () => {
-    if (editorRef.current) onChange(sanitizeRichHtml(editorRef.current.innerHTML));
-  };
-  const command = (name: string, argument?: string) => {
-    editorRef.current?.focus();
-    document.execCommand(name, false, argument);
-    emit();
-  };
-  const toolbar = (event: MouseEvent<HTMLButtonElement>, name: string, argument?: string) => {
+  useEffect(() => {
+    if (!editor || editor.isFocused) return;
+    const next = sanitizeRichHtml(plainTextToHtml(value));
+    if (editor.getHTML() !== next) editor.commands.setContent(next, { emitUpdate: false });
+  }, [editor, value]);
+
+  const imageAttrs = editor?.isActive("image") ? editor.getAttributes("image") : null;
+  void selectionVersion;
+  const imageWidth = Number(imageAttrs?.width) || 0;
+  const imageHeight = Number(imageAttrs?.height) || 0;
+  const canvasWidth = Math.max(240, editor?.view.dom.clientWidth || 240);
+  const selectedImagePercent = imageWidth
+    ? Math.max(20, Math.min(100, Math.round(imageWidth / canvasWidth * 100 / 5) * 5))
+    : Number(imageAttrs?.["data-width"]) || 100;
+
+  const run = (event: MouseEvent<HTMLButtonElement>, action: () => void) => {
     event.preventDefault();
-    command(name, argument);
+    action();
   };
   const insertImage = (src: string) => {
-    if (!src) return;
-    const existingImages = editorRef.current?.querySelectorAll("img").length ?? 0;
-    const align = existingImages % 2 === 0 ? "right" : "left";
-    command("insertHTML", `<img src="${src.replace(/"/g, "&quot;")}" alt="" data-width="25" data-align="${align}" draggable="true">`);
+    if (!editor || !src) return;
+    let imageCount = 0;
+    editor.state.doc.descendants((node) => {
+      if (node.type.name === "image") imageCount += 1;
+    });
+    const align = imageCount % 2 === 0 ? "right" : "left";
+    editor.chain().focus().setImage({ src, alt: "" }).updateAttributes("image", { "data-align": align, "data-width": "25" }).run();
   };
   const upload = (file: File) => {
     const reader = new FileReader();
     reader.onload = () => {
-      const image = new Image();
+      const image = new window.Image();
       image.onload = () => {
         const max = 1800;
         const scale = Math.min(1, max / Math.max(image.width, image.height));
@@ -145,69 +203,56 @@ function RichEditor({ value, onChange, language }: { value: string; onChange: (v
     };
     reader.readAsDataURL(file);
   };
-  const resizeImage = (width: "25" | "50" | "75" | "100") => {
-    if (!selectedImage) return;
-    selectedImage.dataset.width = width;
-    emit();
-  };
-  const resizeImageTo = (width: number) => {
-    if (!selectedImage) return;
-    selectedImage.dataset.width = String(Math.max(25, Math.min(100, Math.round(width / 5) * 5)));
-    emit();
-  };
   const alignImage = (align: "left" | "center" | "right") => {
-    if (!selectedImage) return;
-    selectedImage.dataset.align = align;
-    emit();
+    editor?.chain().focus().updateAttributes("image", { "data-align": align }).run();
   };
+  const setImageWidth = (percent: number) => {
+    if (!editor || !imageAttrs) return;
+    const width = Math.max(60, Math.round(canvasWidth * percent / 100));
+    const ratio = imageWidth && imageHeight ? imageHeight / imageWidth : 0.75;
+    editor.chain().focus().updateAttributes("image", { width, height: Math.round(width * ratio), "data-width": String(percent) }).run();
+  };
+  const removeImage = () => editor?.chain().focus().deleteSelection().run();
   const handleDrop = (event: DragEvent<HTMLDivElement>) => {
     const file = Array.from(event.dataTransfer.files).find(item => item.type.startsWith("image/"));
-    if (file) {
-      event.preventDefault();
-      upload(file);
-      return;
-    }
-    window.setTimeout(emit, 0);
+    if (!file) return;
+    event.preventDefault();
+    upload(file);
   };
 
   return <div className="rich-editor">
     <div className="rich-editor-toolbar" role="toolbar" aria-label={`${language} text formatting`}>
-      <button type="button" title="Bold" onMouseDown={event => toolbar(event, "bold")}><strong>B</strong></button>
-      <button type="button" title="Italic" onMouseDown={event => toolbar(event, "italic")}><em>I</em></button>
-      <button type="button" title="Underline" onMouseDown={event => toolbar(event, "underline")}><u>U</u></button>
-      <button type="button" title="Heading" onMouseDown={event => toolbar(event, "formatBlock", "h3")}>H3</button>
-      <button type="button" title="Paragraph" onMouseDown={event => toolbar(event, "formatBlock", "p")}>P</button>
-      <button type="button" title="Quote" onMouseDown={event => toolbar(event, "formatBlock", "blockquote")}>“ ”</button>
-      <button type="button" title="Bulleted list" onMouseDown={event => toolbar(event, "insertUnorderedList")}>• List</button>
-      <button type="button" title="Numbered list" onMouseDown={event => toolbar(event, "insertOrderedList")}>1. List</button>
-      <button type="button" title="Add link" onMouseDown={event => { event.preventDefault(); const url = window.prompt("Link URL"); if (url) command("createLink", url); }}>Link</button>
+      <button type="button" title="Bold" onMouseDown={event => run(event, () => editor?.chain().focus().toggleBold().run())}><strong>B</strong></button>
+      <button type="button" title="Italic" onMouseDown={event => run(event, () => editor?.chain().focus().toggleItalic().run())}><em>I</em></button>
+      <button type="button" title="Underline" onMouseDown={event => run(event, () => editor?.chain().focus().toggleUnderline().run())}><u>U</u></button>
+      <button type="button" title="Heading" onMouseDown={event => run(event, () => editor?.chain().focus().toggleHeading({ level: 3 }).run())}>H3</button>
+      <button type="button" title="Paragraph" onMouseDown={event => run(event, () => editor?.chain().focus().setParagraph().run())}>P</button>
+      <button type="button" title="Quote" onMouseDown={event => run(event, () => editor?.chain().focus().toggleBlockquote().run())}>“ ”</button>
+      <button type="button" title="Bulleted list" onMouseDown={event => run(event, () => editor?.chain().focus().toggleBulletList().run())}>• List</button>
+      <button type="button" title="Numbered list" onMouseDown={event => run(event, () => editor?.chain().focus().toggleOrderedList().run())}>1. List</button>
+      <button type="button" title="Add link" onMouseDown={event => run(event, () => { const url = window.prompt("Link URL"); if (url) editor?.chain().focus().setLink({ href: url }).run(); })}>Link</button>
       <button type="button" title="Upload image" onMouseDown={event => { event.preventDefault(); fileRef.current?.click(); }}>Image</button>
-      <button type="button" title="Insert image URL" onMouseDown={event => { event.preventDefault(); const url = window.prompt("Image URL"); if (url) insertImage(url); }}>Image URL</button>
-      <button type="button" title="Undo" onMouseDown={event => toolbar(event, "undo")}>↶</button>
-      <button type="button" title="Redo" onMouseDown={event => toolbar(event, "redo")}>↷</button>
+      <button type="button" title="Insert image URL" onMouseDown={event => run(event, () => { const url = window.prompt("Image URL"); if (url) insertImage(url); })}>Image URL</button>
+      <button type="button" title="Undo" onMouseDown={event => run(event, () => editor?.chain().focus().undo().run())}>↶</button>
+      <button type="button" title="Redo" onMouseDown={event => run(event, () => editor?.chain().focus().redo().run())}>↷</button>
     </div>
-    {selectedImage && <div className="rich-editor-image-tools">
+    {imageAttrs && <div className="rich-editor-image-tools">
       <span>Image size</span>
-      <input aria-label="Image width" type="range" min="25" max="100" step="5" value={Number(selectedImage.dataset.width || 100)} onChange={event => resizeImageTo(Number(event.target.value))} />
-      <strong>{selectedImage.dataset.width || 100}%</strong>
-      {(["25", "50", "75", "100"] as const).map(width => <button type="button" key={width} onClick={() => resizeImage(width)} className={selectedImage.dataset.width === width ? "is-active" : ""}>{width}%</button>)}
+      <input aria-label="Image width" type="range" min="20" max="100" step="5" value={selectedImagePercent} onChange={event => setImageWidth(Number(event.target.value))} />
+      <strong>{`${selectedImagePercent}%`}</strong>
+      {([25, 50, 75, 100] as const).map(width => <button type="button" key={width} onClick={() => setImageWidth(width)}>{width}%</button>)}
       <span>Position</span>
-      {(["left", "center", "right"] as const).map(align => <button type="button" key={align} onClick={() => alignImage(align)} className={(selectedImage.dataset.align || "center") === align ? "is-active" : ""}>{align}</button>)}
-      <button type="button" onClick={() => { selectedImage.remove(); setSelectedImage(null); emit(); }}>Remove image</button>
+      {(["left", "center", "right"] as const).map(align => <button type="button" key={align} onClick={() => alignImage(align)} className={(imageAttrs["data-align"] || "center") === align ? "is-active" : ""}>{align}</button>)}
+      <button type="button" onClick={removeImage}>Remove image</button>
     </div>}
     <div
-      ref={editorRef}
-      className="rich-editor-canvas"
-      contentEditable
-      suppressContentEditableWarning
-      data-placeholder="Write and format the content here…"
-      onInput={emit}
-      onBlur={emit}
+      className="rich-editor-canvas tiptap-editor-canvas"
       onDragOver={event => { if (Array.from(event.dataTransfer.types).includes("Files")) event.preventDefault(); }}
       onDrop={handleDrop}
-      onDragEnd={() => window.setTimeout(emit, 0)}
-      onClick={event => setSelectedImage(event.target instanceof HTMLImageElement ? event.target : null)}
-    />
+    >
+      <EditorContent editor={editor} />
+    </div>
+    <p className="rich-editor-help">Chọn ảnh rồi kéo các góc để phóng to/thu nhỏ. Kéo ảnh để đổi vị trí trong luồng nội dung.</p>
     <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={event => { const file = event.target.files?.[0]; if (file) upload(file); event.target.value = ""; }} />
   </div>;
 }

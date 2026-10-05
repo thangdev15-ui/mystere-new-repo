@@ -626,14 +626,26 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
 .rich-editor-canvas img,.rich-content img { display:block; max-width:100%; height:auto; margin:1.5em auto; border-radius:8px; }
 .rich-editor-canvas img { cursor:grab; user-select:none; }
 .rich-editor-canvas img:active { cursor:grabbing; }
-.rich-editor-canvas img[data-width="25"],.rich-content img[data-width="25"] { width:25%; }
-.rich-editor-canvas img[data-width="50"],.rich-content img[data-width="50"] { width:50%; }
-.rich-editor-canvas img[data-width="75"],.rich-content img[data-width="75"] { width:75%; }
-.rich-editor-canvas img[data-width="100"],.rich-content img[data-width="100"] { width:100%; }
+.rich-editor-canvas img[data-width="25"]:not([width]),.rich-content img[data-width="25"]:not([width]) { width:25%; }
+.rich-editor-canvas img[data-width="50"]:not([width]),.rich-content img[data-width="50"]:not([width]) { width:50%; }
+.rich-editor-canvas img[data-width="75"]:not([width]),.rich-content img[data-width="75"]:not([width]) { width:75%; }
+.rich-editor-canvas img[data-width="100"]:not([width]),.rich-content img[data-width="100"]:not([width]) { width:100%; }
 .rich-editor-canvas img[data-align="left"],.rich-content img[data-align="left"] { float:left; margin:0 24px 16px 0; }
 .rich-editor-canvas img[data-align="right"],.rich-content img[data-align="right"] { float:right; margin:0 0 16px 24px; }
 .rich-editor-canvas img[data-align="center"],.rich-content img[data-align="center"] { display:block; float:none; margin:1.5em auto; }
 .rich-editor-canvas::after,.rich-content::after { display:block; clear:both; content:""; }
+.tiptap-editor-canvas .ProseMirror { min-height:250px; outline:0; }
+.tiptap-editor-canvas [data-resize-container] { position:relative; max-width:100%; vertical-align:middle; }
+.tiptap-editor-canvas [data-resize-container]:has(img[data-align="left"]) { float:left; margin:0 24px 16px 0; }
+.tiptap-editor-canvas [data-resize-container]:has(img[data-align="center"]) { display:flex; justify-content:center; margin:1.5em auto; }
+.tiptap-editor-canvas [data-resize-container]:has(img[data-align="right"]) { float:right; margin:0 0 16px 24px; }
+.tiptap-editor-canvas [data-resize-wrapper] { max-width:100%; }
+.tiptap-editor-canvas [data-resize-wrapper] > img { display:block; max-width:100%; height:auto; float:none !important; margin:0 !important; }
+.tiptap-editor-canvas [data-resize-handle] { z-index:2; width:12px; height:12px; border:2px solid #fff; border-radius:50%; background:var(--brand-red); box-shadow:0 1px 4px rgba(0,0,0,.28); opacity:0; transition:opacity .15s; }
+.tiptap-editor-canvas [data-resize-container]:hover [data-resize-handle],.tiptap-editor-canvas [data-resize-container][data-resize-state="true"] [data-resize-handle] { opacity:1; }
+.tiptap-editor-canvas [data-resize-handle="top-left"],.tiptap-editor-canvas [data-resize-handle="bottom-right"] { cursor:nwse-resize; }
+.tiptap-editor-canvas [data-resize-handle="top-right"],.tiptap-editor-canvas [data-resize-handle="bottom-left"] { cursor:nesw-resize; }
+.tiptap-editor-canvas [data-resize-container][data-resize-state="true"] { z-index:3; }
 .project-detail-prose > .rich-content,.community-prose.rich-content { color:#4f5e55; font-size:17px; line-height:1.82; }
 .project-detail-prose > .rich-content p,.community-prose.rich-content p { margin:0 0 19px; }
 .project-detail-prose .rich-content p,.community-prose.rich-content p { white-space:normal; }
