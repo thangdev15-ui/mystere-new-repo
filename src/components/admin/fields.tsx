@@ -124,7 +124,9 @@ function RichEditor({ value, onChange, language }: { value: string; onChange: (v
   };
   const insertImage = (src: string) => {
     if (!src) return;
-    command("insertHTML", `<img src="${src.replace(/"/g, "&quot;")}" alt="" data-width="100" data-align="center" draggable="true">`);
+    const existingImages = editorRef.current?.querySelectorAll("img").length ?? 0;
+    const align = existingImages % 2 === 0 ? "right" : "left";
+    command("insertHTML", `<img src="${src.replace(/"/g, "&quot;")}" alt="" data-width="25" data-align="${align}" draggable="true">`);
   };
   const upload = (file: File) => {
     const reader = new FileReader();

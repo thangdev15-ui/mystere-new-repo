@@ -3,7 +3,7 @@ import Layout from './components/Layout';
 import { StoreProvider } from './store/store';
 import Home, { AboutMysterePage, AllProjectsPage, CommunityPage } from './pages/Home';
 import Admin from './pages/Admin';
-import { CategoryPage, CraftIndex, ProductPage } from './pages/Craft';
+import { CategoryPage, CraftIndex } from './pages/Craft';
 
 export default function App() {
   return <StoreProvider><HashRouter><Routes>
@@ -16,7 +16,6 @@ export default function App() {
       <Route path="/about" element={<Navigate to="/#who-we-are" replace />} />
       <Route path="/our-story" element={<Navigate to="/about-mystere#where-it-began" replace />} />
       <Route path="/craft" element={<CraftIndex />} />
-      <Route path="/craft/:slug/:productId" element={<ProductPage />} />
       <Route path="/craft/:slug" element={<CategoryPage />} />
       <Route path="/journal/*" element={<Navigate to="/#what-we-do" replace />} />
       <Route path="/visit" element={<Navigate to="/#the-thread" replace />} />

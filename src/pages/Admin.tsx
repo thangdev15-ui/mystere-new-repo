@@ -28,7 +28,6 @@ type SectionKey =
   | "projects"
   | "communities"
   | "categories"
-  | "products"
   | "journal"
   | "partners"
   | "contact"
@@ -42,7 +41,6 @@ const SECTIONS: { key: SectionKey; label: string }[] = [
   { key: "communities", label: "What we do · Communities" },
   { key: "events", label: "What we do · Events" },
   { key: "categories", label: "Craft & Products · Topics" },
-  { key: "products", label: "Craft & Products · Products" },
   { key: "newsletter", label: "Newsletter" },
   { key: "contact", label: "Logo & Contact" },
   { key: "settings", label: "Settings" },
@@ -499,101 +497,6 @@ export default function Admin() {
                       short: { ...emptyL },
                       description: { ...emptyL },
                       image: "",
-                      gallery: [],
-                      published: true,
-                    }),
-                  )
-                }
-              />
-            </>
-          )}
-
-          {/* PRODUCTS */}
-          {section === "products" && (
-            <>
-              <h1 className="font-serif text-4xl text-charcoal">Products</h1>
-              <Note>
-                Products are shown inside each topic page after clicking “Explore the collection”
-                on Craft & Products. Edit the story here and it will appear in that collection.
-              </Note>
-              {content.products.map((p, i) => (
-                <AdminCard
-                  key={p.id}
-                  title={p.name.en || "Product"}
-                  onDelete={() => up((d) => d.products.splice(i, 1))}
-                  onMoveUp={() => up((d) => move(d.products, i, -1))}
-                  onMoveDown={() => up((d) => move(d.products, i, 1))}
-                >
-                  <Toggle
-                    label={t(ui.published)}
-                    value={p.published}
-                    onChange={(v) => up((d) => (d.products[i].published = v))}
-                  />
-                  <LangField
-                    label="Name"
-                    value={p.name}
-                    onChange={(v) => up((d) => (d.products[i].name = v))}
-                  />
-                  <LangField
-                    label="Description"
-                    multiline
-                    rows={3}
-                    value={p.description}
-                    onChange={(v) => up((d) => (d.products[i].description = v))}
-                  />
-                  <RichLangField
-                    label="Full product story"
-                    value={p.story ?? p.description}
-                    onChange={(v) => up((d) => (d.products[i].story = v))}
-                  />
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <Field label="Category">
-                      <select
-                        className="w-full border border-sand bg-white px-3 py-2 text-[14px] outline-none focus:border-clay"
-                        value={p.categoryId}
-                        onChange={(e) => up((d) => (d.products[i].categoryId = e.target.value))}
-                      >
-                        {content.categories.map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.name.en}
-                          </option>
-                        ))}
-                      </select>
-                    </Field>
-                    <Field label="Community">
-                      <TextInput
-                        value={p.community}
-                        onChange={(v) => up((d) => (d.products[i].community = v))}
-                      />
-                    </Field>
-                  </div>
-                  <LangField
-                    label="Materials"
-                    value={p.materials}
-                    onChange={(v) => up((d) => (d.products[i].materials = v))}
-                  />
-                  <ImageField
-                    label="Image"
-                    value={p.image}
-                    onChange={(v) => up((d) => (d.products[i].image = v))}
-                  />
-                  {(p.gallery ?? []).map((image, imageIndex) => <div key={imageIndex} className="admin-gallery-field"><ImageField label={`Supporting image ${imageIndex + 1}`} value={image} onChange={(v) => up((d) => (d.products[i].gallery ??= [])[imageIndex] = v)} /><button type="button" className="admin-gallery-remove" onClick={() => up((d) => (d.products[i].gallery ??= []).splice(imageIndex,1))}>Remove image</button></div>)}
-                  <AddButton label="Add supporting image" onClick={() => up((d) => (d.products[i].gallery ??= []).push(""))} />
-                </AdminCard>
-              ))}
-              <AddButton
-                label="Add product"
-                onClick={() =>
-                  up((d) =>
-                    d.products.push({
-                      id: `p${Date.now()}`,
-                      categoryId: d.categories[0]?.id ?? "",
-                      name: { en: "New product", vi: "Sản phẩm mới" },
-                      description: { ...emptyL },
-                      community: "",
-                      materials: { ...emptyL },
-                      image: "",
-                      story: { ...emptyL },
                       gallery: [],
                       published: true,
                     }),
