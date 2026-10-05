@@ -3,7 +3,7 @@ import type { Category, SiteContent } from '../lib/types';
 /** Client-supplied finished artwork, in the order of the numbered source files. */
 export const craftSheets = [
   { slug: '25th-anniversary', title: '25th Anniversary', file: '1.2. 25 Ani.png', match: /25.*(anniversary|ani)|anniversary/i, width: 1414, height: 2000 },
-  { slug: 'about-mystere-shop', title: 'About Mystère Shop', file: '2.2. About mystère vs2 (2).png', match: /about.*myst|myst.*shop/i, width: 960, height: 1200 },
+  { slug: 'about-mystere-shop', title: 'About Mystère Shop', file: 'about-mystere-shop.png', match: /about.*myst|myst.*shop/i, width: 960, height: 1200 },
   { slug: 'traditional-handicraft-bazaar', title: 'Traditional Handicraft Bazaar', file: '3.2. Bazaar vs2.png', match: /bazaar/i, width: 960, height: 1200 },
   { slug: 'decen', title: 'DECEN', file: '4.2. DECEN vs2.png', match: /decen/i, width: 960, height: 1200 },
   { slug: 'live-project', title: 'LIVE Project', file: '5.2. Live project (1).png', match: /live.*project/i, width: 960, height: 1200 },
@@ -13,6 +13,19 @@ export const craftSheets = [
 
 /** Run once for local and remote payloads; subsequent CMS edits remain authoritative. */
 export function migrateCraftSheets(content: SiteContent) {
+  // Repair saved URLs too: macOS decomposes accents in filenames, while Linux
+  // and object storage can treat the visually identical URLs as different files.
+  for (const category of content.categories ?? []) {
+    for (const language of ['en', 'vi'] as const) {
+      const src = category.pageImage?.[language];
+      if (!src) continue;
+      try {
+        if (decodeURIComponent(src).normalize('NFC') === '/images/updated/2.2. About mystère vs2 (2).png') {
+          category.pageImage![language] = '/images/updated/about-mystere-shop.png';
+        }
+      } catch { /* Leave custom URLs untouched. */ }
+    }
+  }
   if (content.craft.sheetVersion === 1) return;
   const remaining = [...(content.categories ?? [])];
   const sheets: Category[] = craftSheets.map(sheet => {
