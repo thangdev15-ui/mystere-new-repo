@@ -134,8 +134,8 @@ export const defaultContent: SiteContent = {
     thread: {
       title: { en: "Every piece carries a story", vi: "Mỗi món đồ đều mang một câu chuyện" },
       body: {
-        en: "We don't just support these communities — we carry their work forward. And every piece you take home from Mystère Shop is a part of that story, continuing on with you.",
-        vi: "Chúng tôi không chỉ hỗ trợ các cộng đồng này — chúng tôi mang công việc của họ đi tiếp. Và mỗi món đồ bạn mang về từ Mystère Shop là một phần của câu chuyện ấy, tiếp tục cùng bạn.",
+        en: "We don't just support these communities — we carry their work forward. Every piece you take home from Mystère Shop was made by the same hands, in the same villages, you've just read about. Choosing it is a small, direct way of keeping a craft — and the livelihood behind it — alive.\n\nCome visit us at 141 Đồng Khởi, Sài Gòn.",
+        vi: "Chúng tôi không chỉ đồng hành cùng các cộng đồng — chúng tôi tiếp nối công việc của họ. Mỗi món đồ bạn mang về từ Mystère Shop được làm bởi chính những đôi tay ở những bản làng bạn vừa đọc. Lựa chọn ấy góp phần giữ nghề thủ công và sinh kế phía sau nghề được tiếp nối.\n\nHãy ghé 141 Đồng Khởi, Sài Gòn.",
       },
       image: IMG_HAPPY_AN,
     },

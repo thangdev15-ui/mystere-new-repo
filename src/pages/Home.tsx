@@ -6,6 +6,12 @@ import { useSectionScroll } from '../hooks/useSectionScroll';
 import type { Community } from '../lib/types';
 import RichText from '../components/RichText';
 
+const liveInlineGallery = [
+  '/images/updated/children%20carrying%20water%20in%20Cao%20Bang%201.jpg',
+  '/images/updated/children%20carrying%20water%20in%20Cao%20Bang%202.jpg',
+  '/images/updated/children%20carrying%20water%20in%20Cao%20Bang%203.jpg',
+];
+
 const projectEditorialImage = (community: Community) => {
   if (community.id === 'c1') return '/images/live-project-retouched.webp';
   if (community.id === 'c2') return '/images/craftbelt-project-retouched.webp';
@@ -76,6 +82,7 @@ export function AllProjectsPage() {
           </div>
           <div className="project-detail-copy"><p className="kicker">{t(community.region)}</p><h2>{community.name}</h2></div>
           {community.id === 'c1' && <p className="project-partnership-note">{en ? 'Mystère Shop accompanies the LIVE Project, supporting its work with ethnic minority artisan communities in Cao Bằng.' : 'Mystère Shop đồng hành cùng chương trình LIVE, hỗ trợ các hoạt động cùng cộng đồng nghệ nhân dân tộc thiểu số tại Cao Bằng.'}</p>}
+          {community.id === 'c1' && <div className="project-inline-gallery" aria-label={en ? 'LIVE Project photographs' : 'Ảnh Dự án LIVE'}>{liveInlineGallery.map((src, index) => <Img key={src} src={src} alt={`${community.name} ${index + 1}`} ratio="aspect-[3/2]" />)}</div>}
           <div className="project-detail-prose"><p className="kicker">{en ? 'Project story' : 'Câu chuyện dự án'}</p><RichText html={t(community.story)} /></div>
           <aside className="project-detail-aside"><div><p className="kicker">{en ? 'The craft' : 'Nghề thủ công'}</p><p>{t(community.craft)}</p></div><div className="community-reference-actions"><ProjectDocumentLink community={community} /><Link to="/#contact" className="contact-project-link">{en ? 'Contact us for more information' : 'Liên hệ để biết thêm thông tin'} <span aria-hidden="true">→</span></Link></div></aside>
           {!!community.gallery?.filter(Boolean).length && <div className="project-detail-gallery">{community.gallery.filter(Boolean).map((src,index) => <Img key={`${src}-${index}`} src={src} alt={`${community.name} ${index + 2}`} ratio="aspect-[4/3]" />)}</div>}
@@ -203,7 +210,7 @@ export default function Home() {
     </section>
     <section id="what-we-do" data-scroll-part className="what-section"><div className="content-width"><div className="section-top"><p className="section-label">{en ? 'What we do' : 'Chúng tôi làm gì'}</p><span>{en ? 'Projects · Communities · Events' : 'Dự án · Cộng đồng · Sự kiện'}</span></div><div className="projects-intro"><h2>{t(h.projectsIntro.title)}</h2><p>{projectsIntroBody}</p></div><div id="projects" className="projects-heading"><h2>{en ? 'Collaboration' : 'Hợp tác'}</h2></div><div className="project-list">{content.communities.filter(c => c.published).map(c => <Project key={c.id} community={c}/>)}</div><div id="communities" className="projects-heading community-work-heading"><h2>{en ? 'Communities we work with' : 'Cộng đồng chúng tôi đồng hành'}</h2><span>{en ? 'Five communities, living crafts' : 'Năm cộng đồng, những nghề sống động'}</span></div><div className="community-work-grid">{communityCards.filter(c => c.published).map(c => <article key={c.id}><figure><Img src={c.image} alt={c.name} ratio="aspect-[3/4]" /></figure><div><h3>{lang === 'en' ? ({'Dao Tiền':'Money Dao','Nùng':'Nung',"H'Mông":"H'Mong",'Black Lô Lô':'Black Lolo'} as Record<string,string>)[c.name] || c.name : c.name}</h3><p>{t(c.craft)}</p></div></article>)}</div><Events /></div>
     </section>
-      <section className="thread-section" id="the-thread" data-scroll-part><div className="content-width thread-grid"><div><p className="kicker">{en ? 'Visit us' : 'Ghé thăm chúng tôi'}</p><h2>{en ? 'Every piece carries a story' : 'Mỗi món đồ đều mang theo một câu chuyện'}</h2><p>{en ? "We don't just support these communities — we carry their work forward. Every piece you take home from Mystère Shop was made by the same hands, in the same villages, you've just read about. Choosing it is a small, direct way of keeping a craft — and the livelihood behind it — alive.\n\nCome visit us at 141 Đồng Khởi to see it, and hear it, in person." : 'Chúng tôi không chỉ đồng hành cùng các cộng đồng — chúng tôi tiếp nối công việc của họ. Mỗi món đồ bạn mang về từ Mystère Shop được làm bởi chính những đôi tay ở những bản làng bạn vừa đọc. Lựa chọn ấy góp phần giữ nghề thủ công và sinh kế phía sau nghề được tiếp nối.\n\nHãy ghé 141 Đồng Khởi để cảm nhận câu chuyện bằng mắt và lắng nghe trực tiếp.'}</p><Link to="/#contact" className="white-link">{en ? 'Visit us' : 'Ghé thăm cửa hàng'} <span aria-hidden="true">→</span></Link></div><figure><Img src={h.thread.image} alt={en ? 'Craft and everyday objects inside Mystère Shop' : 'Những món đồ thủ công trong cửa hàng Mystère'} ratio="aspect-[4/3]"/></figure></div>
+      <section className="thread-section" id="the-thread" data-scroll-part><div className="content-width thread-grid"><div><p className="kicker">{en ? 'Visit us' : 'Ghé thăm chúng tôi'}</p><h2>{t(h.thread.title)}</h2><p>{t(h.thread.body)}</p><Link to="/#contact" className="white-link">{en ? 'Visit us' : 'Ghé thăm cửa hàng'} <span aria-hidden="true">→</span></Link></div><figure><Img src={h.thread.image} alt={en ? 'Craft and everyday objects inside Mystère Shop' : 'Những món đồ thủ công trong cửa hàng Mystère'} ratio="aspect-[4/3]"/></figure></div>
     </section>
   </div>;
 }
