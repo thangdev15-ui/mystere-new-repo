@@ -719,6 +719,7 @@ export default function Admin() {
                 <Note>
                   Leave empty to keep the typographic wordmark in the header and footer.
                 </Note>
+                <LangField label="Footer tagline" value={content.contact.tagline} onChange={(v) => up((d) => (d.contact.tagline = v))} />
               </AdminCard>
               <AdminCard title="Visit Us page">
                 <ImageField

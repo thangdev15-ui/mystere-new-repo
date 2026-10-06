@@ -295,6 +295,7 @@ export const defaultContent: SiteContent = {
     // which cannot be rendered by browsers. Export it as SVG/PNG and upload it here;
     // until then the typographic wordmark is used.
     logo: "",
+    tagline: { en: "The Vietnamese Refinement", vi: "Tinh hoa Việt Nam" },
     image: "/images/shop.jpg",
     displayName: { en: "Mystere Sai Gon", vi: "Mystere Sai Gon" },
     addressLines: ["141 Dong Khoi Street", "Sai Gon Ward", "Ho Chi Minh City"],

@@ -74,6 +74,7 @@ function loadCurrentContent(): SiteContent {
       community.documentLabel = structuredClone(defaults?.documentLabel ?? { en: "", vi: "" });
     }
   }
+  saved.contact.tagline ??= structuredClone(defaultContent.contact.tagline);
   saved.communityCards ??= structuredClone(saved.communities);
   saved.home.mission ??= structuredClone(saved.home.intro);
   saved.events ??= structuredClone(defaultContent.events);
@@ -168,6 +169,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         if (!communities.error && communities.data) {
           const sitePayload = communities.data.find(row => row.id === SITE_CONTENT_ROW)?.story?.payload;
           if (sitePayload && typeof sitePayload === 'object') Object.assign(next, sitePayload);
+          next.contact.tagline ??= structuredClone(defaultContent.contact.tagline);
           next.categories ??= structuredClone(defaultContent.categories);
           next.categories.forEach(category => {
             const description = { en: category.description?.en || category.short?.en || "", vi: category.description?.vi || category.short?.vi || "" };

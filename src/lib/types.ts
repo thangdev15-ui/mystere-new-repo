@@ -152,6 +152,7 @@ export interface SiteContent {
   contact: {
     /** Wordmark image. Empty = typographic logo is used. */
     logo: string;
+    tagline: L;
     image: string;
     displayName: L;
     addressLines: string[];
