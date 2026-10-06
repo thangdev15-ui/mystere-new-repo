@@ -668,9 +668,10 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
 /* Events — one compact, balanced horizontal row per event. */
 .what-section .events-section { margin-top:52px; padding:0 0 58px; }
 .what-section .events-section, .what-section .event-grid, .what-section .event-card.event-strip { background:#fff; }
-.what-section .event-grid { display:block; margin-top:18px; }
-.what-section .event-card.event-strip { display:grid; grid-template-columns:minmax(280px,34%) minmax(0,1fr); min-height:260px; margin-bottom:22px; padding:0; overflow:hidden; background:white; }
-.what-section .event-strip figure { height:auto; min-height:260px; align-self:stretch; margin:0; overflow:hidden; background:#fff; }
+.what-section .events-intro { min-height:0; margin:0 0 18px; padding:12px 0; }
+.what-section .event-grid { display:block; margin-top:0; }
+.what-section .event-card.event-strip { display:grid; grid-template-columns:minmax(240px,30%) minmax(0,1fr); min-height:240px; margin-bottom:14px; padding:0; overflow:hidden; background:white; }
+.what-section .event-strip figure { height:240px; min-height:0; align-self:stretch; margin:0; overflow:hidden; background:#fff; }
 .what-section .event-strip figure img { display:block; width:100%; height:100%; object-fit:contain; object-position:center; background:#fff; }
 .what-section .event-strip .event-card-copy { position:static; display:grid; grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr); grid-template-rows:1fr auto; gap:24px 18px; align-items:end; padding:34px 42px 32px; }
 .what-section .event-summary { grid-column:1/-1; align-self:start; max-width:720px; }
@@ -686,11 +687,11 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
 
 /* Compact horizontal event rows */
 .what-section .event-card.event-strip {
-  grid-template-columns: minmax(280px, 32%) minmax(0, 1fr);
-  min-height: 205px;
-  margin-bottom: 0;
+  grid-template-columns: minmax(240px, 30%) minmax(0, 1fr);
+  min-height: 240px;
+  margin-bottom: 14px;
 }
-.what-section .event-strip figure { min-height: 205px; }
+.what-section .event-strip figure { height: 240px; }
 .what-section .event-strip .event-card-copy {
   display: grid;
   grid-template-columns: minmax(300px, 1.55fr) minmax(150px, .65fr) minmax(230px, 1fr);
@@ -768,7 +769,7 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
   letter-spacing: -.65px;
 }
 .what-section .community-work-heading { margin-top:52px; }
-.what-section .events-intro { margin-top:50px; }
+.what-section .events-intro { margin-top:0; }
 
 /* The supplied Who we are photograph is panoramic; keep every person visible. */
 .who-section .mission-image>img,
