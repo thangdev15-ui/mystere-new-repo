@@ -43,7 +43,7 @@ export const ui = {
   imageAlt: { en: "Mystère Shop", vi: "Mystère Shop" } as L,
   published: { en: "Published", vi: "Hiển thị" } as L,
   partners: { en: "Partners & projects", vi: "Đối tác & dự án" } as L,
-  ourProjects: { en: "Our projects", vi: "Dự án của chúng tôi" } as L,
+  ourProjects: { en: "Our Collaboration", vi: "Hợp tác của chúng tôi" } as L,
   learnMore: { en: "Learn more", vi: "Tìm hiểu thêm" } as L,
   rights: {
     en: "All rights reserved.",

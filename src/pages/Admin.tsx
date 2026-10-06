@@ -218,7 +218,7 @@ export default function Admin() {
               <BlockEditor title="Home page · Our Story" block={content.home.intro} onChange={(fn) => up((d) => fn(d.home.intro))} />
               <BlockEditor title="About Mystère page · Our Mission" block={content.home.mission ?? content.home.intro} onChange={(fn) => up((d) => { d.home.mission ??= structuredClone(d.home.intro); fn(d.home.mission); })} />
               <BlockEditor title="1.2 · Who we are — Where it began" block={content.home.artisan} onChange={(fn) => up((d) => fn(d.home.artisan))} />
-              <AdminCard title="2.1 · What we do — Our projects">
+              <AdminCard title="2.1 · What we do — Our Collaboration">
                 <LangField label="Title" value={content.home.projectsIntro.title} onChange={(v) => up((d) => (d.home.projectsIntro.title = v))} />
                 <LangField label="Body" multiline value={content.home.projectsIntro.body} onChange={(v) => up((d) => (d.home.projectsIntro.body = v))} />
                 <Note>Edit project summaries and detail pages under What we do · Project. Community cards and events have their own sections.</Note>
@@ -380,6 +380,7 @@ export default function Admin() {
                   </Field>
                   <LangField label="PDF button label" value={c.documentLabel ?? { ...emptyL }} onChange={(v) => up((d) => (d.communities[i].documentLabel = v))} />
                   {(c.gallery ?? []).map((image, imageIndex) => <div key={imageIndex} className="admin-gallery-field"><ImageField label={`Gallery image ${imageIndex + 1}`} value={image} onChange={(v) => up((d) => (d.communities[i].gallery ??= [])[imageIndex] = v)} /><button type="button" className="admin-gallery-remove" onClick={() => up((d) => (d.communities[i].gallery ??= []).splice(imageIndex,1))}>Remove image</button></div>)}
+                  <Note>Project gallery images appear together beneath the story. Add as many images as needed; they are shown in the same order here.</Note>
                   <AddButton label="Add gallery image" onClick={() => up((d) => (d.communities[i].gallery ??= []).push(""))} />
                 </AdminCard>
               ))}

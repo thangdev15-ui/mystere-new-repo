@@ -64,7 +64,7 @@ export function AllProjectsPage() {
   const fallback: Record<string, string> = { 'red-dao':'/images/red-dao.png', 'dao-tien':'/images/project-dao-tien.jpg', nung:'/images/project-nung.jpg', hmong:'/images/project-hmong.jpg', 'black-lo-lo':'/images/project-lo-lo.jpg' };
   return <article className="projects-page">
     <header className="projects-page-hero content-width">
-      <p className="section-label">{en ? 'Our projects' : 'Dự án cộng đồng'}</p>
+      <p className="section-label">{en ? 'Our Collaboration' : 'Hợp tác của chúng tôi'}</p>
       <h1>{t(h.projectsIntro.title)}</h1><p>{t(h.projectsIntro.body)}</p>
     </header>
     <div className="projects-page-list content-width">
@@ -75,7 +75,7 @@ export function AllProjectsPage() {
             <Img src={image} alt={community.name} ratio="aspect-[4/3]" priority={community.slug === 'red-dao'} />
           </div>
           <div className="project-detail-copy"><p className="kicker">{t(community.region)}</p><h2>{community.name}</h2></div>
-          {community.id === 'c1' && <p className="project-partnership-note">{en ? 'Mystère Shop accompanies the LIVE programme, supporting its work with ethnic minority artisan communities in Cao Bằng.' : 'Mystère Shop đồng hành cùng chương trình LIVE, hỗ trợ các hoạt động cùng cộng đồng nghệ nhân dân tộc thiểu số tại Cao Bằng.'}</p>}
+          {community.id === 'c1' && <p className="project-partnership-note">{en ? 'Mystère Shop accompanies the LIVE Project, supporting ethnic minority artisan communities in Cao Bằng.' : 'Mystère Shop đồng hành cùng Dự án LIVE, hỗ trợ các cộng đồng nghệ nhân dân tộc thiểu số tại Cao Bằng.'}</p>}
           <div className="project-detail-prose"><p className="kicker">{en ? 'Project story' : 'Câu chuyện dự án'}</p><RichText html={t(community.story)} /></div>
           <aside className="project-detail-aside"><div><p className="kicker">{en ? 'The craft' : 'Nghề thủ công'}</p><p>{t(community.craft)}</p></div><div className="community-reference-actions"><ProjectDocumentLink community={community} /><Link to="/#contact" className="contact-project-link">{en ? 'Contact us for more information' : 'Liên hệ để biết thêm thông tin'} <span aria-hidden="true">→</span></Link></div></aside>
           {!!community.gallery?.filter(Boolean).length && <div className="project-detail-gallery">{community.gallery.filter(Boolean).map((src,index) => <Img key={`${src}-${index}`} src={src} alt={`${community.name} ${index + 2}`} ratio="aspect-[4/3]" />)}</div>}
