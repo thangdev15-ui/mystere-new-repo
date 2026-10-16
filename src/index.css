@@ -490,7 +490,7 @@ figcaption { font-size:10px; line-height:1.6; color:#65716c; margin-top:13px; }
 .what-section .project-copy h3 { font-size:32px; }
 .what-section .project-copy > p:not(.kicker) { max-width:620px; font-size:16px; }
 .banner-content { padding-bottom:18px; }
-.banner-content h1 { font-family:'Ballet Local','Ballet','Allura Local','Allura',cursive; font-size:clamp(84px,10vw,150px); line-height:1.05; margin:0 0 8px; letter-spacing:0; }
+.banner-content h1 { font-family:'Kunstler Script','Ballet Local','Ballet','Allura Local','Allura',cursive; font-size:clamp(84px,10vw,150px); line-height:1.05; margin:0 0 8px; letter-spacing:0; }
 .banner-meta .banner-eyebrow { font-family:'Allura Local','Allura',cursive; text-transform:none; letter-spacing:0; font-size:29px; color:white; }
 .banner-bottom { position:absolute; right:0; bottom:26px; margin:0; }
 @media(max-width:1000px) { .what-section .project-row { grid-template-columns:minmax(250px,340px) minmax(0,1fr); gap:28px; } .what-section .projects-heading > span { display:none; } .banner-bottom { position:static; } }
@@ -1232,4 +1232,43 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
 .category-paper-fallback-image { aspect-ratio:auto; object-fit:contain; }
 @media(max-width:680px) {
   .craft-approved-sheet { margin-bottom:20px; }
+}
+
+/* Public mobile pass: keep every editorial surface inside the viewport. */
+@media(max-width:680px) {
+  html, body, #root { max-width:100%; overflow-x:hidden; }
+  .site-header { position:sticky; }
+  .header-inner { min-height:72px; }
+  .mobile-nav { max-height:calc(100svh - 72px); overflow-y:auto; }
+  .home-banner { min-height:540px; height:calc(100svh - 72px); }
+  .banner-content { width:calc(100% - 32px); padding-block:28px 24px; }
+  .banner-content h1 { max-width:100%; font-size:clamp(52px,16vw,82px); line-height:.96; text-wrap:balance; }
+  .banner-meta { max-width:100%; gap:8px 14px; }
+  .banner-meta .banner-eyebrow { font-size:21px; }
+  .banner-bottom { width:100%; }
+  .banner-cta { max-width:100%; white-space:normal; }
+  .community-page, .projects-page, .about-mystere-page { padding-top:0; }
+  .projects-page-hero, .about-page-hero { padding-top:30px; }
+  .projects-page-hero h1, .about-page-hero h1 { font-size:clamp(34px,11vw,48px); overflow-wrap:anywhere; }
+  .project-detail-section, .about-detail-section, .about-detail-section-alt { min-width:0; }
+  .project-detail-copy h2, .about-detail-section h2 { font-size:clamp(30px,9vw,42px); overflow-wrap:anywhere; }
+  .project-detail-prose>.rich-content { overflow-wrap:anywhere; }
+  .project-detail-prose>.rich-content img,
+  .project-detail-prose>.rich-content img:nth-of-type(even) { max-height:none; }
+  .project-detail-aside, .community-aside { width:100%; box-sizing:border-box; }
+  .project-support-gallery, .community-gallery { min-width:0; }
+  .what-section > .content-width { width:calc(100% - 32px); }
+  .what-section .projects-intro p,
+  .what-section .project-copy > p:not(.kicker),
+  .event-summary h4,
+  .event-strip address { overflow-wrap:anywhere; }
+  .what-section .event-card.event-strip { width:100%; }
+  .what-section .event-strip figure { height:auto; aspect-ratio:3 / 2; }
+  .what-section .event-strip .event-card-copy { padding:22px 20px; }
+  .what-section .event-timing, .what-section .event-strip address { min-width:0; }
+  .category-paper, .category-intro-section { max-width:100%; box-sizing:border-box; }
+  .category-paper .category-description, .category-intro-section .category-description { overflow-wrap:anywhere; }
+  .category-image-strip { max-width:100%; }
+  .site-footer .footer-grid { min-width:0; }
+  .footer-grid>div>a:not(.footer-brand) { width:auto; }
 }
