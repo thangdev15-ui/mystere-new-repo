@@ -1272,3 +1272,25 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
   .site-footer .footer-grid { min-width:0; }
   .footer-grid>div>a:not(.footer-brand) { width:auto; }
 }
+
+/* LIVE story: alternating image/copy rows from the approved reference. */
+.live-project-story { color:#526e65; font-size:16px; line-height:1.8; columns:auto; }
+.live-market-section { max-width:1100px; margin-inline:auto; }
+.live-market-section > .rich-content { text-align:left; }
+.live-market-section h2,.live-market-section h3 { color:#526e65; font-weight:700; letter-spacing:-.5px; }
+.live-market-section > .rich-content h2,.live-market-section > .rich-content h3 { font-size:28px; }
+.live-market-rows { display:grid; gap:48px; margin-block:40px; }
+.live-market-row { display:grid; grid-template-columns:minmax(0,1.08fr) minmax(0,1fr); align-items:center; gap:32px; }
+.live-market-row:nth-child(even) { grid-template-columns:minmax(0,1fr) minmax(0,1.08fr); }
+.live-market-row:nth-child(even) > img { grid-column:2; grid-row:1; }
+.live-market-row:nth-child(even) > .live-market-copy { grid-column:1; grid-row:1; }
+.live-market-row > img { display:block; width:100%; height:auto; aspect-ratio:1.88; object-fit:cover; border-radius:6px; margin:0; }
+.live-market-copy h3 { font-size:28px; line-height:1.25; margin:0 0 16px; }
+.live-market-copy .rich-content { text-align:left; }
+.live-market-copy .rich-content p { color:inherit; font-size:16px; line-height:1.8; margin:0 0 12px; }
+@media(max-width:680px) {
+  .live-market-rows { gap:32px; margin-block:28px; }
+  .live-market-row,.live-market-row:nth-child(even) { grid-template-columns:minmax(0,1fr); gap:20px; }
+  .live-market-row:nth-child(even) > img,.live-market-row:nth-child(even) > .live-market-copy { grid-column:auto; grid-row:auto; }
+  .live-market-copy h3 { font-size:24px; }
+}
