@@ -26,11 +26,15 @@ export default function CraftbeltStory({ html, images, className = '' }: { html:
     return container.innerHTML;
   };
   if (!images.length) return <RichText html={html} className={className} />;
+  const isHeading = (node: Node) => node instanceof Element && (
+    /^H[23]$/.test(node.tagName) ||
+    /^(When everyone works in a different place|Built from the bazaars|One house,? many uses|The next chapter)[.!:]?$/i.test((node.textContent ?? '').trim())
+  );
   // Keep each heading and all following blocks together, without changing text.
   const groups: Node[][] = [];
   let current: Node[] = [];
   for (const node of nodes) {
-    const heading = node instanceof Element && /^H[23]$/.test(node.tagName);
+    const heading = isHeading(node);
     if (heading && current.some(item => (item.textContent ?? '').trim())) {
       groups.push(current);
       current = [];
@@ -38,19 +42,20 @@ export default function CraftbeltStory({ html, images, className = '' }: { html:
     current.push(node);
   }
   if (current.length) groups.push(current);
+  const firstImageIndex = groups.findIndex(group => group.some(node => isHeading(node) && /When everyone|Khi mọi người/i.test(node.textContent ?? '')));
   const usesIndex = groups.findIndex(group => group.some(node =>
-    node instanceof Element && /^H[23]$/.test(node.tagName) &&
+    isHeading(node) &&
     /One house.*many uses|Một ngôi nhà.*nhiều|Một nhà.*nhiều/i.test(node.textContent ?? '')
   ));
   const secondImageIndex = usesIndex > 0 ? usesIndex : groups.length > 2 ? 2 : 1;
   return <div className={`craftbelt-story ${className}`}>
     {groups.map((group, index) => {
-      const image = index === 0 ? images[0] : index === secondImageIndex ? images[1] : undefined;
+      const image = index === (firstImageIndex >= 0 ? firstImageIndex : 0) ? images[0] : index === secondImageIndex ? images[1] : undefined;
       return <section className={image
-        ? `craftbelt-story-row${index === secondImageIndex ? ' craftbelt-story-row-reverse' : ''}`
+        ? 'craftbelt-story-row craftbelt-story-row-reverse'
         : 'craftbelt-story-full'} key={index}>
-        {image && <img src={image} alt="CraftBelt Houses" loading="lazy" />}
         <RichText html={serialize(group)} />
+        {image && <img src={image} alt="CraftBelt Houses" loading="lazy" />}
       </section>;
     })}
   </div>;
