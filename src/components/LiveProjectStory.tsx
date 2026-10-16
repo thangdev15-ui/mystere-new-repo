@@ -15,39 +15,27 @@ export default function LiveProjectStory({ html, en, className = '' }: { html: s
     copy.querySelectorAll('img').forEach(image => image.remove());
     return copy.tagName === 'IMG' ? '' : copy.outerHTML;
   };
-  const intro = nodes.slice(start, more).map(cleanCopy).join('');
-  const paragraphs = nodes.slice(start + 1, more).filter(node => node.tagName === 'P' && text(node));
-  const production = paragraphs.find(node => /Production|Sản xuất/i.test(text(node)));
-  const market = paragraphs.find(node => /Market linking|Liên kết thị trường/i.test(text(node)));
-  const withoutLabel = (node?: Element) => {
-    if (!node) return '';
-    const copy = node.cloneNode(true) as Element;
-    copy.querySelector('strong,b')?.remove();
-    return copy.outerHTML;
-  };
-  const excerpt = (node: Element | undefined, marketCopy: boolean) => {
-    if (!node) return '';
-    const content = new DOMParser().parseFromString(withoutLabel(node), 'text/html').body.textContent ?? '';
-    const cut = marketCopy
-      ? content.search(/\s+In 2012 and 2013,|\s+Năm 2012 và 2013,/)
-      : content.search(/The project also|Dự án cũng/);
-    const result = cut < 0 ? content : marketCopy ? content.slice(0, cut) : content.slice(cut);
-    return result.trim();
-  };
-  const moreCopy = nodes.slice(more + 1, end).map(cleanCopy).join('');
-  const rows = [
-    { image: 2, title: text(nodes[more]), copy: moreCopy },
-    { image: 3, title: en ? 'Craft linking and market access' : 'Kết nối thủ công và tiếp cận thị trường', copy: excerpt(market, true) },
-    { image: 4, title: en ? 'Market linking' : 'Liên kết thị trường', copy: excerpt(production, false) },
-    { image: 1, title: en ? 'Production' : 'Sản xuất', copy: withoutLabel(production) },
-  ];
+  // Partition the original blocks in their original order. Never excerpt,
+  // synthesize headings, or repeat text: every CMS block is rendered once.
+  const section = nodes.slice(start, end);
+  const production = section.findIndex(node => /^(Production|Sản xuất)[.\s:]/i.test(text(node)));
+  const market = section.findIndex(node => /^(Market linking|Liên kết thị trường)[.\s:]/i.test(text(node)));
+  const closing = more - start;
+  if (production < 1 || market <= production || closing <= market) {
+    return <RichText html={html} className={className} />;
+  }
+  const boundaries = [0, production, market, closing, section.length];
+  const images = [2, 3, 4, 1];
+  const rows = images.map((image, index) => ({
+    image,
+    copy: section.slice(boundaries[index], boundaries[index + 1]).map(cleanCopy).join(''),
+  }));
   return <div className={`live-project-story ${className}`}>
     <RichText html={nodes.slice(0, start).map(node => node.outerHTML).join('')} />
     <section className="live-market-section">
-      <RichText html={intro} />
       <div className="live-market-rows">{rows.map((row) => <section className="live-market-row" key={row.image}>
-        <img src={`/images/moinhat/anhtrongproject${row.image}.jpg`} alt={row.title} loading="lazy" />
-        <div className="live-market-copy"><h3>{row.title}</h3><RichText html={row.copy} /></div>
+        <img src={`/images/moinhat/anhtrongproject${row.image}.jpg`} alt={en ? 'LIVE project artisans and handicrafts' : 'Nghệ nhân và sản phẩm thủ công của dự án LIVE'} loading="lazy" />
+        <div className="live-market-copy"><RichText html={row.copy} /></div>
       </section>)}</div>
     </section>
     <RichText html={nodes.slice(end).map(node => node.outerHTML).join('')} />
