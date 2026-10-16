@@ -1298,13 +1298,17 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
 /* CraftBelt Houses: original CMS paragraphs alongside their gallery images. */
 .craftbelt-story { display:grid; gap:48px; }
 .craftbelt-story-row { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:center; gap:36px; }
-.craftbelt-story-row:nth-child(even)>img { grid-column:2; grid-row:1; }
-.craftbelt-story-row:nth-child(even)>.rich-content { grid-column:1; grid-row:1; }
+.craftbelt-story-row-reverse>img { grid-column:2; grid-row:1; }
+.craftbelt-story-row-reverse>.rich-content { grid-column:1; grid-row:1; }
 .craftbelt-story-row>img { display:block; width:100%; height:auto; border-radius:8px; }
 .craftbelt-story-row>.rich-content { min-width:0; color:#4f5e55; font-size:17px; line-height:1.82; }
 .craftbelt-story-row>.rich-content>:first-child { margin-top:0; }
 @media(max-width:680px) {
   .craftbelt-story { gap:32px; }
   .craftbelt-story-row { grid-template-columns:minmax(0,1fr); gap:20px; }
-  .craftbelt-story-row:nth-child(even)>img,.craftbelt-story-row:nth-child(even)>.rich-content { grid-column:auto; grid-row:auto; }
+  .craftbelt-story-row-reverse>img,.craftbelt-story-row-reverse>.rich-content { grid-column:auto; grid-row:auto; }
 }
+
+.craftbelt-story-full { min-width:0; width:100%; }
+.craftbelt-story-full>.rich-content { color:#4f5e55; font-size:17px; line-height:1.82; }
+.craftbelt-story-full>.rich-content>:first-child { margin-top:0; }
