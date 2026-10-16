@@ -924,7 +924,22 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
 .community-work-grid h3 { font-size:18px; }
 .project-detail-prose { grid-column:1/13; width:100%; max-width:none; }
 .project-detail-prose>.rich-content { width:100%; max-width:none; text-align:justify; }
-.project-detail-prose>.rich-content img { max-width:100%; }
+.project-detail-prose>.rich-content img {
+  display:block;
+  width:min(42%, 390px);
+  max-width:42%;
+  height:auto;
+  margin:0 0 26px 34px;
+  float:right;
+  clear:right;
+  border-radius:8px;
+}
+.project-detail-prose>.rich-content img:nth-of-type(even) {
+  margin:0 34px 26px 0;
+  float:left;
+  clear:left;
+}
+.project-detail-prose>.rich-content::after { content:""; display:block; clear:both; }
 .project-partnership-note { grid-column:6/13; align-self:end; margin:0; padding:18px 22px; border-left:2px solid var(--brand-red); color:#4f5e55; font-size:16px; line-height:1.7; }
 .project-support-gallery { grid-column:1/13; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
 .project-support-gallery img { width:100%; height:360px; object-fit:cover; border-radius:12px; }
@@ -941,6 +956,14 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
   .mission-actions { align-items:flex-start; flex-direction:column; gap:15px; }
   .community-work-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .project-partnership-note,.project-support-gallery { grid-column:1/13; }
+  .project-detail-prose>.rich-content img,
+  .project-detail-prose>.rich-content img:nth-of-type(even) {
+    width:100%;
+    max-width:100%;
+    float:none;
+    clear:both;
+    margin:0 auto 22px;
+  }
   .project-support-gallery { grid-template-columns:1fr; }
   .project-support-gallery img { height:270px; }
   .who-section .mission-image { width:100%; }
