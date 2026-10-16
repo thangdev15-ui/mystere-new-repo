@@ -697,7 +697,11 @@ defaultContent.communities[3].image = "/images/project-hmong.jpg";
 defaultContent.communities[4].image = "/images/project-lo-lo.jpg";
 // Supporting project photographs are editable from the community gallery in CMS.
 defaultContent.communities[0].gallery = ["/images/live-water-collection.webp", "/images/live-child-water.webp"];
-defaultContent.communities[1].gallery = ["/images/craft-belt-house-retouched.png"];
+defaultContent.communities[1].gallery = [
+  "/images/craft-belt-house-retouched.png",
+  "/images/moinhat/Five%20Women%20in%20Traditional%20Indigo%20Attire.png",
+  "/images/moinhat/Rural%20Timber%20House%20Community%20Gathering.png",
+];
 defaultContent.home.intro.body = {
   en: "Mystère Shop believes the artisans of Cao Bằng, Hà Giang and Sa Pa deserve more than admiration for their craft — they deserve a future shaped by it.\n\nWe work alongside Red Dao, Dao Tiền, Nùng, H'Mông and Black Lô Lô communities to keep weaving, embroidery and silverwork alive. Through our shop, their work reaches new homes, carrying the knowledge and stories of the people who made it.",
   vi: "Mystère Shop tin rằng nghệ nhân ở Cao Bằng, Hà Giang và Sa Pa xứng đáng có nhiều hơn sự ngưỡng mộ dành cho tay nghề — họ cần một tương lai được vun đắp từ chính nghề ấy.\n\nChúng tôi đồng hành cùng các cộng đồng Dao Đỏ, Dao Tiền, Nùng, H'Mông và Lô Lô Đen để gìn giữ nghề dệt, thêu và chế tác bạc. Qua cửa hàng, những sản phẩm ấy đến với các mái nhà mới, mang theo tri thức và câu chuyện của người làm ra chúng."

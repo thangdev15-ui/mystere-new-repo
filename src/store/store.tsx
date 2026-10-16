@@ -70,6 +70,10 @@ function loadCurrentContent(): SiteContent {
   for (const community of saved.communities) {
     const defaults = defaultContent.communities.find(item => item.id === community.id);
     community.documentUrl ??= defaults?.documentUrl ?? "";
+    if (community.id === "c2" && defaults?.gallery?.length) {
+      community.gallery ??= [];
+      for (const image of defaults.gallery) if (!community.gallery.includes(image)) community.gallery.push(image);
+    }
     if (!community.documentLabel || community.documentLabel.en === "Read the DECEN presentation") {
       community.documentLabel = structuredClone(defaults?.documentLabel ?? { en: "", vi: "" });
     }
