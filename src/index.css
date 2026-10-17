@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Allura&family=Ballet:opsz@16..72&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap&subset=vietnamese');
 @import "tailwindcss";
 
+@font-face { font-family:'Pinyon Script'; src:url('/fonts/pinyon-script.ttf') format('truetype'); font-style:normal; font-weight:400; font-display:swap; }
 @font-face { font-family:'Ballet Local'; src:url('/fonts/ballet.ttf') format('truetype'); font-display:swap; }
 @font-face { font-family:'Allura Local'; src:url('/fonts/allura.ttf') format('truetype'); font-display:swap; }
 
@@ -490,7 +491,7 @@ figcaption { font-size:10px; line-height:1.6; color:#65716c; margin-top:13px; }
 .what-section .project-copy h3 { font-size:32px; }
 .what-section .project-copy > p:not(.kicker) { max-width:620px; font-size:16px; }
 .banner-content { padding-bottom:18px; }
-.banner-content h1 { font-family:'Kunstler Script','Ballet Local','Ballet','Allura Local','Allura',cursive; font-size:clamp(84px,10vw,150px); line-height:1.05; margin:0 0 8px; letter-spacing:0; }
+.banner-content h1 { font-family:'Pinyon Script','Allura Local',cursive; font-size:clamp(84px,10vw,150px); line-height:1.05; margin:0 0 8px; letter-spacing:0; }
 .banner-meta .banner-eyebrow { font-family:'Allura Local','Allura',cursive; text-transform:none; letter-spacing:0; font-size:29px; color:white; }
 .banner-bottom { position:absolute; right:0; bottom:26px; margin:0; }
 @media(max-width:1000px) { .what-section .project-row { grid-template-columns:minmax(250px,340px) minmax(0,1fr); gap:28px; } .what-section .projects-heading > span { display:none; } .banner-bottom { position:static; } }
@@ -1281,30 +1282,35 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
 .live-market-section > .rich-content h2,.live-market-section > .rich-content h3 { font-size:28px; }
 .live-market-rows { display:grid; gap:48px; margin-block:40px; }
 .live-market-row { display:grid; grid-template-columns:minmax(0,1.08fr) minmax(0,1fr); align-items:center; gap:32px; }
-.live-market-row:nth-child(even) { grid-template-columns:minmax(0,1fr) minmax(0,1.08fr); }
-.live-market-row:nth-child(even) > img { grid-column:2; grid-row:1; }
-.live-market-row:nth-child(even) > .live-market-copy { grid-column:1; grid-row:1; }
+.live-market-row-reverse { grid-template-columns:minmax(0,1fr) minmax(0,1.08fr); }
+.live-market-row-reverse > img { grid-column:2; grid-row:1; }
+.live-market-row-reverse > .live-market-copy { grid-column:1; grid-row:1; }
 .live-market-row > img { display:block; width:100%; height:auto; aspect-ratio:1.88; object-fit:cover; border-radius:6px; margin:0; }
 .live-market-copy h3 { font-size:28px; line-height:1.25; margin:0 0 16px; }
 .live-market-copy .rich-content { text-align:left; }
 .live-market-copy .rich-content p { color:inherit; font-size:16px; line-height:1.8; margin:0 0 12px; }
 @media(max-width:680px) {
   .live-market-rows { gap:32px; margin-block:28px; }
-  .live-market-row,.live-market-row:nth-child(even) { grid-template-columns:minmax(0,1fr); gap:20px; }
-  .live-market-row:nth-child(even) > img,.live-market-row:nth-child(even) > .live-market-copy { grid-column:auto; grid-row:auto; }
+  .live-market-row,.live-market-row-reverse { grid-template-columns:minmax(0,1fr); gap:20px; }
+  .live-market-row-reverse > img,.live-market-row-reverse > .live-market-copy { grid-column:auto; grid-row:auto; }
   .live-market-copy h3 { font-size:24px; }
 }
 
 /* CraftBelt: named CMS sections, with two images and full-width text between. */
 .craftbelt-layout { display:grid; gap:36px; color:#4f5e55; font-size:17px; line-height:1.82; }
 .craftbelt-layout-row { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:36px; align-items:start; }
-.craftbelt-layout-built>.craftbelt-layout-image { grid-column:2; grid-row:1; }
-.craftbelt-layout-built>.rich-content { grid-column:1; grid-row:1; }
+.craftbelt-layout-when>.craftbelt-layout-image { grid-column:2; grid-row:1; }
+.craftbelt-layout-when>.rich-content { grid-column:1; grid-row:1; }
 .craftbelt-layout-image { display:block; width:100%; height:auto; border-radius:8px; }
 .craftbelt-layout-full,.craftbelt-layout .rich-content { min-width:0; width:100%; }
 .craftbelt-layout .rich-content>:first-child { margin-top:0; }
 @media(max-width:680px) {
   .craftbelt-layout { gap:28px; }
   .craftbelt-layout-row { grid-template-columns:minmax(0,1fr); gap:20px; }
-  .craftbelt-layout-built>.craftbelt-layout-image,.craftbelt-layout-built>.rich-content { grid-column:auto; grid-row:auto; }
+  .craftbelt-layout-when>.craftbelt-layout-image,.craftbelt-layout-when>.rich-content { grid-column:auto; grid-row:auto; }
 }
+
+/* Client review: full-width reading space and inset event labels. */
+.live-market-rows>.live-project-wide-image { display:block; width:100%; max-width:none; height:auto; margin:0; border-radius:8px; }
+.projects-page-hero h1,.projects-page-hero>p:last-child { max-width:none; width:100%; }
+.what-section .events-intro { padding-inline:clamp(20px,2.5vw,40px); }

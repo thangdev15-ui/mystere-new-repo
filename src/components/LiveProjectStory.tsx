@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import RichText, { sanitizeRichHtml } from './RichText';
 
 /** Reflow only the LIVE market-access section; the CMS remains the text source. */
@@ -33,10 +34,12 @@ export default function LiveProjectStory({ html, en, className = '' }: { html: s
   return <div className={`live-project-story ${className}`}>
     <RichText html={nodes.slice(0, start).map(node => node.outerHTML).join('')} />
     <section className="live-market-section">
-      <div className="live-market-rows">{rows.map((row) => <section className="live-market-row" key={row.image}>
+      <div className="live-market-rows">{rows.map((row, index) => <Fragment key={row.image}>
+        {index === 3 && <img className="live-project-wide-image" src="/images/moinhat/projectlive.webp" alt={en ? "LIVE Project" : "Dự án LIVE"} loading="lazy" />}
+        <section className={`live-market-row${index % 2 ? " live-market-row-reverse" : ""}`}>
         <img src={`/images/moinhat/anhtrongproject${row.image}.jpg`} alt={en ? 'LIVE project artisans and handicrafts' : 'Nghệ nhân và sản phẩm thủ công của dự án LIVE'} loading="lazy" />
         <div className="live-market-copy"><RichText html={row.copy} /></div>
-      </section>)}</div>
+      </section></Fragment>)}</div>
     </section>
     <RichText html={nodes.slice(end).map(node => node.outerHTML).join('')} />
   </div>;
