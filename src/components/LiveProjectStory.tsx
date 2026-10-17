@@ -6,7 +6,7 @@ export default function LiveProjectStory({ html, en, className = '' }: { html: s
   const doc = new DOMParser().parseFromString(sanitizeRichHtml(html), 'text/html');
   const nodes = Array.from(doc.body.children);
   const text = (node: Element) => (node.textContent ?? '').trim();
-  const start = nodes.findIndex(node => /^H[23]$/.test(node.tagName) && /From skilled hands|Từ đôi bàn tay|Từ bàn tay/i.test(text(node)));
+  const start = nodes.findIndex(node => /^H[23]$/.test(node.tagName) && /From skilled hands|Từ đôi bàn tay|Từ đôi tay|Từ bàn tay/i.test(text(node)));
   const more = nodes.findIndex((node, index) => index > start && /^H[23]$/.test(node.tagName) && /More than a project|Hơn cả một dự án/i.test(text(node)));
   if (start < 0 || more < 0) return <RichText html={html} className={className} />;
   let end = more + 1;
@@ -19,8 +19,8 @@ export default function LiveProjectStory({ html, en, className = '' }: { html: s
   // Partition the original blocks in their original order. Never excerpt,
   // synthesize headings, or repeat text: every CMS block is rendered once.
   const section = nodes.slice(start, end);
-  const production = section.findIndex(node => /^(Production|Sản xuất)[.\s:]/i.test(text(node)));
-  const market = section.findIndex(node => /^(Market linking|Liên kết thị trường)[.\s:]/i.test(text(node)));
+  const production = section.findIndex(node => /^(Production|Sản xuất|Hỗ trợ sản xuất)[.\s:]/i.test(text(node)));
+  const market = section.findIndex(node => /^(Market linking|Liên kết thị trường|Kết nối thị trường)[.\s:]/i.test(text(node)));
   const closing = more - start;
   if (production < 1 || market <= production || closing <= market) {
     return <RichText html={html} className={className} />;
