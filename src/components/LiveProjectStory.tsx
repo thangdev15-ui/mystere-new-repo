@@ -27,6 +27,7 @@ export default function LiveProjectStory({ html, en, className = '' }: { html: s
   }
   const boundaries = [0, production, market, closing, section.length];
   const images = [2, 3, 4, 1];
+  const captions: Record<number, string> = { 2: "Red Dao & H’mong", 3: "Lolo", 1: "Money Dao" };
   const rows = images.map((image, index) => ({
     image,
     copy: section.slice(boundaries[index], boundaries[index + 1]).map(cleanCopy).join(''),
@@ -37,7 +38,7 @@ export default function LiveProjectStory({ html, en, className = '' }: { html: s
       <div className="live-market-rows">{rows.map((row, index) => <Fragment key={row.image}>
         {index === 3 && <img className="live-project-wide-image" src="/images/moinhat/projectlive.webp" alt={en ? "LIVE Project" : "Dự án LIVE"} loading="lazy" />}
         <section className={`live-market-row${index % 2 ? " live-market-row-reverse" : ""}`}>
-        <img src={`/images/moinhat/anhtrongproject${row.image}.jpg`} alt={en ? 'LIVE project artisans and handicrafts' : 'Nghệ nhân và sản phẩm thủ công của dự án LIVE'} loading="lazy" />
+        <figure className="live-market-photo"><img src={`/images/moinhat/anhtrongproject${row.image}.jpg`} alt={en ? 'LIVE project artisans and handicrafts' : 'Nghệ nhân và sản phẩm thủ công của dự án LIVE'} loading="lazy" />{captions[row.image] && <figcaption>{captions[row.image]}</figcaption>}</figure>
         <div className="live-market-copy"><RichText html={row.copy} /></div>
       </section></Fragment>)}</div>
     </section>

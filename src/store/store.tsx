@@ -10,6 +10,7 @@ import {
 import { migrateCraftSheets } from "../data/craftSheets";
 import { defaultContent } from "../data/defaultContent";
 import type { L, Lang, SiteContent } from "../lib/types";
+import { storeBrowserValue } from "../lib/browserStorage";
 import { supabase } from "../lib/supabase";
 
 const CONTENT_KEY = "mystere.content.v2";
@@ -204,17 +205,17 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [remoteReady]);
 
   useEffect(() => {
-    localStorage.setItem(CONTENT_KEY, JSON.stringify(content));
+    storeBrowserValue(CONTENT_KEY, content);
   }, [content]);
   useEffect(() => {
-    localStorage.setItem(LANG_KEY, JSON.stringify(lang));
+    storeBrowserValue(LANG_KEY, lang);
     document.documentElement.lang = lang;
   }, [lang]);
   useEffect(() => {
-    localStorage.setItem(AUTH_KEY, JSON.stringify(user));
+    storeBrowserValue(AUTH_KEY, user);
   }, [user]);
   useEffect(() => {
-    localStorage.setItem(SUBS_KEY, JSON.stringify(subscribers));
+    storeBrowserValue(SUBS_KEY, subscribers);
   }, [subscribers]);
 
   const setContent = useCallback((updater: (draft: SiteContent) => SiteContent) => {
@@ -240,7 +241,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     return false;
   }, []);
   const saveContent = useCallback(async () => {
-    if (!supabase || !user) { localStorage.setItem(CONTENT_KEY, JSON.stringify(content)); return { ok: true }; }
+    if (!supabase || !user) {
+      const ok = storeBrowserValue(CONTENT_KEY, content);
+      return ok ? { ok: true } : { ok: false, error: "Browser storage is unavailable or full. Your changes remain open, but could not be saved locally." };
+    }
     const communityIds = [...content.communities.map(row => row.id), SITE_CONTENT_ROW];
     const eventIds = content.events.map(row => row.id);
     const updated_at = new Date().toISOString();
@@ -264,7 +268,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       eventIds.length ? supabase.from('events').delete().not('id', 'in', quoteIds(eventIds)) : supabase.from('events').delete().neq('id', ''),
     ]);
     if (communityDelete.error || eventDelete.error) return { ok:false, error:communityDelete.error?.message || eventDelete.error?.message || 'Saved changes, but could not remove deleted records.' };
-    localStorage.setItem(CONTENT_KEY, JSON.stringify(content));
+    storeBrowserValue(CONTENT_KEY, content);
     return { ok:true };
   }, [content, user]);
 

@@ -1283,16 +1283,16 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
 .live-market-rows { display:grid; gap:48px; margin-block:40px; }
 .live-market-row { display:grid; grid-template-columns:minmax(0,1.08fr) minmax(0,1fr); align-items:center; gap:32px; }
 .live-market-row-reverse { grid-template-columns:minmax(0,1fr) minmax(0,1.08fr); }
-.live-market-row-reverse > img { grid-column:2; grid-row:1; }
+.live-market-row-reverse > .live-market-photo { grid-column:2; grid-row:1; }
 .live-market-row-reverse > .live-market-copy { grid-column:1; grid-row:1; }
-.live-market-row > img { display:block; width:100%; height:auto; aspect-ratio:1.88; object-fit:cover; border-radius:6px; margin:0; }
+.live-market-photo > img { display:block; width:100%; height:auto; aspect-ratio:1.88; object-fit:cover; border-radius:6px; margin:0; }
 .live-market-copy h3 { font-size:28px; line-height:1.25; margin:0 0 16px; }
 .live-market-copy .rich-content { text-align:left; }
 .live-market-copy .rich-content p { color:inherit; font-size:16px; line-height:1.8; margin:0 0 12px; }
 @media(max-width:680px) {
   .live-market-rows { gap:32px; margin-block:28px; }
   .live-market-row,.live-market-row-reverse { grid-template-columns:minmax(0,1fr); gap:20px; }
-  .live-market-row-reverse > img,.live-market-row-reverse > .live-market-copy { grid-column:auto; grid-row:auto; }
+  .live-market-row-reverse > .live-market-photo,.live-market-row-reverse > .live-market-copy { grid-column:auto; grid-row:auto; }
   .live-market-copy h3 { font-size:24px; }
 }
 
@@ -1314,3 +1314,27 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
 .live-market-rows>.live-project-wide-image { display:block; width:100%; max-width:none; height:auto; margin:0; border-radius:8px; }
 .projects-page-hero h1,.projects-page-hero>p:last-child { max-width:none; width:100%; }
 .what-section .events-intro { padding-inline:clamp(20px,2.5vw,40px); }
+
+/* One real wordmark, with no generated duplicate text at mobile breakpoints. */
+.site-header .brand>.brand-label { font-size:inherit; line-height:1.1; min-width:0; }
+.site-header .brand>.brand-label::before,
+html[lang='vi'] .site-header .brand>.brand-label::before,
+html[lang='vi'] .site-header .brand>.brand-label small::before { content:none; }
+.site-header .brand-name { display:block; font:31px/1.1 Georgia,serif; white-space:nowrap; }
+.site-header .brand>.brand-label small { display:block; font-size:10px; }
+.live-market-photo { min-width:0; margin:0; }
+.live-market-photo figcaption { margin-top:10px; color:#65716c; font-size:12px; line-height:1.5; }
+@media(max-width:760px) {
+  .site-header .header-inner { min-height:72px; padding-inline:12px; gap:8px; }
+  .site-header .brand { width:auto; flex:1 1 auto; min-width:0; gap:6px; }
+  .site-header .brand img { width:32px; height:36px; flex-shrink:0; }
+  .site-header .brand-name { font-size:clamp(16px,4.5vw,23px); }
+  .site-header .brand>.brand-label small { font-size:7px; letter-spacing:2px; margin-top:5px; }
+  .site-header .header-tools { gap:4px; }
+  .site-header .language-picker>button { font-size:11px; gap:4px; min-height:40px; }
+  .site-header .search-button,.site-header .mobile-menu { min-width:30px; min-height:40px; justify-content:center; }
+  .site-footer .footer-grid { grid-template-columns:minmax(0,1fr); }
+  .site-footer .footer-grid>div:first-child { grid-column:auto; }
+  .community-hero h1 { font-size:clamp(32px,10vw,48px); overflow-wrap:anywhere; }
+  .community-hero,.community-body { min-width:0; }
+}
