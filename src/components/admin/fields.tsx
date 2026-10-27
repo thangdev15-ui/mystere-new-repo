@@ -282,6 +282,25 @@ export function ImageField({
   const fileRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
 
+  const downloadImage = async () => {
+    if (!value) return;
+    const filename = `mystere-image.${value.startsWith("data:image/webp") ? "webp" : value.startsWith("data:image/png") ? "png" : "jpg"}`;
+    try {
+      const response = await fetch(value);
+      const blob = await response.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = objectUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(objectUrl);
+    } catch {
+      window.open(value, "_blank", "noopener,noreferrer");
+    }
+  };
+
   const upload = (file: File) => {
     if (file.size > maxFileSizeMb * 1024 * 1024) {
       setError(`Please choose an image up to ${maxFileSizeMb} MB.`);
@@ -332,6 +351,15 @@ export function ImageField({
             >
               Upload image
             </button>
+            {value && (
+              <button
+                type="button"
+                onClick={() => void downloadImage()}
+                className="border border-sand px-4 py-2 text-[10px] uppercase tracking-[0.18em] text-cocoa hover:border-charcoal hover:text-charcoal"
+              >
+                Download image
+              </button>
+            )}
             {value && (
               <button
                 type="button"
