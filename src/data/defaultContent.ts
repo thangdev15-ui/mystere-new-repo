@@ -291,10 +291,9 @@ export const defaultContent: SiteContent = {
   },
 
   contact: {
-    // The client's master logo is supplied as Adobe Illustrator (logo mystere - 1.ai),
-    // which cannot be rendered by browsers. Export it as SVG/PNG and upload it here;
-    // until then the typographic wordmark is used.
-    logo: "",
+    // Approved raster logo supplied by the client. The accompanying wordmark stays
+    // in the header so the brand remains horizontal at every screen size.
+    logo: "/images/moinhat/newlogomys.jpg",
     tagline: { en: "The Vietnamese Refinement", vi: "Tinh hoa Việt Nam" },
     image: "/images/shop.jpg",
     displayName: { en: "Mystere Sai Gon", vi: "Mystere Sai Gon" },
