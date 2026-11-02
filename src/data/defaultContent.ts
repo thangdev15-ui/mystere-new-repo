@@ -119,7 +119,7 @@ export const defaultContent: SiteContent = {
         en: "Mystère Shop — 141 Dong Khoi Street",
         vi: "Mystère Shop — 141 Đồng Khởi",
       },
-      image: IMG_REDDAO_FAMILY_VN,
+      image: "/images/21126/21126.jpg",
     },
     projectsIntro: {
       title: {
@@ -293,7 +293,7 @@ export const defaultContent: SiteContent = {
   contact: {
     // Approved raster logo supplied by the client. The accompanying wordmark stays
     // in the header so the brand remains horizontal at every screen size.
-    logo: "/images/moinhat/newlogomys.jpg",
+    logo: "/images/21126/newlestlogo.jpg",
     tagline: { en: "The Vietnamese Refinement", vi: "Tinh hoa Việt Nam" },
     image: "/images/shop.jpg",
     displayName: { en: "Mystere Sai Gon", vi: "Mystere Sai Gon" },

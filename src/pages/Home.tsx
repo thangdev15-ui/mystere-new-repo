@@ -115,7 +115,7 @@ export function AboutMysterePage() {
     </section>
     <section id="where-it-began" data-scroll-part className="about-detail-section about-detail-section-alt content-width">
       <figure>
-        <Img src="/images/PreservingHeritage.png" alt={t(h.artisan.title)} ratio="aspect-[3/4]" />
+        <Img src={h.artisan.image} alt={t(h.artisan.title)} ratio="aspect-[3/4]" />
       </figure>
       <div>
         <p className="kicker">{en ? 'Where it began' : 'Khởi nguồn'}</p>
