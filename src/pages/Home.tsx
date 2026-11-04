@@ -14,10 +14,13 @@ const liveInlineGallery = [
   '/images/updated/children%20carrying%20water%20in%20Cao%20Bang%203.jpg',
 ];
 
-const projectEditorialImage = (community: Community) => {
+const projectEditorialImage = (community: Community, communityCards: Community[] = []) => {
   if (community.id === 'c1') return '/images/live-project-retouched.webp';
   if (community.id === 'c2') return '/images/craftbelt-project-retouched.webp';
-  return community.image;
+  // The five community cards are maintained by the client in CMS.  For the
+  // matching community projects, use that CMS image before the legacy project
+  // image (which still points at old event posters for a few records).
+  return communityCards.find(card => card.id === community.id)?.image || community.image;
 };
 
 function ProjectDocumentLink({ community, className = "" }: { community: Community; className?: string }) {
@@ -28,11 +31,11 @@ function ProjectDocumentLink({ community, className = "" }: { community: Communi
 }
 
 function Project({ community: c }: { community: Community }) {
-  const { t, lang } = useStore();
+  const { t, lang, content } = useStore();
   const fallbackImages: Record<string, string> = { 'red-dao':'/images/red-dao.png', 'dao-tien':'/images/project-dao-tien.jpg', nung:'/images/project-nung.jpg', hmong:'/images/project-hmong.jpg', 'black-lo-lo':'/images/project-lo-lo.jpg' };
-  const image = projectEditorialImage(c) || fallbackImages[c.slug];
+  const image = projectEditorialImage(c, content.communityCards) || fallbackImages[c.slug];
   return <article className="project-row" id={c.slug} data-scroll-part>
-    {image ? <Img src={image} alt={c.name} ratio="aspect-[3/2]" className="project-photo" /> : <div className="project-photo photo-pending"><span>{t(c.region)}</span><small>{lang === 'en' ? 'Field photograph forthcoming' : 'Ảnh thực địa sẽ được bổ sung'}</small></div>}
+    {image ? <Img src={image} alt={c.name} ratio="aspect-[3/2]" className={`project-photo project-photo--${c.id}`} /> : <div className="project-photo photo-pending"><span>{t(c.region)}</span><small>{lang === 'en' ? 'Field photograph forthcoming' : 'Ảnh thực địa sẽ được bổ sung'}</small></div>}
     <div className="project-copy"><p className="kicker">{t(c.region)}</p><h3>{c.name}</h3><p>{t(c.line)}</p>
       <div className="project-actions"><Link className="project-more" to={`/projects#${c.slug}`}>{lang === 'en' ? 'More about' : 'Xem thêm'} <span aria-hidden="true">↗</span></Link><ProjectDocumentLink community={c} /></div>
     </div>
@@ -56,7 +59,7 @@ export function CommunityPage() {
   const { content, t, lang } = useStore();
   const community = content.communities.find(item => item.slug === slug) || content.communities[0];
   const fallback: Record<string, string> = { 'red-dao':'/images/red-dao.png', 'dao-tien':'/images/project-dao-tien.jpg', nung:'/images/project-nung.jpg', hmong:'/images/project-hmong.jpg', 'black-lo-lo':'/images/project-lo-lo.jpg' };
-  const image = community.image || fallback[community.slug];
+  const image = projectEditorialImage(community, content.communityCards) || fallback[community.slug];
   const en = lang === 'en';
   return <article className="community-page">
     <header className="community-hero content-width"><div><p className="kicker">{t(community.region)}</p><p className="community-index">{en ? 'Our project' : 'Dự án cộng đồng'}</p><h1>{community.name}</h1><p className="community-strapline">{t(community.title)}</p></div><figure><Img src={image} alt={community.name} ratio="aspect-[4/3]" priority /></figure></header>
@@ -77,7 +80,7 @@ export function AllProjectsPage() {
     </header>
     <div className="projects-page-list content-width">
       {communities.map(community => {
-        const image = projectEditorialImage(community) || fallback[community.slug];
+        const image = projectEditorialImage(community, content.communityCards) || fallback[community.slug];
         return <section key={community.id} id={community.slug} data-scroll-part className={`project-detail-section project-${community.id}`}>
           <div className="project-detail-media">
             <Img src={image} alt={community.name} ratio="aspect-[4/3]" priority={community.slug === 'red-dao'} />

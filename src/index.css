@@ -1338,3 +1338,49 @@ html[lang='vi'] .site-header .brand>.brand-label small::before { content:none; }
   .community-hero h1 { font-size:clamp(32px,10vw,48px); overflow-wrap:anywhere; }
   .community-hero,.community-body { min-width:0; }
 }
+
+/* Mobile homepage: keep the opening as one full-bleed hero.  The supplied
+   image is wide, so on a phone we crop its left/right edges rather than adding
+   empty bands above or below it. */
+@media(max-width:680px) {
+  .home-banner {
+    display:flex;
+    min-height:620px;
+    height:calc(100svh - 72px);
+    overflow:hidden;
+    background:#211f1c;
+  }
+  .home-banner .banner-image {
+    position:absolute;
+    inset:0;
+    width:auto;
+    height:auto;
+    aspect-ratio:auto;
+    transform:none;
+  }
+  .home-banner .banner-image img { object-fit:cover; object-position:center; }
+  .home-banner .banner-shade {
+    position:absolute;
+    inset:0;
+    height:auto;
+    background:linear-gradient(180deg,rgba(14,20,17,.12),rgba(14,20,17,.18) 35%,rgba(14,20,17,.82));
+    pointer-events:none;
+  }
+  .home-banner .banner-content {
+    position:relative;
+    width:calc(100% - 40px);
+    padding:0 0 32px;
+  }
+  .home-banner .banner-content h1 {
+    font-size:clamp(54px,16vw,76px);
+    line-height:.94;
+    white-space:nowrap;
+    text-wrap:initial;
+  }
+  .home-banner .banner-meta { gap:10px 14px; }
+  .home-banner .banner-bottom { position:static; width:100%; margin-top:24px; }
+  .home-banner .banner-cta { width:100%; justify-content:space-between; padding:17px 20px; }
+
+  /* All five community photographs use one consistent mobile frame. */
+  .what-section .project-photo { height:auto; aspect-ratio:3 / 2; object-position:center; }
+}
