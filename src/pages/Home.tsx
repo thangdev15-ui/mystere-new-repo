@@ -199,7 +199,7 @@ export default function Home() {
   return <div className="new-home" ref={pageRef}>
     <div className="reading-progress" aria-hidden="true" />
     <section data-scroll-part className="home-banner" aria-label={en ? 'Welcome to Mystère Shop' : 'Chào mừng đến Mystère Shop'}>
-      <div className="banner-image"><HeroImage src={h.heroImage} priority /></div>
+      <div className="banner-image"><HeroImage src={h.heroImage} mobileSrc="/images/21126/bg-mobile.png" priority /></div>
       <div className="banner-shade" />
       <div className="content-width banner-content">
         <h1>{en ? 'Mystère Shop' : 'Shop Huyền Bí'}</h1>

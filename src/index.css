@@ -1358,9 +1358,7 @@ html[lang='vi'] .site-header .brand>.brand-label small::before { content:none; }
     aspect-ratio:auto;
     transform:none;
   }
-  /* Preserve the complete supplied scene on the tall mobile hero.  A cover
-     crop hides the people at both edges; stretching only this decorative
-     background keeps the full composition visible with no empty band. */
+  /* A separate portrait composition is supplied for this tall mobile hero. */
   .home-banner .banner-image img { object-fit:fill; object-position:center; }
   .home-banner .banner-shade {
     position:absolute;

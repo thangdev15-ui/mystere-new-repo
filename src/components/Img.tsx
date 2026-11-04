@@ -24,11 +24,14 @@ interface ImgProps {
  */
 export function HeroImage({
   src,
+  mobileSrc,
   alt = "",
   priority = false,
   label,
 }: {
   src: string;
+  /** Portrait composition supplied specifically for narrow screens. */
+  mobileSrc?: string;
   alt?: string;
   priority?: boolean;
   label?: string;
@@ -41,7 +44,7 @@ export function HeroImage({
       </div>
     );
   }
-  return (
+  const image = (
     <img
       src={src}
       alt={alt}
@@ -51,6 +54,7 @@ export function HeroImage({
       className="h-full w-full object-cover"
     />
   );
+  return mobileSrc ? <picture className="block h-full w-full"><source media="(max-width: 680px)" srcSet={mobileSrc} />{image}</picture> : image;
 }
 
 /**
