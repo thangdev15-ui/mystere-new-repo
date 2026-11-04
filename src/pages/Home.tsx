@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type CSSProperties } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useStore } from '../store/store';
 import Img, { HeroImage } from '../components/Img';
@@ -35,7 +35,7 @@ function Project({ community: c }: { community: Community }) {
   const fallbackImages: Record<string, string> = { 'red-dao':'/images/red-dao.png', 'dao-tien':'/images/project-dao-tien.jpg', nung:'/images/project-nung.jpg', hmong:'/images/project-hmong.jpg', 'black-lo-lo':'/images/project-lo-lo.jpg' };
   const image = projectEditorialImage(c, content.communityCards) || fallbackImages[c.slug];
   return <article className="project-row" id={c.slug} data-scroll-part>
-    {image ? <Img src={image} alt={c.name} ratio="aspect-[3/2]" className={`project-photo project-photo--${c.id}`} /> : <div className="project-photo photo-pending"><span>{t(c.region)}</span><small>{lang === 'en' ? 'Field photograph forthcoming' : 'Ảnh thực địa sẽ được bổ sung'}</small></div>}
+    {image ? <figure className={`project-photo-frame project-photo-frame--${c.id}`} style={{ '--project-photo': `url("${image}")` } as CSSProperties}><Img src={image} alt={c.name} ratio="" className="project-photo" /></figure> : <div className="project-photo photo-pending"><span>{t(c.region)}</span><small>{lang === 'en' ? 'Field photograph forthcoming' : 'Ảnh thực địa sẽ được bổ sung'}</small></div>}
     <div className="project-copy"><p className="kicker">{t(c.region)}</p><h3>{c.name}</h3><p>{t(c.line)}</p>
       <div className="project-actions"><Link className="project-more" to={`/projects#${c.slug}`}>{lang === 'en' ? 'More about' : 'Xem thêm'} <span aria-hidden="true">↗</span></Link><ProjectDocumentLink community={c} /></div>
     </div>

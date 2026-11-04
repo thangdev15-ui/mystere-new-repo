@@ -1369,11 +1369,11 @@ html[lang='vi'] .site-header .brand>.brand-label small::before { content:none; }
   }
   .home-banner .banner-content {
     position:relative;
-    width:calc(100% - 40px);
-    padding:0 0 32px;
+    width:calc(100% - 32px);
+    padding:0 0 30px;
   }
   .home-banner .banner-content h1 {
-    font-size:clamp(54px,16vw,76px);
+    font-size:clamp(60px,18vw,82px);
     line-height:.94;
     white-space:nowrap;
     text-wrap:initial;
@@ -1383,5 +1383,39 @@ html[lang='vi'] .site-header .brand>.brand-label small::before { content:none; }
   .home-banner .banner-cta { width:100%; justify-content:space-between; padding:17px 20px; }
 
   /* All five community photographs use one consistent mobile frame. */
-  .what-section .project-photo { height:auto; aspect-ratio:3 / 2; object-position:center; }
+  .what-section .project-photo-frame { height:auto; aspect-ratio:3 / 2; }
 }
+
+/* Each community keeps the same landscape-sized card. Portrait source photos
+   are shown in full over a soft version of themselves, so faces and headwear
+   are never cropped on desktop or mobile. */
+.what-section .project-photo-frame {
+  position:relative;
+  width:100%;
+  height:225px;
+  margin:0;
+  overflow:hidden;
+  border-radius:12px;
+  background:#233129 var(--project-photo) center / cover no-repeat;
+}
+.what-section .project-photo-frame::before {
+  content:"";
+  position:absolute;
+  inset:-18px;
+  background:inherit;
+  filter:blur(16px) brightness(.72);
+  transform:scale(1.08);
+}
+.what-section .project-photo-frame .project-photo {
+  position:relative;
+  z-index:1;
+  display:block;
+  width:100%;
+  height:100%;
+  max-width:100%;
+  aspect-ratio:auto;
+  object-fit:contain;
+  object-position:center;
+  border-radius:0;
+}
+@media(max-width:1000px) { .what-section .project-photo-frame { height:auto; aspect-ratio:3 / 2; } }
