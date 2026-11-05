@@ -1370,9 +1370,9 @@ html[lang='vi'] .site-header .brand>.brand-label small::before { content:none; }
   .home-banner .banner-content {
     position:relative;
     width:calc(100% - 32px);
-    /* Match the reference: CTA floats above a visible strip of grass rather
-       than being pressed against the bottom edge of the hero. */
-    padding:0 0 clamp(84px,13svh,132px);
+    /* Keep the copy on the grass below the group, while retaining a calm
+       breathing space beneath the CTA on short and tall phone screens. */
+    padding:0 0 max(36px, env(safe-area-inset-bottom));
   }
   .home-banner .banner-content h1 {
     font-size:clamp(60px,18vw,82px);
