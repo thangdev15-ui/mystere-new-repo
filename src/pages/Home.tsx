@@ -23,6 +23,15 @@ const projectEditorialImage = (community: Community, communityCards: Community[]
   return communityCards.find(card => card.id === community.id)?.image || community.image;
 };
 
+// Collaboration is the two project programmes; the five named communities are
+// presented separately in the community section below.
+const isCollaboration = (community: Community) => community.id === 'c1' || community.id === 'c2';
+const collaborationLabel = (community: Community, en: boolean) => {
+  if (community.id === 'c1') return en ? 'LIVE Project' : 'Dự án LIVE';
+  if (community.id === 'c2') return en ? 'Craft Belt Houses' : 'Nhà Craft Belt';
+  return community.name;
+};
+
 function ProjectDocumentLink({ community, className = "" }: { community: Community; className?: string }) {
   const { t, lang } = useStore();
   if (!community.documentUrl) return null;
@@ -36,7 +45,7 @@ function Project({ community: c }: { community: Community }) {
   const image = projectEditorialImage(c, content.communityCards) || fallbackImages[c.slug];
   return <article className="project-row" id={c.slug} data-scroll-part>
     {image ? <figure className={`project-photo-frame project-photo-frame--${c.id}`} style={{ '--project-photo': `url("${image}")` } as CSSProperties}><Img src={image} alt={c.name} ratio="" className="project-photo" /></figure> : <div className="project-photo photo-pending"><span>{t(c.region)}</span><small>{lang === 'en' ? 'Field photograph forthcoming' : 'Ảnh thực địa sẽ được bổ sung'}</small></div>}
-    <div className="project-copy"><p className="kicker">{t(c.region)}</p><h3>{c.name}</h3><p>{t(c.line)}</p>
+    <div className="project-copy"><p className="kicker">{t(c.region)}</p><h3>{collaborationLabel(c, lang === 'en')}</h3><p>{t(c.line)}</p>
       <div className="project-actions"><Link className="project-more" to={`/projects#${c.slug}`}>{lang === 'en' ? 'More about' : 'Xem thêm'} <span aria-hidden="true">↗</span></Link><ProjectDocumentLink community={c} /></div>
     </div>
   </article>;
@@ -62,7 +71,7 @@ export function CommunityPage() {
   const image = projectEditorialImage(community, content.communityCards) || fallback[community.slug];
   const en = lang === 'en';
   return <article className="community-page">
-    <header className="community-hero content-width"><div><p className="kicker">{t(community.region)}</p><p className="community-index">{en ? 'Our project' : 'Dự án cộng đồng'}</p><h1>{community.name}</h1><p className="community-strapline">{t(community.title)}</p></div><figure><Img src={image} alt={community.name} ratio="aspect-[4/3]" priority /></figure></header>
+    <header className="community-hero content-width"><div><p className="kicker">{t(community.region)}</p><p className="community-index">{en ? 'Our project' : 'Dự án cộng đồng'}</p><h1>{collaborationLabel(community, en)}</h1><p className="community-strapline">{t(community.title)}</p></div><figure><Img src={image} alt={collaborationLabel(community, en)} ratio="aspect-[4/3]" priority /></figure></header>
     <div className="community-body content-width"><div className="community-story"><p className="kicker">{en ? 'The story' : 'Câu chuyện'}</p><h2>{t(community.title)}</h2>{community.id === 'c1' ? <LiveProjectStory className="community-prose" html={t(community.story)} en={en} /> : community.id === 'c2' ? <CraftbeltStory html={t(community.story)} images={community.gallery?.filter(Boolean) ?? []} /> : <RichText className="community-prose" html={t(community.story)} />}</div><aside className="community-aside"><div><p className="kicker">{en ? 'The craft' : 'Nghề thủ công'}</p><p>{t(community.craft)}</p></div><div className="community-reference-actions"><ProjectDocumentLink community={community} /><Link to="/#contact" className="contact-project-link">{en ? 'Contact us for more information' : 'Liên hệ để biết thêm thông tin'} <span aria-hidden="true">→</span></Link></div></aside>{!!community.gallery?.filter(Boolean).slice(community.id === 'c2' ? 2 : 0).length && <div className="community-gallery">{community.gallery.filter(Boolean).slice(community.id === 'c2' ? 2 : 0).map((src,index) => <Img key={`${src}-${index}`} src={src} alt={`${community.name} ${index + 2}`} ratio="aspect-[4/3]" />)}</div>}<Link to="/#what-we-do" className="back-link">← {en ? 'Back to What we do' : 'Quay lại Chúng tôi làm gì'}</Link></div>
   </article>;
 }
@@ -71,7 +80,7 @@ export function AllProjectsPage() {
   const { content, t, lang } = useStore();
   const en = lang === 'en';
   const h = content.home;
-  const communities = content.communities.filter(item => item.published);
+  const communities = content.communities.filter(item => item.published && isCollaboration(item));
   const fallback: Record<string, string> = { 'red-dao':'/images/red-dao.png', 'dao-tien':'/images/project-dao-tien.jpg', nung:'/images/project-nung.jpg', hmong:'/images/project-hmong.jpg', 'black-lo-lo':'/images/project-lo-lo.jpg' };
   return <article className="projects-page">
     <header className="projects-page-hero content-width">
@@ -85,7 +94,7 @@ export function AllProjectsPage() {
           <div className="project-detail-media">
             <Img src={image} alt={community.name} ratio="aspect-[4/3]" priority={community.slug === 'red-dao'} />
           </div>
-          <div className="project-detail-copy"><p className="kicker">{t(community.region)}</p><h2>{community.name}</h2></div>
+          <div className="project-detail-copy"><p className="kicker">{t(community.region)}</p><h2>{collaborationLabel(community, en)}</h2></div>
           {community.id === 'c1' && <p className="project-partnership-note">{en ? 'Mystère Shop accompanies the LIVE Project, supporting its work with ethnic minority artisan communities in Cao Bằng.' : 'Mystère Shop đồng hành cùng chương trình LIVE, hỗ trợ các hoạt động cùng cộng đồng nghệ nhân dân tộc thiểu số tại Cao Bằng.'}</p>}
           {community.id === 'c1' && <div className="project-inline-gallery" aria-label={en ? 'LIVE Project photographs' : 'Ảnh Dự án LIVE'}>{liveInlineGallery.map((src, index) => <Img key={src} src={src} alt={`${community.name} ${index + 1}`} ratio="aspect-[3/2]" />)}</div>}
           <div className="project-detail-prose"><p className="kicker">{en ? 'Project story' : 'Câu chuyện dự án'}</p>{community.id === 'c1' ? <LiveProjectStory html={t(community.story)} en={en} /> : community.id === 'c2' ? <CraftbeltStory html={t(community.story)} images={community.gallery?.filter(Boolean) ?? []} /> : <RichText html={t(community.story)} />}</div>
@@ -213,7 +222,7 @@ export default function Home() {
       <div className="section-top content-width"><h2 id="who-heading" className="who-heading">{en ? 'WHO WE ARE' : 'VỀ CHÚNG TÔI'}</h2><span>{en ? 'Art and Craft' : 'Nghệ thuật và thủ công'}</span></div>
       <div id="our-mission" className="mission-grid content-width"><div className="mission-copy"><p className="kicker">{en ? 'Our story' : 'Câu chuyện của chúng tôi'}</p><h3>{t(h.intro.title)}</h3><div className="red-rule"/>{t(h.intro.body).split('\n\n').map((paragraph,index) => <p key={index}>{paragraph}</p>)}<div className="mission-actions"><Link to="/about-mystere" className="project-more">{en ? 'About Mystère' : 'Về Huyền Bí'} <span aria-hidden="true">→</span></Link><Link to="/craft" className="project-more">{en ? 'Our Product' : 'Sản phẩm'} <span aria-hidden="true">→</span></Link></div></div><figure className="mission-image"><Img src="/images/our-story-retouched.webp" alt={en ? 'Ethnic minority artisans standing at the Mystère Shop in District 1, Ho Chi Minh City' : 'Các nghệ nhân dân tộc tại Shop Huyền Bí, Quận 1, Thành phố Hồ Chí Minh'} ratio="aspect-[4/5]" priority/><figcaption><span>{en ? 'Ethnic minority artisans standing at the Mystère Shop in District 1, Ho Chi Minh City.' : 'Các nghệ nhân dân tộc tại Shop Huyền Bí, Quận 1, Thành phố Hồ Chí Minh.'}</span><span>{en ? 'Since 2001' : 'Từ năm 2001'}</span></figcaption></figure></div>
     </section>
-    <section id="what-we-do" data-scroll-part className="what-section"><div className="content-width"><div className="section-top"><p className="section-label">{en ? 'What we do' : 'Chúng tôi làm gì'}</p><span>{en ? 'Projects · Communities · Events' : 'Dự án · Cộng đồng · Sự kiện'}</span></div><div className="projects-intro"><h2>{t(h.projectsIntro.title)}</h2><p>{projectsIntroBody}</p></div><div id="projects" className="projects-heading"><h2>{en ? 'Collaboration' : 'Hợp tác'}</h2></div><div className="project-list">{content.communities.filter(c => c.published).map(c => <Project key={c.id} community={c}/>)}</div><div id="communities" className="projects-heading community-work-heading"><h2>{en ? 'Communities we work with' : 'Cộng đồng chúng tôi đồng hành'}</h2><span>{en ? 'Five communities, living crafts' : 'Năm cộng đồng, những nghề sống động'}</span></div><div className="community-work-grid">{communityCards.filter(c => c.published).map(c => <article key={c.id}><figure><Img src={c.image} alt={c.name} ratio="aspect-[3/4]" /></figure><div><h3>{lang === 'en' ? ({'Dao Tiền':'Money Dao','Nùng':'Nung',"H'Mông":"H'Mong",'Black Lô Lô':'Black Lolo'} as Record<string,string>)[c.name] || c.name : c.name}</h3><p>{t(c.craft)}</p></div></article>)}</div><Events /></div>
+    <section id="what-we-do" data-scroll-part className="what-section"><div className="content-width"><div className="section-top"><p className="section-label">{en ? 'What we do' : 'Chúng tôi làm gì'}</p><span>{en ? 'Projects · Communities · Events' : 'Dự án · Cộng đồng · Sự kiện'}</span></div><div className="projects-intro"><h2>{t(h.projectsIntro.title)}</h2><p>{projectsIntroBody}</p></div><div id="projects" className="projects-heading"><h2>{en ? 'Collaboration' : 'Hợp tác'}</h2></div><div className="project-list">{content.communities.filter(c => c.published && isCollaboration(c)).map(c => <Project key={c.id} community={c}/>)}</div><div id="communities" className="projects-heading community-work-heading"><h2>{en ? 'Communities we work with' : 'Cộng đồng chúng tôi đồng hành'}</h2><span>{en ? 'Five communities, living crafts' : 'Năm cộng đồng, những nghề sống động'}</span></div><div className="community-work-grid">{communityCards.filter(c => c.published).map(c => <article key={c.id}><figure><Img src={c.image} alt={c.name} ratio="aspect-[3/4]" /></figure><div><h3>{lang === 'en' ? ({'Dao Tiền':'Money Dao','Nùng':'Nung',"H'Mông":"H'Mong",'Black Lô Lô':'Black Lolo'} as Record<string,string>)[c.name] || c.name : c.name}</h3><p>{t(c.craft)}</p></div></article>)}</div><Events /></div>
     </section>
       <section className="thread-section" id="the-thread" data-scroll-part><div className="content-width thread-grid"><div><p className="kicker">{en ? 'Visit us' : 'Ghé thăm chúng tôi'}</p><h2>{t(h.thread.title)}</h2><p>{t(h.thread.body)}</p><Link to="/#contact" className="white-link">{en ? 'Visit us' : 'Ghé thăm cửa hàng'} <span aria-hidden="true">→</span></Link></div><figure><Img src={h.thread.image} alt={en ? 'Craft and everyday objects inside Mystère Shop' : 'Những món đồ thủ công trong cửa hàng Mystère'} ratio="aspect-[4/3]"/></figure></div>
     </section>
