@@ -21,11 +21,12 @@ export default function LiveProjectStory({ html, en, className = '' }: { html: s
   const section = nodes.slice(start, end);
   const production = section.findIndex(node => /^(Production|Sản xuất|Hỗ trợ sản xuất)[.\s:]/i.test(text(node)));
   const market = section.findIndex(node => /^(Market linking|Liên kết thị trường|Kết nối thị trường)[.\s:]/i.test(text(node)));
+  const common = section.findIndex((node, index) => index > market && /^H[23]$/.test(node.tagName) && /Common houses|Những "ngôi nhà chung"/i.test(text(node)));
   const closing = more - start;
-  if (production < 1 || market <= production || closing <= market) {
+  if (production < 1 || market <= production || common <= market || closing <= common) {
     return <RichText html={html} className={className} />;
   }
-  const boundaries = [0, production, market, closing, section.length];
+  const boundaries = [0, production, market, common, section.length];
   const images = [2, 3, 4, 1];
   const captions: Record<number, string> = { 2: "Red Dao & H’mong", 3: "Lolo", 1: "Money Dao" };
   const rows = images.map((image, index) => ({

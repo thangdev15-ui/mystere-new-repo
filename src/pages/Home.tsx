@@ -99,7 +99,6 @@ export function AllProjectsPage() {
           {community.id === 'c1' && <div className="project-inline-gallery" aria-label={en ? 'LIVE Project photographs' : 'Ảnh Dự án LIVE'}>{liveInlineGallery.map((src, index) => <Img key={src} src={src} alt={`${community.name} ${index + 1}`} ratio="aspect-[3/2]" />)}</div>}
           <div className="project-detail-prose"><p className="kicker">{en ? 'Project story' : 'Câu chuyện dự án'}</p>{community.id === 'c1' ? <LiveProjectStory html={t(community.story)} en={en} /> : community.id === 'c2' ? <CraftbeltStory html={t(community.story)} images={community.gallery?.filter(Boolean) ?? []} /> : <RichText html={t(community.story)} />}</div>
           <aside className="project-detail-aside"><div><p className="kicker">{en ? 'The craft' : 'Nghề thủ công'}</p><p>{t(community.craft)}</p></div><div className="community-reference-actions"><ProjectDocumentLink community={community} /><Link to="/#contact" className="contact-project-link">{en ? 'Contact us for more information' : 'Liên hệ để biết thêm thông tin'} <span aria-hidden="true">→</span></Link></div></aside>
-          {!!community.gallery?.filter(Boolean).slice(community.id === 'c2' ? 2 : 0).length && <div className="project-detail-gallery">{community.gallery.filter(Boolean).slice(community.id === 'c2' ? 2 : 0).map((src,index) => <Img key={`${src}-${index}`} src={src} alt={`${community.name} ${index + 2}`} ratio="aspect-[4/3]" />)}</div>}
         </section>;
       })}
     </div>
