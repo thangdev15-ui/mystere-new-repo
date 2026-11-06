@@ -201,10 +201,7 @@ export default function Home() {
   const h = content.home;
   const communityCards = content.communityCards ?? content.communities;
   const en = lang === 'en';
-  const approvedProjectsIntro = en
-    ? 'Mystère Shop has traded the finest handmade jewellery and craft of Vietnam’s hill-tribe artisans since 2001. The relationship behind every piece runs deeper than a transaction. It began with a chance meeting, grew through fifteen years of trust, and continues today across five communities in Cao Bằng, Hà Giang and Sa Pa.'
-    : 'Từ năm 2001, Mystère Shop đã giới thiệu những sản phẩm trang sức và thủ công tinh xảo nhất của các nghệ nhân vùng cao Việt Nam. Mối quan hệ phía sau mỗi sản phẩm sâu sắc hơn một giao dịch. Mối duyên ấy bắt đầu từ một cuộc gặp tình cờ, lớn lên qua mười lăm năm tin cậy và tiếp tục đến hôm nay cùng năm cộng đồng tại Cao Bằng, Hà Giang và Sa Pa.';
-  const projectsIntroBody = h.projectsIntro.body.en.startsWith('Mystère Shop has been trading the finest handmade') ? approvedProjectsIntro : t(h.projectsIntro.body);
+  const projectsIntroBody = t(h.projectsIntro.body);
   return <div className="new-home" ref={pageRef}>
     <div className="reading-progress" aria-hidden="true" />
     <section data-scroll-part className="home-banner" aria-label={en ? 'Welcome to Mystère Shop' : 'Chào mừng đến Mystère Shop'}>
