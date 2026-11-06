@@ -132,7 +132,7 @@ export function AboutMysterePage() {
       <div>
         <p className="kicker">{en ? 'Where it began' : 'Khởi nguồn'}</p>
         <h2>{t(h.artisan.title)}</h2>
-        <p>{t(h.artisan.body)}</p>
+        {t(h.artisan.body).split('\n\n').map((paragraph, index) => <p key={index}>{paragraph}</p>)}
         <Link to="/#who-we-are" className="project-more">← {en ? 'Back to Who we are' : 'Quay lại Về chúng tôi'}</Link>
       </div>
     </section>
