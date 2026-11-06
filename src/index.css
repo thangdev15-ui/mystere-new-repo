@@ -1442,3 +1442,13 @@ html[lang='vi'] .site-header .brand>.brand-label small::before { content:none; }
 .what-section .event-strip figure img { object-fit:cover; object-position:center 22%; }
 .what-section .event-strip:nth-child(2) figure img { object-position:center 16%; }
 .what-section .event-strip:nth-child(3) figure img { object-position:center 33%; }
+
+/* Keep the mobile banner copy entirely in the grass below the group. */
+@media(max-width:680px) {
+  .home-banner .banner-content { padding-bottom:max(24px, env(safe-area-inset-bottom)); }
+  .home-banner .banner-content h1 { font-size:clamp(52px, 13vw, 64px); line-height:.9; }
+  .home-banner .banner-meta { gap:6px 12px; }
+  .home-banner .banner-meta .banner-eyebrow { font-size:19px; line-height:1; }
+  .home-banner .banner-bottom { margin-top:16px; }
+  .home-banner .banner-cta { padding:14px 18px; }
+}
