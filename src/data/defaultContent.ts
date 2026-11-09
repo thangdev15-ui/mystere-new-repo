@@ -396,7 +396,7 @@ export const defaultContent: SiteContent = {
         en: "Hemp, grown and spun by hand, becomes fabric strong enough to last generations. The H'Mông weave and embroider it with patterns that carry meaning — a language without words, stitched instead of spoken. We're still learning to read it.",
         vi: "Cây lanh, được trồng và xe sợi bằng tay, trở thành thứ vải bền đến mức dùng được qua nhiều thế hệ. Người H'Mông dệt và thêu lên đó những hoa văn mang ý nghĩa — một thứ ngôn ngữ không lời, được khâu lại thay vì nói ra. Chúng tôi vẫn đang học cách đọc nó.",
       },
-      craft: { en: "Hemp, weaving and embroidery.", vi: "Cây lanh, dệt và thêu." },
+      craft: { en: "Beeswax batik on cotton.", vi: "Vẽ sáp ong trên vải cotton." },
       image: "/images/H'Mong.jpg",
       published: true,
     },
