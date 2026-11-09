@@ -676,7 +676,7 @@ html[lang='vi'] .brand > span small::before { content:'Mystère Shop'; font-size
 .what-section .event-grid { display:block; margin-top:0; }
 .what-section .event-card.event-strip { display:grid; grid-template-columns:minmax(240px,30%) minmax(0,1fr); min-height:240px; margin-bottom:14px; padding:0; overflow:hidden; background:white; }
 .what-section .event-strip figure { height:240px; min-height:0; align-self:stretch; margin:0; overflow:hidden; background:#fff; }
-.what-section .event-strip figure img { display:block; width:100%; height:100%; object-fit:contain; object-position:center; background:#fff; }
+.what-section .event-strip figure img { display:block; width:100%; height:100%; object-fit:cover; object-position:center top; background:#fff; }
 .what-section .event-strip .event-card-copy { position:static; display:grid; grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr); grid-template-rows:1fr auto; gap:24px 18px; align-items:end; padding:34px 42px 32px; }
 .what-section .event-summary { grid-column:1/-1; align-self:start; max-width:720px; }
 .what-section .event-summary .kicker { position:static; margin:0 0 17px; color:#6c796f; }

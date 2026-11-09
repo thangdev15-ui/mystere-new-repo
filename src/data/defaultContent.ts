@@ -304,7 +304,7 @@ export const defaultContent: SiteContent = {
     mapsUrl: "https://www.google.com/maps/search/?api=1&query=141+Dong+Khoi+Street+Ho+Chi+Minh+City",
     instagram: "https://instagram.com/",
     facebook: "https://facebook.com/",
-    email: "hello@mystere-shop.vn",
+    email: "mystereshop@gmail.com",
     note: {
       en: "Instagram and Facebook profiles, and the shop photograph, are still to be supplied by Mystère — they can be updated in the Admin dashboard.",
       vi: "Trang Instagram và Facebook, cùng ảnh chụp cửa hiệu, sẽ do Mystère cung cấp — có thể cập nhật trong trang Quản trị.",

@@ -34,6 +34,10 @@ type SectionKey =
   | "newsletter"
   | "settings";
 
+// This is a deliberate confirmation gate for publishing CMS changes. It is a
+// workflow safeguard (not a substitute for Supabase authentication).
+const ADMIN_SAVE_CONFIRMATION_CODE = "MS-LOCK-6Q9V-2026";
+
 const SECTIONS: { key: SectionKey; label: string }[] = [
   { key: "dashboard", label: "Dashboard" },
   { key: "home", label: "NEW · Page content" },
@@ -103,6 +107,9 @@ export default function Admin() {
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
+  const [confirmingSave, setConfirmingSave] = useState(false);
+  const [confirmationCode, setConfirmationCode] = useState("");
+  const [confirmationError, setConfirmationError] = useState("");
   const [connection, setConnection] = useState<'idle' | 'checking' | 'connected' | 'error'>(isSupabaseConfigured ? 'checking' : 'idle');
   const checkConnection = async () => {
     if (!supabase) { setConnection('idle'); return; }
@@ -125,6 +132,19 @@ export default function Admin() {
     (window as any).__mystereSaveTimer = window.setTimeout(() => setSaved(false), 1200);
   };
   const save = async () => { setSaving(true); setSaveError(""); const result = await saveContent(); setSaving(false); setDirty(!result.ok); setSaved(result.ok); if (!result.ok) setSaveError(result.error || "Save failed. Please try again."); window.setTimeout(() => setSaved(false), 1800); };
+  const requestSave = () => {
+    setConfirmationCode("");
+    setConfirmationError("");
+    setConfirmingSave(true);
+  };
+  const confirmSave = async () => {
+    if (confirmationCode.trim() !== ADMIN_SAVE_CONFIRMATION_CODE) {
+      setConfirmationError("Confirmation code is incorrect.");
+      return;
+    }
+    setConfirmingSave(false);
+    await save();
+  };
 
   const move = <T,>(arr: T[], i: number, dir: -1 | 1) => {
     const j = i + dir;
@@ -165,7 +185,7 @@ export default function Admin() {
             <span className={`${dirty || saveError ? "text-rust" : "text-moss"}`} title={saveError}>
               {saving ? 'Saving…' : saveError ? 'Save failed' : dirty ? 'Unsaved changes' : saved ? 'Saved just now' : 'All changes saved'}
             </span>
-            <button onClick={() => void save()} disabled={!dirty || saving} className="border border-charcoal px-3 py-2 text-[10px] uppercase tracking-[0.16em] disabled:cursor-not-allowed disabled:opacity-40">Save changes</button>
+            <button onClick={requestSave} disabled={!dirty || saving} className="border border-charcoal px-3 py-2 text-[10px] uppercase tracking-[0.16em] disabled:cursor-not-allowed disabled:opacity-40">Save changes</button>
             <Link to="/" className="text-cocoa/70 hover:text-charcoal">
               View site
             </Link>
@@ -175,6 +195,22 @@ export default function Admin() {
           </div>
         </div>
       </header>
+
+      {confirmingSave && <div className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal/55 px-5" role="dialog" aria-modal="true" aria-labelledby="save-confirmation-title">
+        <form className="w-full max-w-md border border-sand bg-ivory p-7 shadow-2xl" onSubmit={(event) => { event.preventDefault(); void confirmSave(); }}>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-rust">Publish confirmation</p>
+          <h2 id="save-confirmation-title" className="mt-3 font-serif text-3xl text-charcoal">Confirm before saving</h2>
+          <p className="mt-3 text-sm leading-6 text-cocoa/75">Enter the confirmation code before publishing any CMS change. This protects customer-authored content from accidental updates.</p>
+          <label className="mt-6 block text-[10px] uppercase tracking-[0.16em] text-cocoa/70">Confirmation code
+            <input autoFocus value={confirmationCode} onChange={(event) => { setConfirmationCode(event.target.value); setConfirmationError(""); }} className="mt-2 w-full border border-sand bg-white px-3 py-3 text-sm tracking-[0.08em] outline-none focus:border-rust" />
+          </label>
+          {confirmationError && <p className="mt-2 text-sm text-rust" role="alert">{confirmationError}</p>}
+          <div className="mt-7 flex justify-end gap-3">
+            <button type="button" onClick={() => setConfirmingSave(false)} className="border border-sand px-4 py-2 text-[10px] uppercase tracking-[0.16em]">Cancel</button>
+            <button type="submit" className="bg-rust px-4 py-2 text-[10px] uppercase tracking-[0.16em] text-white">Confirm & save</button>
+          </div>
+        </form>
+      </div>}
 
       <div className="admin-workspace mx-auto flex max-w-[1500px] flex-col gap-10 px-6 py-10 lg:flex-row">
         <aside className="admin-sidebar lg:w-52 lg:shrink-0">
