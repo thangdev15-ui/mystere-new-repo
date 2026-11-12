@@ -1443,6 +1443,16 @@ html[lang='vi'] .site-header .brand>.brand-label small::before { content:none; }
 .what-section .event-strip:nth-child(2) figure img { object-position:center 16%; }
 .what-section .event-strip:nth-child(3) figure img { object-position:center 33%; }
 
+/* The first event now uses a landscape photograph rather than a poster.
+   Match its native ratio so the lower-right photographer credit remains visible. */
+.what-section .event-strip:first-child { min-height:0; }
+.what-section .event-strip:first-child figure {
+  height:auto;
+  aspect-ratio:1450 / 1085;
+  align-self:start;
+}
+.what-section .event-strip:first-child figure img { object-position:center; }
+
 /* Keep the mobile banner copy entirely in the grass below the group. */
 @media(max-width:680px) {
   .home-banner .banner-content { padding-bottom:max(24px, env(safe-area-inset-bottom)); }
