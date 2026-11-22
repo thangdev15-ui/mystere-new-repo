@@ -6,3 +6,5 @@ dist/
 .vercel/
 .document-work/
 scripts/__pycache__/
+.vercel
+.env*
